@@ -1,0 +1,35 @@
+{% set s = sections.movers %}
+{% if s.ok %}
+{% set d = s.data %}
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+  {% for list_key, list_label in [('gainers','漲幅前 100'), ('losers','跌幅前 100')] %}
+  <div>
+    <h4 style="margin-bottom:10px;color:var(--text-muted)">{{ list_label }}</h4>
+    <table class="dt-table" data-sort-col="5" data-sort-dir="{{ 'desc' if list_key == 'gainers' else 'asc' }}">
+      <thead>
+        <tr>
+          <th>#</th><th>代號</th><th>名稱</th><th>收盤</th>
+          <th>漲跌</th><th>漲跌幅%</th><th>市場</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for stock in d[list_key] %}
+        {% set cls = 'pos' if stock.change > 0 else ('neg' if stock.change < 0 else 'flat') %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ stock.code }}</td>
+          <td>{{ stock.name }}</td>
+          <td data-order="{{ stock.close }}">{{ "{:,.2f}".format(stock.close) }}</td>
+          <td class="{{ cls }}" data-order="{{ stock.change }}">{{ "{:+.2f}".format(stock.change) }}</td>
+          <td class="{{ cls }}" data-order="{{ stock.change_pct }}">{{ "{:+.2f}".format(stock.change_pct) }}%</td>
+          <td><span style="color:var(--text-muted);font-size:12px">{{ stock.market }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="error-box">漲跌幅資料載入失敗：{{ s.error }}</div>
+{% endif %}

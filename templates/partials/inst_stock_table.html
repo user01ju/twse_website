@@ -1,0 +1,60 @@
+{# Reusable partial for 外資/投信/三大法人合計 buy/sell tables.
+   Expects: section_data (ok/data), show_amount=True/False, show_ranked=True/False #}
+{% if section_data.ok %}
+{% set d = section_data.data %}
+
+{% if show_sub_tables is not defined %}{% set show_sub_tables = true %}{% endif %}
+{% if show_ranked is not defined %}{% set show_ranked = false %}{% endif %}
+
+{% if show_sub_tables %}
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+  {% for list_key, list_label in [('buy_super','買超前 100'), ('sell_super','賣超前 100')] %}
+  <div>
+    <h4 style="margin-bottom:8px;color:var(--text-muted)">{{ list_label }}</h4>
+    <table class="dt-table" data-sort-col="3" data-sort-dir="{{ 'desc' if list_key == 'buy_super' else 'asc' }}">
+      <thead>
+        <tr><th>#</th><th>代號</th><th>名稱</th><th>買賣超(張)</th><th>市場</th></tr>
+      </thead>
+      <tbody>
+        {% for s in d[list_key] %}
+        {% set cls = 'pos' if s.net_zhang > 0 else ('neg' if s.net_zhang < 0 else 'flat') %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ s.code }}</td>
+          <td>{{ s.name }}</td>
+          <td class="{{ cls }}">{{ "{:+,}".format(s.net_zhang) }}</td>
+          <td><span style="color:var(--text-muted);font-size:12px">{{ s.market }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if show_ranked %}
+<h4 style="margin-bottom:8px;color:var(--text-muted)">買賣超金額排行前 100</h4>
+<table class="dt-table" data-sort-col="4" data-sort-dir="desc">
+  <thead>
+    <tr><th>#</th><th>代號</th><th>名稱</th><th>買賣超(張)</th><th>估計金額(億)</th><th>市場</th></tr>
+  </thead>
+  <tbody>
+    {% for s in d.ranked_by_amount %}
+    {% set cls = 'pos' if s.net_zhang > 0 else ('neg' if s.net_zhang < 0 else 'flat') %}
+    <tr>
+      <td>{{ loop.index }}</td>
+      <td>{{ s.code }}</td>
+      <td>{{ s.name }}</td>
+      <td class="{{ cls }}">{{ "{:+,}".format(s.net_zhang) }}</td>
+      <td class="{{ cls }}">{{ "{:+.2f}".format(s.net_yi) }}</td>
+      <td><span style="color:var(--text-muted);font-size:12px">{{ s.market }}</span></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% else %}
+<div class="error-box">資料載入失敗：{{ section_data.error }}</div>
+{% endif %}

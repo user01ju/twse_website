@@ -1,0 +1,25 @@
+{% set s = sections.taiex %}
+{% if s.ok %}
+{% set d = s.data %}
+<div class="stat-grid">
+  <div class="stat-card taiex-main">
+    <div class="label">發行量加權指數</div>
+    <div class="value {{ 'pos' if d.change_pts > 0 else ('neg' if d.change_pts < 0 else 'flat') }}">
+      {{ "{:,.2f}".format(d.close) }}
+    </div>
+    <div class="sub {{ 'pos' if d.change_pts > 0 else ('neg' if d.change_pts < 0 else 'flat') }}">
+      {{ "{:+,.2f}".format(d.change_pts) }} ({{ "{:+.2f}".format(d.change_pct) }}%)
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="label">成交金額</div>
+    <div class="value">{{ "{:,.0f}".format(d.trading_amount_yi) }}<span style="font-size:16px;color:var(--text-muted)"> 億</span></div>
+  </div>
+  <div class="stat-card">
+    <div class="label">成交筆數</div>
+    <div class="value">{{ "{:,}".format(d.transaction_count) }}</div>
+  </div>
+</div>
+{% else %}
+<div class="error-box">加權指數資料載入失敗：{{ s.error }}</div>
+{% endif %}

@@ -1,0 +1,41 @@
+{% set s = sections.breadth %}
+{% if s.ok %}
+{% set d = s.data %}
+<div class="breadth-grid">
+  {% for market_key, market_label in [('twse','上市'), ('tpex','上櫃'), ('esb','興櫃')] %}
+  {% set m = d[market_key] %}
+  <div class="breadth-card">
+    <h4>{{ market_label }}（共 {{ "{:,}".format(m.total) }} 支）</h4>
+    <div class="breadth-row">
+      <span>上漲</span>
+      <span class="bval pos">{{ "{:,}".format(m.up) }}</span>
+      <span class="bpct">({{ m.up_pct }}%)</span>
+    </div>
+    <div class="breadth-row">
+      <span>下跌</span>
+      <span class="bval neg">{{ "{:,}".format(m.down) }}</span>
+      <span class="bpct">({{ m.down_pct }}%)</span>
+    </div>
+    <div class="breadth-row">
+      <span>持平</span>
+      <span class="bval flat">{{ "{:,}".format(m.flat) }}</span>
+      <span class="bpct">({{ m.flat_pct }}%)</span>
+    </div>
+    {% if market_key != 'esb' %}
+    <div class="breadth-row" style="border-top:1px solid var(--border);margin-top:4px;padding-top:4px">
+      <span>漲停</span>
+      <span class="bval pos">{{ "{:,}".format(m.limit_up) }}</span>
+      <span class="bpct">({{ m.limit_up_pct }}%)</span>
+    </div>
+    <div class="breadth-row">
+      <span>跌停</span>
+      <span class="bval neg">{{ "{:,}".format(m.limit_down) }}</span>
+      <span class="bpct">({{ m.limit_down_pct }}%)</span>
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="error-box">市場統計資料載入失敗：{{ s.error }}</div>
+{% endif %}

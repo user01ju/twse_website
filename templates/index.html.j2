@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}台股每日行情{% endblock %}
+
+{% block content %}
+<h1 class="page-title">台股每日行情匯總</h1>
+
+{% if reports %}
+{% set latest = reports[0] %}
+<div class="latest-banner">
+  <div>
+    <div class="latest-label">最新報告</div>
+    <a href="reports/{{ latest.date }}.html">{{ latest.date }} 收盤行情</a>
+  </div>
+  <div style="color:var(--text-muted);font-size:12px;margin-left:auto">
+    更新於 {{ latest.generated_at }}
+  </div>
+</div>
+{% endif %}
+
+<table class="archive-table">
+  <thead>
+    <tr><th>日期</th><th>產生時間</th><th>連結</th></tr>
+  </thead>
+  <tbody>
+    {% for r in reports %}
+    <tr>
+      <td>{{ r.date }}</td>
+      <td style="color:var(--text-muted);font-size:13px">{{ r.generated_at }}</td>
+      <td><a href="reports/{{ r.date }}.html">查看報告</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if not reports %}
+<div style="color:var(--text-muted);padding:40px 0;text-align:center">
+  尚無報告，請執行 <code>python update.py</code> 產生今日報告。
+</div>
+{% endif %}
+
+<div style="margin-top:32px;color:var(--text-muted);font-size:12px">
+  資料來源：臺灣證券交易所 (TWSE) · 證券櫃檯買賣中心 (TPEX)
+</div>
+{% endblock %}

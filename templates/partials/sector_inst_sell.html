@@ -1,0 +1,84 @@
+{# 法人賣超子類股分析 — 外資 / 投信 / 三大法人 #}
+{% set s = sections.sector_inst %}
+{% if not s.ok %}
+<div class="error-box">子類股法人資料錯誤：{{ s.error }}</div>
+{% else %}
+{% set tabs = [
+  ('sell_foreign',  '🌐 外資',     s.data.foreign_sell),
+  ('sell_trust',    '🏦 投信',     s.data.trust_sell),
+  ('sell_dealer',   '🏛️ 自營商',   s.data.dealer_sell),
+  ('sell_combined', '📊 三大法人', s.data.combined_sell),
+] %}
+
+<div class="si-tabs">
+  {% for key, label, groups in tabs %}
+  <button class="si-tab si-tab-neg {% if loop.first %}active{% endif %}"
+          onclick="siSwitch(this,'si-panel-{{ key }}')">{{ label }}</button>
+  {% endfor %}
+</div>
+
+{% for key, label, groups in tabs %}
+<div id="si-panel-{{ key }}" class="si-panel {% if not loop.first %}hidden{% endif %}">
+  {% if not groups %}
+  <div class="error-box">暫無資料</div>
+  {% else %}
+
+  {% set total_abs = namespace(v=0) %}
+  {% set max_abs   = namespace(v=0) %}
+  {% for g in groups %}
+    {% set total_abs.v = total_abs.v + g.abs_yi %}
+    {% if g.abs_yi > max_abs.v %}{% set max_abs.v = g.abs_yi %}{% endif %}
+  {% endfor %}
+
+  <div class="si-meta">
+    共 <strong>{{ groups | length }}</strong> 個子類股　合計淨賣超
+    <strong class="neg">{{ "{:,.1f}".format(total_abs.v) }} 億</strong>
+  </div>
+
+  <table class="si-table">
+    <thead>
+      <tr>
+        <th class="si-th-rank">#</th>
+        <th class="si-th-sector">子類股</th>
+        <th class="si-th-num">個股數</th>
+        <th class="si-th-yi">淨賣超(億)</th>
+        <th class="si-th-pct">佔比</th>
+        <th class="si-th-stocks">個股明細（代號 名稱 金額）</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for g in groups %}
+      {% set bar_pct = (g.abs_yi / max_abs.v * 100) if max_abs.v > 0 else 0 %}
+      <tr class="si-row {% if loop.index % 2 == 0 %}si-alt{% endif %}">
+        <td class="si-rank">{{ loop.index }}</td>
+        <td class="si-sector">
+          <span class="si-sector-name">{{ g.sector }}</span>
+          {% if g.parent %}<span class="si-parent">{{ g.parent }}</span>{% endif %}
+        </td>
+        <td class="si-num">{{ g.count }}</td>
+        <td class="si-yi neg" data-order="{{ g.net_yi }}">
+          {{ "{:,.1f}".format(g.net_yi) }}
+        </td>
+        <td class="si-pct">
+          <div class="si-bar-wrap">
+            <div class="si-bar si-bar-neg" style="width:{{ "{:.1f}".format(bar_pct) }}%"></div>
+            <span class="si-bar-label">{{ "{:.1f}".format(g.pct) }}%</span>
+          </div>
+        </td>
+        <td class="si-stocks">
+          {% for st in g.stocks %}
+          <span class="si-stock-tag">
+            <span class="si-code">{{ st.code }}</span>
+            <span class="si-sname">{{ st.name }}</span>
+            <span class="si-zhang neg">{{ "{:.2f}".format(st.net_yi) }}億</span>
+          </span>
+          {% endfor %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</div>
+{% endfor %}
+{% endif %}

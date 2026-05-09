@@ -1,0 +1,56 @@
+{# Combined 外資 / 投信 / 三大法人合計 side-by-side buy/sell super tables #}
+{% set panels = [
+  ('🌐', '外資買賣超',   sections.foreign),
+  ('🏦', '投信買賣超',   sections.trust),
+  ('📊', '三大法人合計買賣超', sections.combined),
+] %}
+
+<div class="inst-combined-wrapper">
+  {% for icon, label, sec in panels %}
+  <div class="inst-combined-panel">
+    {# ── Buy super ── #}
+    <div class="inst-combined-sub">
+      <div class="inst-combined-head">{{ icon }} {{ label }} 買超</div>
+      {% if sec.ok %}
+      <table class="dt-table inst-compact" data-sort-col="3" data-sort-dir="desc">
+        <thead><tr><th>代號</th><th>名稱</th><th>張數</th><th>金額</th></tr></thead>
+        <tbody>
+          {% for s in sec.data.buy_super %}
+          <tr>
+            <td>{{ s.code }}</td>
+            <td>{{ s.name }}</td>
+            <td class="pos" data-order="{{ s.net_zhang }}">+{{ "{:,}".format(s.net_zhang) }}張</td>
+            <td class="pos" data-order="{{ s.net_yi }}">+{{ "{:.1f}".format(s.net_yi) }}億</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div class="error-box">{{ sec.error }}</div>
+      {% endif %}
+    </div>
+
+    {# ── Sell super ── #}
+    <div class="inst-combined-sub" style="margin-top:16px">
+      <div class="inst-combined-head">{{ icon }} {{ label }} 賣超</div>
+      {% if sec.ok %}
+      <table class="dt-table inst-compact" data-sort-col="3" data-sort-dir="asc">
+        <thead><tr><th>代號</th><th>名稱</th><th>張數</th><th>金額</th></tr></thead>
+        <tbody>
+          {% for s in sec.data.sell_super %}
+          <tr>
+            <td>{{ s.code }}</td>
+            <td>{{ s.name }}</td>
+            <td class="neg" data-order="{{ s.net_zhang }}">{{ "{:,}".format(s.net_zhang) }}張</td>
+            <td class="neg" data-order="{{ s.net_yi }}">{{ "{:.1f}".format(s.net_yi) }}億</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div class="error-box">{{ sec.error }}</div>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>

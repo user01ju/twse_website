@@ -1,0 +1,30 @@
+{% set s = sections.institutional %}
+{% if s.ok %}
+{% set d = s.data %}
+<div class="inst-wrapper">
+  {% for market_key, market_label in [('twse','上市'), ('tpex','上櫃')] %}
+  <div class="inst-block">
+    <h4>{{ market_label }} 三大法人（億元）</h4>
+    <table class="inst-table">
+      <thead>
+        <tr><th>單位名稱</th><th>買進</th><th>賣出</th><th>買賣超</th></tr>
+      </thead>
+      <tbody>
+        {% for row in d[market_key] %}
+        <tr{% if row.is_total %} class="inst-total"{% endif %}>
+          <td>{{ row.name }}</td>
+          <td>{{ "{:,.1f}".format(row.buy_yi) }}</td>
+          <td>{{ "{:,.1f}".format(row.sell_yi) }}</td>
+          <td class="{{ 'pos' if row.net_yi > 0 else ('neg' if row.net_yi < 0 else 'flat') }}">
+            {{ "{:+,.1f}".format(row.net_yi) }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="error-box">三大法人資料載入失敗：{{ s.error }}</div>
+{% endif %}

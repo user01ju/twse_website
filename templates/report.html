@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}{{ date_str }} 台股每日行情{% endblock %}
+{% block nav_extra %}
+  <span class="report-date">{{ date_str }} 收盤資料</span>
+{% endblock %}
+
+{% block content %}
+<div style="margin-bottom:20px">
+  <h2 style="font-size:18px;color:var(--text-muted);font-weight:400">
+    {{ date_str }} &nbsp;台灣股市每日行情匯總
+  </h2>
+</div>
+
+{# Section 1: 加權指數 #}
+{% include "partials/taiex_summary.html" %}
+
+{# Section 2: 市場統計 #}
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">市場統計（上市 / 上櫃 / 興櫃）</span>
+    <span class="section-toggle-icon">▼</span>
+  </div>
+  <div class="section-body">
+    {% include "partials/market_breadth.html" %}
+  </div>
+</div>
+
+{# Sections 3+4: 三大法人彙總 #}
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">三大法人買賣金額彙總（上市 + 上櫃）</span>
+    {% if sections.institutional.ok %}
+    {% set inst = sections.institutional.data %}
+    {% set twse_net = (inst.twse | selectattr('is_total') | list | first).net_yi | default(0) %}
+    {% set tpex_net = (inst.tpex | selectattr('is_total') | list | first).net_yi | default(0) %}
+    {% set total_net = twse_net + tpex_net %}
+    <span class="section-subtitle {{ 'pos' if total_net > 0 else ('neg' if total_net < 0 else 'flat') }}">
+      {{ '買超' if total_net > 0 else '賣超' }}&nbsp;{{ "{:,.1f}".format(total_net | abs) }}&thinsp;億
+    </span>
+    {% endif %}
+    <span class="section-toggle-icon">▼</span>
+  </div>
+  <div class="section-body">
+    {% include "partials/institutional_table.html" %}
+  </div>
+</div>
+
+{# 法人買超子類股分析彙總表 #}
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">法人買超子類股分析彙總表（外資 / 投信 / 自營商 / 三大法人）</span>
+    <span class="section-toggle-icon">▼</span>
+  </div>
+  <div class="section-body">{% include "partials/sector_inst_summary.html" %}</div>
+</div>
+
+{# 法人賣超子類股分析彙總表 #}
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">法人賣超子類股分析彙總表（外資 / 投信 / 自營商 / 三大法人）</span>
+    <span class="section-toggle-icon">▼</span>
+  </div>
+  <div class="section-body">{% include "partials/sector_inst_summary_sell.html" %}</div>
+</div>
+
+{# 法人買超 by 子類股 #}
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">法人買超子類股分析（CMoney 分類）</span>
+    <span class="section-toggle-icon">▼</span>
+  </div>
+  <div class="section-body">{% include "partials/sector_inst.html" %}</div>
+</div>
+
+{# 法人賣超 by 子類股 #}
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">法人賣超子類股分析（CMoney 分類）</span>
+    <span class="section-toggle-icon">▼</span>
+  </div>
+  <div class="section-body">{% include "partials/sector_inst_sell.html" %}</div>
+</div>
+
+{# AI 今日盤勢總覽 #}
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">今日盤勢總覽</span>
+    <span class="section-toggle-icon">▼</span>
+  </div>
+  <div class="section-body">
+    {% include "partials/ai_summary.html" %}
+  </div>
+</div>
+
+{# Sections 5+6: 漲跌幅前100 #}
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">漲幅 / 跌幅前 100（上市 + 上櫃）</span>
+    <span class="section-toggle-icon">▼</span>
+  </div>
+  <div class="section-body">
+    {% include "partials/movers_table.html" %}
+  </div>
+</div>
+
+{# Sections 7+8+9: 外資 / 投信 / 三大法人合計 買賣超（合併三欄） #}
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">法人買賣超（上市 + 上櫃）</span>
+    <span class="section-toggle-icon">▼</span>
+  </div>
+  <div class="section-body">
+    {% include "partials/inst_combined_table.html" %}
+  </div>
+</div>
+
+<div style="margin-top:32px;padding-top:16px;border-top:1px solid var(--border);color:var(--text-muted);font-size:12px">
+  資料來源：臺灣證券交易所 (TWSE) · 證券櫃檯買賣中心 (TPEX)　｜　產生時間：{{ generated_at }}
+</div>
+{% endblock %}

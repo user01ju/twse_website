@@ -1,0 +1,174 @@
+import logging
+import time
+from datetime import date as _date
+
+import requests
+
+from config import ENDPOINTS, FETCH_TIMEOUT, FETCH_RETRIES
+
+logger = logging.getLogger(__name__)
+
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "Accept": "application/json",
+}
+
+# Legacy STOCK_DAY_ALL returns array-of-arrays; map positional index → English field name
+_STOCK_DAY_FIELDS = [
+    "Code", "Name", "TradeVolume", "TradeValue",
+    "OpeningPrice", "HighestPrice", "LowestPrice", "ClosingPrice",
+    "Change", "Transaction",
+]
+
+
+class FetchError(Exception):
+    pass
+
+
+def _get(url: str, params: dict = None, timeout: int = FETCH_TIMEOUT) -> list | dict:
+    for attempt in range(FETCH_RETRIES):
+        try:
+            resp = requests.get(url, params=params, headers=HEADERS, timeout=timeout)
+            resp.raise_for_status()
+            return resp.json()
+        except requests.RequestException as e:
+            if attempt == FETCH_RETRIES - 1:
+                raise FetchError(f"GET {url} failed after {FETCH_RETRIES} attempts: {e}") from e
+            time.sleep(2 ** attempt)
+
+
+def _greg_to_roc(greg8: str) -> str:
+    """'20260508' → '1150508'"""
+    if len(greg8) == 8:
+        return str(int(greg8[:4]) - 1911) + greg8[4:]
+    return greg8
+
+
+def fetch_taiex_index(date_str: str = None) -> list[dict]:
+    """
+    MI_5MINS_HIST — 近5個交易日 OHLC。取最後一筆計算當日收盤指數與漲跌，
+    回傳與 OpenAPI MI_INDEX 相同欄位的 list[dict]，供 index_stats.py 直接使用。
+    """
+    if date_str is None:
+        date_str = _date.today().strftime("%Y%m%d")
+    data = _get(ENDPOINTS["twse_index"], params={"response": "json", "date": date_str})
+    if not isinstance(data, dict):
+        raise FetchError(f"Unexpected MI_5MINS_HIST response type: {type(data)}")
+    if data.get("stat") not in ("OK", "ok"):
+        raise FetchError(f"MI_5MINS_HIST stat={data.get('stat')}: {data.get('msg', '')}")
+
+    rows = data.get("data", [])
+    if not rows:
+        raise FetchError("MI_5MINS_HIST: no data rows")
+
+    # rows[i] = [日期('115/05/08'), 開盤指數, 最高指數, 最低指數, 收盤指數]
+    last   = rows[-1]
+    close  = float(str(last[4]).replace(",", ""))
+    prev   = float(str(rows[-2][4]).replace(",", "")) if len(rows) >= 2 else close
+
+    change_pts = round(close - prev, 2)
+    change_pct = round((change_pts / prev) * 100, 2) if prev else 0.0
+    sign = "+" if change_pts >= 0 else "-"
+
+    # "115/05/08" → "1150508"
+    roc_date = last[0].replace("/", "")
+
+    return [{
+        "指數":       "發行量加權股價指數",
+        "收盤指數":   str(close),
+        "漲跌":       sign,
+        "漲跌點數":   str(abs(change_pts)),
+        "漲跌百分比": str(abs(change_pct)),
+        "Date":       roc_date,
+    }]
+
+
+def fetch_stock_day_all(date_str: str = None) -> list[dict]:
+    """
+    Legacy STOCK_DAY_ALL — 全部上市個股當日收盤資料。
+    回傳 list[dict]，欄位與 OpenAPI 版本相同（Code, Name, ClosingPrice, Change ...），
+    並附加 Date 欄位（ROC 格式如 '1150508'）供 report_builder._detect_data_date 使用。
+    """
+    if date_str is None:
+        date_str = _date.today().strftime("%Y%m%d")
+    data = _get(ENDPOINTS["twse_stock_all"], params={"response": "json", "date": date_str})
+    if not isinstance(data, dict):
+        raise FetchError(f"Unexpected STOCK_DAY_ALL response type: {type(data)}")
+    if data.get("stat") not in ("OK", "ok"):
+        raise FetchError(f"STOCK_DAY_ALL stat={data.get('stat')}: {data.get('msg', '')}")
+
+    roc_date = _greg_to_roc(data.get("date", ""))
+    rows = data.get("data", [])
+
+    result = []
+    for row in rows:
+        if len(row) < len(_STOCK_DAY_FIELDS):
+            continue
+        d = {k: row[i] for i, k in enumerate(_STOCK_DAY_FIELDS)}
+        d["Date"] = roc_date
+        result.append(d)
+    return result
+
+
+def _fetch_legacy(endpoint_key: str, date_str: str = None) -> dict:
+    """Fetch TWSE legacy JSON endpoint. Omitting date returns current-day data."""
+    params = {"response": "json"}
+    if date_str:
+        params["date"] = date_str
+    data = _get(ENDPOINTS[endpoint_key], params=params)
+    if not isinstance(data, dict):
+        raise FetchError(f"Unexpected {endpoint_key} response type: {type(data)}")
+    if data.get("stat") not in ("OK", "ok"):
+        raise FetchError(f"{endpoint_key} stat={data.get('stat')}: {data.get('msg', '')}")
+    return data
+
+
+def fetch_twt84u(date_str: str = None) -> dict[str, tuple[float, float]]:
+    """
+    TWT84U — 個股漲跌停參考價。
+    date_str: YYYYMMDD of the trading day whose reference prices are needed.
+    Returns {code: (limit_up_price, limit_down_price)}.
+    Fields: [代號, 名稱, 漲停價, 開盤競價基準, 跌停價, ...]
+    """
+    time.sleep(0.3)   # slight delay to avoid rate-limit when fetched in parallel
+    params = {"response": "json"}
+    if date_str:
+        params["date"] = date_str
+    data = _get(ENDPOINTS["twse_twt84u"], params=params)
+    if not isinstance(data, dict) or data.get("stat") not in ("OK", "ok"):
+        raise FetchError(f"TWT84U stat={data.get('stat') if isinstance(data, dict) else '?'}")
+
+    def pf(s):
+        try:
+            return float(str(s).replace(",", ""))
+        except (ValueError, TypeError):
+            return None
+
+    result = {}
+    for row in data.get("data", []):
+        if len(row) < 5:
+            continue
+        code = str(row[0]).strip()
+        lu = pf(row[2])
+        ld = pf(row[4])
+        if code and lu is not None and ld is not None:
+            result[code] = (lu, ld)
+    return result
+
+
+def fetch_bfi82u() -> dict:
+    """Listed 三大法人彙總 (aggregate by institution type) — BFI82U, current-day."""
+    return _fetch_legacy("twse_bfi82u")
+
+
+def fetch_t86() -> dict:
+    """Listed 三大法人 by stock (外資/投信/自營商/合計) — T86, current-day.
+    selectType=ALLBUT0999: 全部上市股票（不含權證、牛熊證、可展延牛熊證）
+    """
+    params = {"response": "json", "selectType": "ALLBUT0999"}
+    data = _get(ENDPOINTS["twse_t86"], params=params)
+    if not isinstance(data, dict):
+        raise FetchError(f"Unexpected twse_t86 response type: {type(data)}")
+    if data.get("stat") not in ("OK", "ok"):
+        raise FetchError(f"twse_t86 stat={data.get('stat')}: {data.get('msg', '')}")
+    return data

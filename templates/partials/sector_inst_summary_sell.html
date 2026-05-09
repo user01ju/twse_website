@@ -1,0 +1,61 @@
+{# 法人賣超子類股分析彙總表 #}
+{% set s = sections.sector_summary %}
+{% if not s.ok %}
+<div class="error-box">彙總表資料錯誤：{{ s.error }}</div>
+{% else %}
+{% set d = s.data.sell %}
+<div style="overflow-x:auto">
+<table class="sis-table">
+  <thead>
+    <tr class="sis-head-group">
+      <th rowspan="2" class="sis-th-rank">#</th>
+      <th rowspan="2" class="sis-th-sector">子類股</th>
+      <th rowspan="2" class="sis-th-num">個股數</th>
+      <th class="sis-th-inst">外資</th>
+      <th class="sis-th-inst">投信</th>
+      <th class="sis-th-inst">自營商</th>
+      <th class="sis-th-inst sis-th-combined">三大法人</th>
+      <th rowspan="2" class="sis-th-stocks">個股明細（代號 名稱 金額）</th>
+    </tr>
+    <tr class="sis-head-total">
+      <th class="sis-sub">合計<br><span class="neg">{{ "{:,.1f}".format(d.tot_foreign) }}&thinsp;億</span></th>
+      <th class="sis-sub">合計<br><span class="neg">{{ "{:,.1f}".format(d.tot_trust) }}&thinsp;億</span></th>
+      <th class="sis-sub">合計<br><span class="{{ 'neg' if d.tot_dealer >= 0 else 'pos' }}">{{ "{:,.1f}".format(d.tot_dealer) }}&thinsp;億</span></th>
+      <th class="sis-sub sis-th-combined">合計<br><span class="neg">{{ "{:,.1f}".format(d.tot_combined) }}&thinsp;億</span></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in d.rows %}
+    <tr class="sis-row {% if loop.index % 2 == 0 %}si-alt{% endif %}">
+      <td class="si-rank">{{ loop.index }}</td>
+      <td class="si-sector">
+        <span class="si-sector-name">{{ r.sector }}</span>
+        {% if r.parent %}<span class="si-parent">{{ r.parent }}</span>{% endif %}
+      </td>
+      <td class="si-num">{{ r.count }}</td>
+      {% for val in [r.foreign_yi, r.trust_yi] %}
+      <td class="sis-yi {{ 'neg' if val > 0 else 'flat' }}">
+        {% if val > 0 %}{{ "{:,.1f}".format(val) }}{% else %}—{% endif %}
+      </td>
+      {% endfor %}
+      <td class="sis-yi {% if r.dealer_yi > 0 %}neg{% elif r.dealer_yi < 0 %}pos{% else %}flat{% endif %}">
+        {% if r.dealer_yi == 0 %}—
+        {% elif r.dealer_yi > 0 %}{{ "{:,.1f}".format(r.dealer_yi) }}
+        {% else %}({{ "{:,.1f}".format(r.dealer_yi | abs) }}){% endif %}
+      </td>
+      <td class="sis-yi sis-yi-combined neg">{{ "{:,.1f}".format(r.combined_yi) }}</td>
+      <td class="si-stocks">
+        {% for st in r.stocks %}
+        <span class="si-stock-tag">
+          <span class="si-code">{{ st.code }}</span>
+          <span class="si-sname">{{ st.name }}</span>
+          <span class="si-zhang neg">{{ "{:.2f}".format(st.net_yi | abs) }}億</span>
+        </span>
+        {% endfor %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
