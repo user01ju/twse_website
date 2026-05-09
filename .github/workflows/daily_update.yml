@@ -1,0 +1,83 @@
+name: 每日股市行情更新
+
+on:
+  schedule:
+    # 台灣時間 15:00 開始，每 30 分鐘重試一次，直到 00:00（UTC 07:00–16:00）
+    - cron: '0,30 7-16 * * 1-5'
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 檢查是否超過台灣時間 00:00（UTC 16:00）
+        id: timecheck
+        run: |
+          HOUR_UTC=$(date -u +%H)
+          if [ "$HOUR_UTC" -ge 16 ]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "已超過台灣時間 00:00，略過本次執行"
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Checkout source
+        if: steps.timecheck.outputs.skip != 'true'
+        uses: actions/checkout@v4
+
+      - name: 還原歷史報告（從 gh-pages）
+        if: steps.timecheck.outputs.skip != 'true'
+        run: |
+          mkdir -p output/reports
+          git fetch origin gh-pages 2>/dev/null || true
+          if git show-ref --verify --quiet refs/remotes/origin/gh-pages; then
+            git archive origin/gh-pages | tar -x -C output/ 2>/dev/null || true
+            echo "歷史報告已還原"
+          else
+            echo "gh-pages 尚未建立，從頭部署"
+          fi
+
+      - name: 設定 Python 3.12
+        if: steps.timecheck.outputs.skip != 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 安裝套件
+        if: steps.timecheck.outputs.skip != 'true'
+        run: pip install -r requirements.txt
+
+      - name: 執行資料抓取與報告生成
+        if: steps.timecheck.outputs.skip != 'true'
+        id: generate
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          python update.py
+          RESULT=$?
+          echo "result=$RESULT" >> $GITHUB_OUTPUT
+          exit 0  # 讓 step 永遠成功，由後續步驟判斷結果
+
+      - name: 部署到 GitHub Pages
+        if: steps.timecheck.outputs.skip != 'true' && steps.generate.outputs.result == '0'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./output
+          keep_files: false
+          commit_message: "chore: update market report ${{ env.REPORT_DATE }}"
+
+      - name: 輸出執行結果
+        if: steps.timecheck.outputs.skip != 'true'
+        run: |
+          RESULT="${{ steps.generate.outputs.result }}"
+          if [ "$RESULT" = "0" ]; then
+            echo "新報告已生成並部署"
+          elif [ "$RESULT" = "2" ]; then
+            echo "無新資料（非交易日或資料未就緒），等待下次重試"
+          else
+            echo "發生錯誤（exit $RESULT），等待下次重試"
+          fi

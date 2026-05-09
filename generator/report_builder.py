@@ -91,7 +91,7 @@ def build(target_date: date) -> None:
     output_path = REPORTS_DIR / f"{actual_date.isoformat()}.html"
     if output_path.exists() and not FORCE_REBUILD:
         logger.info(f"Report already exists: {output_path}, skipping (set FORCE_REBUILD=True to override)")
-        return
+        return False
 
     # ── Price lookups ───────────────────────────────────────────────────────
     twse_prices = _build_price_lookup(raw.get("twse_stocks") or [], "Code", "ClosingPrice")
@@ -175,3 +175,4 @@ def build(target_date: date) -> None:
     index_builder.rebuild()
 
     logger.info(f"Report saved: {output_path}")
+    return True
