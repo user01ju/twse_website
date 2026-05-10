@@ -5,18 +5,18 @@
 {% endblock %}
 
 {% block content %}
-<div style="margin-bottom:20px">
-  <h2 style="font-size:18px;color:var(--text-muted);font-weight:400">
-    {{ date_str }} &nbsp;台灣股市每日行情匯總
-  </h2>
+<div class="page-heading">
+  <span class="date-label">{{ date_str }}</span>
+  <h2>台灣股市每日行情匯總</h2>
 </div>
 
 {# Section 1: 加權指數 #}
 {% include "partials/taiex_summary.html" %}
 
 {# Section 2: 市場統計 #}
-<div class="section">
+<div class="section accent-teal">
   <div class="section-header">
+    <span class="section-accent"></span>
     <span class="section-title">市場統計（上市 / 上櫃 / 興櫃）</span>
     <span class="section-toggle-icon">▼</span>
   </div>
@@ -26,8 +26,9 @@
 </div>
 
 {# Sections 3+4: 三大法人彙總 #}
-<div class="section">
+<div class="section accent-blue">
   <div class="section-header">
+    <span class="section-accent"></span>
     <span class="section-title">三大法人買賣金額彙總（上市 + 上櫃）</span>
     {% if sections.institutional.ok %}
     {% set inst = sections.institutional.data %}
@@ -46,8 +47,9 @@
 </div>
 
 {# 法人買超子類股分析彙總表 #}
-<div class="section">
+<div class="section accent-blue">
   <div class="section-header">
+    <span class="section-accent"></span>
     <span class="section-title">法人買超子類股分析彙總表（外資 / 投信 / 自營商 / 三大法人）</span>
     <span class="section-toggle-icon">▼</span>
   </div>
@@ -55,8 +57,9 @@
 </div>
 
 {# 法人賣超子類股分析彙總表 #}
-<div class="section">
+<div class="section accent-rose">
   <div class="section-header">
+    <span class="section-accent"></span>
     <span class="section-title">法人賣超子類股分析彙總表（外資 / 投信 / 自營商 / 三大法人）</span>
     <span class="section-toggle-icon">▼</span>
   </div>
@@ -64,8 +67,9 @@
 </div>
 
 {# 法人買超 by 子類股 #}
-<div class="section">
+<div class="section accent-blue">
   <div class="section-header">
+    <span class="section-accent"></span>
     <span class="section-title">法人買超子類股分析（CMoney 分類）</span>
     <span class="section-toggle-icon">▼</span>
   </div>
@@ -73,8 +77,9 @@
 </div>
 
 {# 法人賣超 by 子類股 #}
-<div class="section">
+<div class="section accent-rose">
   <div class="section-header">
+    <span class="section-accent"></span>
     <span class="section-title">法人賣超子類股分析（CMoney 分類）</span>
     <span class="section-toggle-icon">▼</span>
   </div>
@@ -82,8 +87,9 @@
 </div>
 
 {# AI 今日盤勢總覽 #}
-<div class="section">
+<div class="section accent-purple">
   <div class="section-header">
+    <span class="section-accent"></span>
     <span class="section-title">今日盤勢總覽</span>
     <span class="section-toggle-icon">▼</span>
   </div>
@@ -93,8 +99,9 @@
 </div>
 
 {# Sections 5+6: 漲跌幅前100 #}
-<div class="section">
+<div class="section accent-amber">
   <div class="section-header">
+    <span class="section-accent"></span>
     <span class="section-title">漲幅 / 跌幅前 100（上市 + 上櫃）</span>
     <span class="section-toggle-icon">▼</span>
   </div>
@@ -103,9 +110,10 @@
   </div>
 </div>
 
-{# Sections 7+8+9: 外資 / 投信 / 三大法人合計 買賣超（合併三欄） #}
-<div class="section">
+{# Sections 7+8+9: 法人買賣超合併三欄 #}
+<div class="section accent-blue">
   <div class="section-header">
+    <span class="section-accent"></span>
     <span class="section-title">法人買賣超（上市 + 上櫃）</span>
     <span class="section-toggle-icon">▼</span>
   </div>
@@ -114,7 +122,9 @@
   </div>
 </div>
 
-<div style="margin-top:32px;padding-top:16px;border-top:1px solid var(--border);color:var(--text-muted);font-size:12px">
-  資料來源：臺灣證券交易所 (TWSE) · 證券櫃檯買賣中心 (TPEX)　｜　產生時間：{{ generated_at }}
+<div class="report-footer">
+  <span>資料來源：臺灣證券交易所 (TWSE) · 證券櫃檯買賣中心 (TPEX)</span>
+  <span class="report-footer-dot"></span>
+  <span>產生時間：{{ generated_at }}</span>
 </div>
 {% endblock %}

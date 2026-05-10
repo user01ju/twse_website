@@ -3,9 +3,10 @@
 <div class="ai-summary-body">
   {{ s.data.summary | ai_summary_html }}
 </div>
-<div style="margin-top:12px;font-size:11px;color:var(--text-muted)">
-  🤖 由 {{ s.data.model }} 生成 &nbsp;·&nbsp;
-  {{ s.data.input_tokens }} in / {{ s.data.output_tokens }} out tokens
+<div class="ai-footer">
+  <span>🤖 {{ s.data.model }}</span>
+  <span class="ai-footer-dot"></span>
+  <span>{{ s.data.input_tokens }} in / {{ s.data.output_tokens }} out tokens</span>
 </div>
 {% else %}
 <div class="error-box">AI 摘要生成失敗：{{ s.error }}</div>
