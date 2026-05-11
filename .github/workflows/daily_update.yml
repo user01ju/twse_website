@@ -56,10 +56,10 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
+          set +e
           python update.py
           RESULT=$?
           echo "result=$RESULT" >> $GITHUB_OUTPUT
-          exit 0  # 讓 step 永遠成功，由後續步驟判斷結果
 
       - name: 部署到 GitHub Pages
         if: steps.timecheck.outputs.skip != 'true' && steps.generate.outputs.result == '0'
