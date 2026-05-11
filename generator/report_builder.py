@@ -71,13 +71,13 @@ def build(target_date: date) -> None:
         "twse_bfi82u": (twse_client.fetch_bfi82u,        []),
         "twse_t86":    (twse_client.fetch_t86,           []),
         "twse_twt84u":    (twse_client.fetch_twt84u,         [today_str]),
-        "tpex_daily":     (tpex_client.fetch_daily_quotes,   []),
-        "tpex_highlight": (tpex_client.fetch_highlight,       []),
-        "tpex_3sum":   (tpex_client.fetch_3insti_summary,[]),
-        "tpex_qfii":   (tpex_client.fetch_3insti_qfii,   []),
-        "tpex_trust":  (tpex_client.fetch_3insti_trust,  []),
-        "tpex_all":    (tpex_client.fetch_3insti_all,    []),
-        "tpex_esb":    (tpex_client.fetch_esb_quotes,    []),
+        "tpex_daily":     (tpex_client.fetch_daily_quotes,   [target_date]),
+        "tpex_highlight": (tpex_client.fetch_highlight,       [target_date]),
+        "tpex_3sum":   (tpex_client.fetch_3insti_summary,[target_date]),
+        "tpex_qfii":   (tpex_client.fetch_3insti_qfii,   [target_date]),
+        "tpex_trust":  (tpex_client.fetch_3insti_trust,  [target_date]),
+        "tpex_all":    (tpex_client.fetch_3insti_all,    [target_date]),
+        "tpex_esb":    (tpex_client.fetch_esb_quotes,    [target_date]),
     })
 
     # Determine actual data date from STOCK_DAY_ALL / MI_5MINS_HIST response
@@ -87,6 +87,11 @@ def build(target_date: date) -> None:
         logger.warning("Could not detect data date from API; using requested date")
     else:
         logger.info(f"Actual data date from API: {actual_date.isoformat()}")
+
+    # Cross-check TPEX data date against TWSE actual_date
+    tpex_date = tpex_client.get_tpex_data_date(raw.get("tpex_daily") or [])
+    if tpex_date and tpex_date != actual_date:
+        logger.warning(f"TPEX data date mismatch: TWSE={actual_date.isoformat()}, TPEX={tpex_date.isoformat()} — TPEX may not have updated yet")
 
     # ── Completeness gate ───────────────────────────────────────────────────
     # Institutional data (T86, BFI82U, TPEX 3insti) is typically available ~17:00.

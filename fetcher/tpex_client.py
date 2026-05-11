@@ -41,23 +41,48 @@ def _get(url: str, timeout: int = FETCH_TIMEOUT) -> list[dict]:
             time.sleep(2 ** attempt)
 
 
-def _filter_today(records: list[dict], date_field: str = "Date") -> list[dict]:
-    """Keep only records matching today's ROC date (e.g. '115/05/07' or '1150507')."""
-    today = date.today()
-    roc_year = today.year - 1911
-    # TPEX uses format '115/05/07'
-    roc_slash = f"{roc_year}/{today.month:02d}/{today.day:02d}"
-    # Also match compact form '1150507'
-    roc_compact = f"{roc_year:03d}{today.month:02d}{today.day:02d}"
+def _filter_date(records: list[dict], target: date, date_field: str = "Date") -> list[dict]:
+    """Keep only records matching target date (ROC compact '1150507', slash '115/05/07', or ISO)."""
+    roc_year = target.year - 1911
+    roc_slash   = f"{roc_year}/{target.month:02d}/{target.day:02d}"
+    roc_compact = f"{roc_year:03d}{target.month:02d}{target.day:02d}"
+    iso         = target.isoformat()
 
-    filtered = [r for r in records if r.get(date_field, "") in (roc_slash, roc_compact, today.isoformat())]
+    filtered = [r for r in records if r.get(date_field, "") in (roc_slash, roc_compact, iso)]
     if not filtered:
-        logger.debug(f"No records for today ({roc_slash}) in {date_field}; returning all {len(records)} records")
+        logger.debug(f"No TPEX records for {roc_slash} in '{date_field}'; returning all {len(records)} records")
         return records
     return filtered
 
 
-def fetch_highlight() -> dict:
+def get_tpex_data_date(records: list[dict], date_field: str = "Date") -> date | None:
+    """Extract the actual data date from the first TPEX record."""
+    from fetcher.market_calendar import roc_to_date
+    if not records:
+        return None
+    raw = str(records[0].get(date_field, "")).strip()
+    # compact: '1150507'
+    if len(raw) == 7 and raw.isdigit():
+        try:
+            return roc_to_date(raw)
+        except Exception:
+            pass
+    # slash: '115/05/07'
+    if "/" in raw:
+        try:
+            return roc_to_date(raw.replace("/", ""))
+        except Exception:
+            pass
+    # ISO: '2026-05-07'
+    try:
+        from datetime import date as _date
+        return _date.fromisoformat(raw)
+    except Exception:
+        pass
+    return None
+
+
+def fetch_highlight(target: date = None) -> dict:
     """
     TPEX tpex_mainborad_highlight — 上櫃大盤漲跌統計 (official breadth numbers).
     Returns the single today record as a dict, or {} on failure.
@@ -72,7 +97,7 @@ def fetch_highlight() -> dict:
             resp.raise_for_status()
             data = resp.json()
             if isinstance(data, list) and data:
-                records = _filter_today(data)
+                records = _filter_date(data, target or date.today())
                 return records[0] if records else {}
             return {}
         except requests.RequestException as e:
@@ -81,37 +106,37 @@ def fetch_highlight() -> dict:
             time.sleep(2 ** attempt)
 
 
-def fetch_daily_quotes() -> list[dict]:
+def fetch_daily_quotes(target: date = None) -> list[dict]:
     """TPEX daily mainboard close quotes (上櫃個股)."""
     records = _get(ENDPOINTS["tpex_daily"])
-    return _filter_today(records)
+    return _filter_date(records, target or date.today())
 
 
-def fetch_3insti_summary() -> list[dict]:
+def fetch_3insti_summary(target: date = None) -> list[dict]:
     """TPEX 上櫃三大法人彙總."""
     records = _get(ENDPOINTS["tpex_3insti_sum"])
-    return _filter_today(records)
+    return _filter_date(records, target or date.today())
 
 
-def fetch_3insti_qfii() -> list[dict]:
+def fetch_3insti_qfii(target: date = None) -> list[dict]:
     """TPEX 上櫃外資買賣超 by stock."""
     records = _get(ENDPOINTS["tpex_3insti_qfii"])
-    return _filter_today(records)
+    return _filter_date(records, target or date.today())
 
 
-def fetch_3insti_trust() -> list[dict]:
+def fetch_3insti_trust(target: date = None) -> list[dict]:
     """TPEX 上櫃投信買賣超 by stock."""
     records = _get(ENDPOINTS["tpex_3insti_trust"])
-    return _filter_today(records)
+    return _filter_date(records, target or date.today())
 
 
-def fetch_3insti_all() -> list[dict]:
+def fetch_3insti_all(target: date = None) -> list[dict]:
     """TPEX 上櫃三大法人合計買賣超 by stock."""
     records = _get(ENDPOINTS["tpex_3insti_all"])
-    return _filter_today(records)
+    return _filter_date(records, target or date.today())
 
 
-def fetch_esb_quotes() -> list[dict]:
+def fetch_esb_quotes(target: date = None) -> list[dict]:
     """TPEX 興櫃股票統計."""
     records = _get(ENDPOINTS["tpex_esb"])
-    return _filter_today(records)
+    return _filter_date(records, target or date.today())
