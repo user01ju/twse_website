@@ -5,6 +5,11 @@ on:
     # 台灣時間 15:00 開始，每 30 分鐘重試一次，直到 00:00（UTC 07:00–16:00）
     - cron: '0,30 7-16 * * 1-5'
   workflow_dispatch:
+    inputs:
+      force_rebuild:
+        description: '強制重建報告 (FORCE_REBUILD=true)'
+        type: boolean
+        default: false
 
 jobs:
   update:
@@ -55,6 +60,7 @@ jobs:
         id: generate
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          FORCE_REBUILD: ${{ github.event.inputs.force_rebuild == 'true' && 'true' || 'false' }}
         run: |
           set +e
           python update.py
