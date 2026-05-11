@@ -7,6 +7,9 @@ import json
 import logging
 from datetime import date, datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
+
+_TZ = ZoneInfo("Asia/Taipei")
 
 from config import OUTPUT_DIR
 from processor import index_stats, market_breadth, movers
@@ -54,7 +57,7 @@ def build(actual_date: date, raw: dict, complete: bool) -> bool:
 
     payload = {
         "date":         actual_date.isoformat(),
-        "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "generated_at": datetime.now(_TZ).strftime("%Y-%m-%d %H:%M:%S"),
         "complete":     complete,
         "taiex":        taiex,
         "breadth": {

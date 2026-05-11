@@ -1,6 +1,9 @@
 import logging
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, datetime
+from zoneinfo import ZoneInfo
+
+_TZ = ZoneInfo("Asia/Taipei")
 
 from config import REPORTS_DIR, FORCE_REBUILD
 from fetcher import twse_client, tpex_client
@@ -209,7 +212,7 @@ def build(target_date: date) -> None:
     )
 
     # ── Render & save ───────────────────────────────────────────────────────
-    generated_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    generated_at = datetime.now(_TZ).strftime("%Y-%m-%d %H:%M:%S")
     renderer.render_report(actual_date, sections, output_path, generated_at)
     today_builder.build(actual_date, raw, complete=True)
     renderer.copy_static()
