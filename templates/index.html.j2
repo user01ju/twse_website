@@ -4,6 +4,44 @@
 {% block content %}
 <h1 class="page-title">台股每日行情匯總</h1>
 
+<!-- 即時大盤 widget (從 today.json 動態載入) -->
+<div id="today-widget" style="display:none">
+  <div class="today-header">
+    <span id="tw-date"></span>
+    <span id="tw-badge" class="today-badge"></span>
+    <span id="tw-time" style="color:var(--text-muted);font-size:12px;margin-left:auto"></span>
+  </div>
+  <div class="today-grid">
+    <div class="today-card">
+      <div class="today-card-label">加權指數</div>
+      <div id="tw-close" class="today-card-value"></div>
+      <div id="tw-change" class="today-card-sub"></div>
+    </div>
+    <div class="today-card">
+      <div class="today-card-label">成交金額</div>
+      <div id="tw-amount" class="today-card-value"></div>
+    </div>
+    <div class="today-card breadth-card">
+      <div class="today-card-label">上市漲跌</div>
+      <div id="tw-breadth-twse" class="breadth-row"></div>
+    </div>
+    <div class="today-card breadth-card">
+      <div class="today-card-label">上櫃漲跌</div>
+      <div id="tw-breadth-tpex" class="breadth-row"></div>
+    </div>
+  </div>
+  <div class="today-movers">
+    <div class="movers-col">
+      <div class="movers-title up-color">漲幅前 5</div>
+      <div id="tw-gainers"></div>
+    </div>
+    <div class="movers-col">
+      <div class="movers-title down-color">跌幅前 5</div>
+      <div id="tw-losers"></div>
+    </div>
+  </div>
+</div>
+
 {% if reports %}
 {% set latest = reports[0] %}
 <div class="latest-banner">
@@ -41,4 +79,115 @@
 <div style="margin-top:32px;color:var(--text-muted);font-size:12px">
   資料來源：臺灣證券交易所 (TWSE) · 證券櫃檯買賣中心 (TPEX)
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<style>
+.today-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.today-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--accent-pos);
+  color: #fff;
+}
+.today-badge.partial { background: var(--text-muted); }
+.today-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.today-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.today-card-label { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+.today-card-value { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.today-card-sub   { font-size: 13px; margin-top: 4px; }
+.breadth-row      { display: flex; gap: 10px; flex-wrap: wrap; font-size: 13px; margin-top: 4px; }
+.breadth-item     { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.breadth-num      { font-weight: 700; font-size: 16px; }
+.breadth-lbl      { font-size: 10px; color: var(--text-muted); }
+.today-movers     { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px; }
+.movers-col       { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+.movers-title     { font-size: 12px; font-weight: 600; margin-bottom: 8px; }
+.mover-row        { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.mover-row:last-child { border-bottom: none; }
+.mover-name       { color: var(--text-muted); font-size: 11px; }
+.up-color   { color: var(--accent-pos); }
+.down-color { color: var(--accent-neg); }
+#today-widget { margin-bottom: 28px; }
+</style>
+<script>
+(function() {
+  function fmt(n, d) { return Number(n).toLocaleString('zh-TW', {minimumFractionDigits: d||0, maximumFractionDigits: d||2}); }
+  function pctStr(p) { return (p >= 0 ? '+' : '') + fmt(p, 2) + '%'; }
+  function colorClass(n) { return n > 0 ? 'up-color' : n < 0 ? 'down-color' : ''; }
+
+  fetch('./today.json?_=' + Date.now())
+    .then(r => r.ok ? r.json() : null)
+    .catch(() => null)
+    .then(d => {
+      if (!d || !d.taiex) return;
+
+      // header
+      document.getElementById('tw-date').textContent = d.date + ' 盤後快訊';
+      const badge = document.getElementById('tw-badge');
+      if (d.complete) { badge.textContent = '完整版'; badge.className = 'today-badge'; }
+      else            { badge.textContent = '更新中'; badge.className = 'today-badge partial'; }
+      document.getElementById('tw-time').textContent = '資料時間 ' + d.generated_at;
+
+      // taiex
+      const t = d.taiex;
+      const cc = colorClass(t.change_pts);
+      document.getElementById('tw-close').innerHTML =
+        '<span class="' + cc + '">' + fmt(t.close, 2) + '</span>';
+      document.getElementById('tw-change').innerHTML =
+        '<span class="' + cc + '">' + (t.change_pts >= 0 ? '▲' : '▼') +
+        ' ' + fmt(Math.abs(t.change_pts), 2) + ' (' + pctStr(t.change_pct) + ')</span>';
+      document.getElementById('tw-amount').innerHTML =
+        '<span>' + fmt(t.trading_amount_yi, 0) + ' 億</span>';
+
+      // breadth
+      function renderBreadth(id, b) {
+        if (!b || !b.total) return;
+        document.getElementById(id).innerHTML =
+          '<div class="breadth-item"><span class="breadth-num up-color">' + b.up + '</span><span class="breadth-lbl">上漲</span></div>' +
+          '<div class="breadth-item"><span class="breadth-num down-color">' + b.down + '</span><span class="breadth-lbl">下跌</span></div>' +
+          '<div class="breadth-item"><span class="breadth-num" style="color:var(--text-muted)">' + b.flat + '</span><span class="breadth-lbl">持平</span></div>' +
+          '<div class="breadth-item"><span class="breadth-num up-color">' + b.limit_up + '</span><span class="breadth-lbl">漲停</span></div>' +
+          '<div class="breadth-item"><span class="breadth-num down-color">' + b.limit_down + '</span><span class="breadth-lbl">跌停</span></div>';
+      }
+      renderBreadth('tw-breadth-twse', d.breadth && d.breadth.twse);
+      renderBreadth('tw-breadth-tpex', d.breadth && d.breadth.tpex);
+
+      // movers
+      function renderMovers(id, list, isUp) {
+        const el = document.getElementById(id);
+        if (!list || !list.length) return;
+        el.innerHTML = list.map(s =>
+          '<div class="mover-row">' +
+          '<span><span class="' + (isUp ? 'up-color' : 'down-color') + '">' + s.code + '</span> <span class="mover-name">' + s.name + '</span></span>' +
+          '<span class="' + (isUp ? 'up-color' : 'down-color') + '">' + pctStr(s.change_pct) + '</span>' +
+          '</div>'
+        ).join('');
+      }
+      renderMovers('tw-gainers', d.top_gainers, true);
+      renderMovers('tw-losers',  d.top_losers,  false);
+
+      document.getElementById('today-widget').style.display = 'block';
+    });
+})();
+</script>
 {% endblock %}

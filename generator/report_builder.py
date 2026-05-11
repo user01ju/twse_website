@@ -6,7 +6,7 @@ from config import REPORTS_DIR, FORCE_REBUILD
 from fetcher import twse_client, tpex_client
 from fetcher.market_calendar import roc_to_date
 from processor import index_stats, market_breadth, movers, institutional, foreign_trades, trust_trades, combined_inst, dealer_trades, ai_summary, sector_inst
-from generator import renderer, index_builder
+from generator import renderer, index_builder, today_builder
 
 logger = logging.getLogger(__name__)
 
@@ -90,11 +90,15 @@ def build(target_date: date) -> None:
 
     # ── Completeness gate ───────────────────────────────────────────────────
     # Institutional data (T86, BFI82U, TPEX 3insti) is typically available ~17:00.
-    # If any key source is missing, skip and let the workflow retry later.
+    # If any key source is missing, write today.json (partial) and skip full report.
     missing = [k for k in ("twse_t86", "twse_bfi82u", "tpex_3sum", "tpex_all") if not raw.get(k)]
     if missing:
-        logger.info(f"Institutional data not yet available ({', '.join(missing)}), skipping")
-        return False
+        logger.info(f"Institutional data not yet available ({', '.join(missing)}), writing partial today.json")
+        updated = today_builder.build(actual_date, raw, complete=False)
+        if updated:
+            renderer.copy_static()
+            index_builder.rebuild()
+        return "partial" if updated else False
 
     output_path = REPORTS_DIR / f"{actual_date.isoformat()}.html"
     if output_path.exists() and not FORCE_REBUILD:
@@ -179,6 +183,7 @@ def build(target_date: date) -> None:
     # ── Render & save ───────────────────────────────────────────────────────
     generated_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     renderer.render_report(actual_date, sections, output_path, generated_at)
+    today_builder.build(actual_date, raw, complete=True)
     renderer.copy_static()
     index_builder.rebuild()
 

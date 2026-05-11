@@ -1,8 +1,8 @@
 """One-shot runner: fetch today's data and generate the report.
 
 Exit codes:
-  0 — new report generated successfully
-  2 — skipped (report already exists, or no trading data yet)
+  0 — new report generated, OR partial today.json written (deploy needed)
+  2 — skipped (nothing new)
   1 — unexpected error
 """
 import logging
@@ -27,11 +27,14 @@ def main():
         print(f"ERROR: {e}", file=sys.stderr)
         sys.exit(1)
 
-    if generated:
+    if generated is True:
         print("Done. New report generated.")
         sys.exit(0)
+    elif generated == "partial":
+        print("Done. Partial today.json written (institutional data not yet available).")
+        sys.exit(0)
     else:
-        print("Done. Report already exists or no data — skipped.")
+        print("Done. Nothing new — skipped.")
         sys.exit(2)
 
 
