@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -35,4 +36,4 @@ FETCH_TIMEOUT    = 30
 FETCH_RETRIES    = 3
 FETCH_HOUR       = 15
 FETCH_MINUTE     = 5
-FORCE_REBUILD    = False
+FORCE_REBUILD    = os.environ.get("FORCE_REBUILD", "").lower() in ("1", "true", "yes")
