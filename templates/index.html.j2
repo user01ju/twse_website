@@ -33,16 +33,6 @@
       <div id="tw-breadth-tpex"></div>
     </div>
   </div>
-  <div class="today-movers">
-    <div class="movers-col">
-      <div class="movers-title pos">漲幅前 5</div>
-      <div id="tw-gainers"></div>
-    </div>
-    <div class="movers-col">
-      <div class="movers-title neg">跌幅前 5</div>
-      <div id="tw-losers"></div>
-    </div>
-  </div>
 </div>
 
 {% if reports %}
@@ -146,16 +136,6 @@
 .tw-bval   { font-weight: 700; min-width: 38px; text-align: right; font-variant-numeric: tabular-nums; }
 .tw-bpct   { color: var(--text-muted); font-size: 11px; margin-left: auto; }
 
-/* movers */
-.today-movers { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px; }
-.movers-col   { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
-.movers-title { font-size: 12px; font-weight: 600; margin-bottom: 8px; }
-.mover-row    { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
-.mover-row:last-child { border-bottom: none; }
-.mover-code   { font-weight: 600; font-variant-numeric: tabular-nums; }
-.mover-name   { color: var(--text-muted); font-size: 11px; margin-left: 4px; }
-.mover-pct    { font-weight: 700; font-variant-numeric: tabular-nums; }
-
 #today-widget { margin-bottom: 28px; }
 </style>
 <script>
@@ -216,21 +196,6 @@
       }
       renderBreadth('tw-bar-twse', 'tw-breadth-twse', 'lbl-twse', d.breadth && d.breadth.twse, '上市漲跌');
       renderBreadth('tw-bar-tpex', 'tw-breadth-tpex', 'lbl-tpex', d.breadth && d.breadth.tpex, '上櫃漲跌');
-
-      // movers
-      function renderMovers(id, list, isUp) {
-        const el = document.getElementById(id);
-        if (!list || !list.length) return;
-        el.innerHTML = list.map(s =>
-          '<div class="mover-row">' +
-          '<span><span class="mover-code ' + (isUp ? 'pos' : 'neg') + '">' + s.code + '</span>' +
-          '<span class="mover-name">' + s.name + '</span></span>' +
-          '<span class="mover-pct ' + (isUp ? 'pos' : 'neg') + '">' + pctStr(s.change_pct) + '</span>' +
-          '</div>'
-        ).join('');
-      }
-      renderMovers('tw-gainers', d.top_gainers, true);
-      renderMovers('tw-losers',  d.top_losers,  false);
 
       document.getElementById('today-widget').style.display = 'block';
     });
