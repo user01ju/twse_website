@@ -88,6 +88,14 @@ def build(target_date: date) -> None:
     else:
         logger.info(f"Actual data date from API: {actual_date.isoformat()}")
 
+    # ── Completeness gate ───────────────────────────────────────────────────
+    # Institutional data (T86, BFI82U, TPEX 3insti) is typically available ~17:00.
+    # If any key source is missing, skip and let the workflow retry later.
+    missing = [k for k in ("twse_t86", "twse_bfi82u", "tpex_3sum", "tpex_all") if not raw.get(k)]
+    if missing:
+        logger.info(f"Institutional data not yet available ({', '.join(missing)}), skipping")
+        return False
+
     output_path = REPORTS_DIR / f"{actual_date.isoformat()}.html"
     if output_path.exists() and not FORCE_REBUILD:
         logger.info(f"Report already exists: {output_path}, skipping (set FORCE_REBUILD=True to override)")
