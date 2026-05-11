@@ -761,3 +761,19 @@ table.inst-compact th:nth-child(n+3) { text-align: right; }
 .accent-teal   .section-accent { background: var(--bar-teal); }
 .accent-amber  .section-accent { background: var(--bar-amber); }
 .accent-rose   .section-accent { background: var(--bar-rose); }
+
+
+/* 漲跌幅分布圖 */
+.dist-chart-wrap {
+  margin-bottom: 24px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+}
+.dist-chart-title {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  font-weight: 500;
+}

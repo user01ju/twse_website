@@ -1,5 +1,21 @@
 """Section 2: 市場統計 (上漲/下跌/持平/漲停/跌停)."""
-from .utils import parse_num, price_status, is_warrant
+from .utils import parse_num, price_status, is_warrant, change_pct as _change_pct
+
+# 漲跌幅分布區間 (label, lo_inclusive, hi_exclusive); None = unbounded
+_DIST_BINS = [
+    ("<-10",   None, -10),
+    ("-10~-8",  -10,  -8),
+    ("-8~-6",    -8,  -6),
+    ("-6~-4",    -6,  -4),
+    ("-4~-2",    -4,  -2),
+    ("-2~0",     -2,   0),
+    ("0~2",       0,   2),
+    ("2~4",       2,   4),
+    ("4~6",       4,   6),
+    ("6~8",       6,   8),
+    ("8~10",      8,  10),
+    (">10",      10, None),
+]
 
 
 def _count(stocks: list[dict], close_field: str, change_field: str,
@@ -117,6 +133,46 @@ def _from_tpex_highlight(h: dict) -> dict:
     return counts
 
 
+def _distribution(twse_stocks: list[dict], tpex_stocks: list[dict]) -> dict:
+    """Combined TWSE+TPEX change_pct distribution across 12 bins."""
+    pcts = []
+    for s in twse_stocks:
+        try:
+            code = str(s.get("Code", "")).strip()
+            if is_warrant(code, ""):
+                continue
+            close  = parse_num(s.get("ClosingPrice", 0))
+            change = parse_num(str(s.get("Change", "0")).replace(",", ""))
+            if close > 0:
+                pcts.append(_change_pct(close, change))
+        except Exception:
+            pass
+    for s in tpex_stocks:
+        try:
+            code = str(s.get("SecuritiesCompanyCode", "")).strip()
+            name = str(s.get("CompanyName", "")).strip()
+            if is_warrant(code, name):
+                continue
+            close  = parse_num(s.get("Close", 0))
+            change = parse_num(str(s.get("Change", "0")))
+            if close > 0:
+                pcts.append(_change_pct(close, change))
+        except Exception:
+            pass
+
+    bins = {label: 0 for label, *_ in _DIST_BINS}
+    for p in pcts:
+        for label, lo, hi in _DIST_BINS:
+            if (lo is None or p >= lo) and (hi is None or p < hi):
+                bins[label] += 1
+                break
+
+    return {
+        "labels": [b[0] for b in _DIST_BINS],
+        "counts": [bins[b[0]] for b in _DIST_BINS],
+    }
+
+
 def build(twse_stocks: list[dict], tpex_stocks: list[dict], esb_stocks: list[dict],
           twt84u_limits: dict = None, tpex_highlight: dict = None) -> dict:
     # TPEX: use official highlight data when available, fall back to per-stock computation
@@ -131,4 +187,5 @@ def build(twse_stocks: list[dict], tpex_stocks: list[dict], esb_stocks: list[dic
                        code_field="Code", limit_prices=twt84u_limits),
         "tpex": tpex_counts,
         "esb":  _count_esb(esb_stocks),
+        "distribution": _distribution(twse_stocks, tpex_stocks),
     }

@@ -1,6 +1,18 @@
 {% set s = sections.breadth %}
 {% if s.ok %}
 {% set d = s.data %}
+
+{# 漲跌幅分布柱狀圖 #}
+{% if d.distribution %}
+{% set dist = d.distribution %}
+<div class="dist-chart-wrap">
+  <div class="dist-chart-title">漲跌幅分布（上市 + 上櫃合計）</div>
+  <canvas id="dist-chart" height="120"
+    data-labels="{{ dist.labels | tojson }}"
+    data-counts="{{ dist.counts | tojson }}">
+  </canvas>
+</div>
+{% endif %}
 <div class="breadth-grid">
   {% for market_key, market_label in [('twse','上市'), ('tpex','上櫃'), ('esb','興櫃')] %}
   {% set m = d[market_key] %}
