@@ -766,7 +766,7 @@ table.inst-compact th:nth-child(n+3) { text-align: right; }
 /* 漲跌幅分布圖 */
 .dist-chart-wrap {
   position: relative;
-  height: 200px;
+  height: 100px;
   margin-bottom: 24px;
   background: var(--bg);
   border: 1px solid var(--border);
