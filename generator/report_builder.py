@@ -88,17 +88,40 @@ def build(target_date: date) -> None:
     else:
         logger.info(f"Actual data date from API: {actual_date.isoformat()}")
 
-    # Cross-check TPEX data date against TWSE actual_date
-    tpex_date = tpex_client.get_tpex_data_date(raw.get("tpex_daily") or [])
-    if tpex_date and tpex_date != actual_date:
-        logger.warning(f"TPEX data date mismatch: TWSE={actual_date.isoformat()}, TPEX={tpex_date.isoformat()} — TPEX may not have updated yet")
-
     # ── Completeness gate ───────────────────────────────────────────────────
-    # Institutional data (T86, BFI82U, TPEX 3insti) is typically available ~17:00.
-    # If any key source is missing, write today.json (partial) and skip full report.
-    missing = [k for k in ("twse_t86", "twse_bfi82u", "tpex_3sum", "tpex_all") if not raw.get(k)]
-    if missing:
-        logger.info(f"Institutional data not yet available ({', '.join(missing)}), writing partial today.json")
+    # Institutional data must exist AND be dated to actual_date before full report.
+    def _inst_date_ok() -> tuple[bool, list[str]]:
+        stale = []
+        # TWSE T86 / BFI82U: top-level 'date' field in YYYYMMDD
+        for key in ("twse_t86", "twse_bfi82u"):
+            d = raw.get(key)
+            if not d:
+                stale.append(f"{key}=missing")
+                continue
+            raw_d = str(d.get("date", "")).strip()
+            try:
+                inst_date = date.fromisoformat(f"{raw_d[:4]}-{raw_d[4:6]}-{raw_d[6:8]}")
+            except Exception:
+                stale.append(f"{key}=bad_date({raw_d})")
+                continue
+            if inst_date != actual_date:
+                stale.append(f"{key}={inst_date.isoformat()}")
+        # TPEX 3sum / 3all: per-row 'Date' in ROC compact
+        for key in ("tpex_3sum", "tpex_all"):
+            rows = raw.get(key)
+            if not rows:
+                stale.append(f"{key}=missing")
+                continue
+            inst_date = tpex_client.get_tpex_data_date(rows)
+            if inst_date is None:
+                stale.append(f"{key}=no_date")
+            elif inst_date != actual_date:
+                stale.append(f"{key}={inst_date.isoformat()}")
+        return (len(stale) == 0, stale)
+
+    ok, stale = _inst_date_ok()
+    if not ok:
+        logger.info(f"Institutional data not ready for {actual_date.isoformat()}: {stale} — writing partial today.json")
         updated = today_builder.build(actual_date, raw, complete=False)
         if updated:
             renderer.copy_static()
