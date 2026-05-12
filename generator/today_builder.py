@@ -33,7 +33,7 @@ def build(actual_date: date, raw: dict, complete: bool) -> bool:
         taiex = index_stats.build(twse_index, twse_stocks)
     except Exception as e:
         logger.warning(f"today_builder: index_stats failed: {e}")
-        return False
+        taiex = {}   # allow writing a date-only placeholder when raw is empty
 
     # ── breadth ─────────────────────────────────────────────────────────────
     try:

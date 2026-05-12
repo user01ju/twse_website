@@ -162,7 +162,7 @@
     .then(r => r.ok ? r.json() : null)
     .catch(() => null)
     .then(d => {
-      if (!d || !d.taiex) return;
+      if (!d || !d.date) return;
 
       // header
       document.getElementById('tw-date').textContent = d.date + ' 盤後快訊';
@@ -180,6 +180,10 @@
 
       // taiex
       const t = d.taiex;
+      if (!t || !t.close) {
+        document.getElementById('today-widget').style.display = 'block';
+        return;
+      }
       const cc = posNeg(t.change_pts);
       document.getElementById('tw-close').innerHTML =
         '<span class="' + cc + '">' + fmt(t.close, 2) + '</span>';

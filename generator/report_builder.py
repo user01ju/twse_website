@@ -7,7 +7,7 @@ _TZ = ZoneInfo("Asia/Taipei")
 
 from config import REPORTS_DIR, FORCE_REBUILD
 from fetcher import twse_client, tpex_client
-from fetcher.market_calendar import roc_to_date
+from fetcher.market_calendar import roc_to_date, is_trading_day
 from processor import index_stats, market_breadth, movers, institutional, foreign_trades, trust_trades, combined_inst, dealer_trades, ai_summary, sector_inst, mover_sector
 from generator import renderer, index_builder, today_builder
 
@@ -90,6 +90,16 @@ def build(target_date: date) -> None:
         logger.warning("Could not detect data date from API; using requested date")
     else:
         logger.info(f"Actual data date from API: {actual_date.isoformat()}")
+
+    # ── Today-is-trading-day but data still yesterday? → show "更新中" for today ──
+    today_tw = datetime.now(_TZ).date()
+    if actual_date < today_tw and is_trading_day(today_tw):
+        logger.info(f"API still returning {actual_date.isoformat()} but today {today_tw.isoformat()} is a trading day — writing partial today.json")
+        updated = today_builder.build(today_tw, {}, complete=False)
+        if updated:
+            renderer.copy_static()
+            index_builder.rebuild()
+        return "partial" if updated else False
 
     # ── Completeness gate ───────────────────────────────────────────────────
     # Institutional data must exist AND be dated to actual_date before full report.
