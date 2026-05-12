@@ -8,7 +8,7 @@ _TZ = ZoneInfo("Asia/Taipei")
 from config import REPORTS_DIR, FORCE_REBUILD
 from fetcher import twse_client, tpex_client
 from fetcher.market_calendar import roc_to_date
-from processor import index_stats, market_breadth, movers, institutional, foreign_trades, trust_trades, combined_inst, dealer_trades, ai_summary, sector_inst
+from processor import index_stats, market_breadth, movers, institutional, foreign_trades, trust_trades, combined_inst, dealer_trades, ai_summary, sector_inst, mover_sector
 from generator import renderer, index_builder, today_builder
 
 logger = logging.getLogger(__name__)
@@ -165,6 +165,11 @@ def build(target_date: date) -> None:
         movers.build,
         raw.get("twse_stocks") or [],
         raw.get("tpex_daily") or [],
+    )
+    sections["mover_sector"] = _safe(
+        mover_sector.build,
+        sections["movers"]["data"]["gainers"] if sections["movers"]["ok"] else [],
+        sections["movers"]["data"]["losers"]  if sections["movers"]["ok"] else [],
     )
     sections["foreign"] = _safe(
         foreign_trades.build,

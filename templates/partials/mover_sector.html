@@ -1,0 +1,54 @@
+{% set s = sections.mover_sector %}
+{% if not s.ok %}
+<div class="error-box">資料錯誤：{{ s.error }}</div>
+{% else %}
+{% set d = s.data %}
+
+{% for list_key, list_label, accent_cls in [
+    ('gainers', '漲幅前100 子類股分析', 'pos'),
+    ('losers',  '跌幅前100 子類股分析', 'neg')
+] %}
+{% set groups = d[list_key] %}
+<h4 style="margin:0 0 12px;color:var(--{{ accent_cls }})">{{ list_label }}</h4>
+<div style="overflow-x:auto;margin-bottom:32px">
+<table class="sis-table">
+  <thead>
+    <tr>
+      <th class="sis-th-rank">#</th>
+      <th class="sis-th-sector">子類股</th>
+      <th class="sis-th-num">個股數</th>
+      <th class="sis-th-inst">平均漲跌幅</th>
+      <th class="sis-th-stocks">個股明細（代號 名稱 漲跌幅）</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in groups %}
+    <tr class="sis-row {% if loop.index % 2 == 0 %}si-alt{% endif %}">
+      <td class="si-rank">{{ loop.index }}</td>
+      <td class="si-sector">
+        <span class="si-sector-name">{{ r.sector }}</span>
+        {% if r.parent %}<span class="si-parent">{{ r.parent }}</span>{% endif %}
+      </td>
+      <td class="si-num">{{ r.count }}</td>
+      <td class="sis-yi {{ accent_cls }}" style="font-weight:600">
+        {{ "{:+.2f}".format(r.avg_pct) }}%
+      </td>
+      <td class="si-stocks">
+        {% for st in r.stocks %}
+        <span class="si-stock-tag">
+          <span class="si-code">{{ st.code }}</span>
+          <span class="si-sname">{{ st.name }}</span>
+          <span class="si-zhang {{ 'pos' if st.change_pct > 0 else ('neg' if st.change_pct < 0 else 'flat') }}">
+            {{ "{:+.2f}".format(st.change_pct) }}%
+          </span>
+        </span>
+        {% endfor %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endfor %}
+
+{% endif %}
