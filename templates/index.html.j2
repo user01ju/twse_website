@@ -13,12 +13,12 @@
   </div>
   <div class="today-grid">
     <div class="today-card">
-      <div class="today-card-label">加權指數</div>
+      <div class="today-card-label">加權指數 <span id="tw-taiex-date" class="card-date-tag"></span></div>
       <div id="tw-close" class="today-card-value"></div>
       <div id="tw-change" class="today-card-sub"></div>
     </div>
     <div class="today-card">
-      <div class="today-card-label">成交金額</div>
+      <div class="today-card-label">成交金額 <span id="tw-amount-date" class="card-date-tag"></span></div>
       <div id="tw-amount" class="today-card-value"></div>
       <div id="tw-txn" class="today-card-sub" style="color:var(--text-muted)"></div>
     </div>
@@ -93,6 +93,18 @@
   color: #fff;
 }
 .today-badge.partial { background: var(--text-muted); }
+.card-date-tag {
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  vertical-align: middle;
+  margin-left: 4px;
+  letter-spacing: 0;
+}
 .today-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -159,6 +171,13 @@
       else            { badge.textContent = '更新中'; badge.className = 'today-badge partial'; }
       document.getElementById('tw-time').textContent = '資料時間 ' + d.generated_at;
 
+      // date tags on cards
+      const dateTag = d.date;
+      ['tw-taiex-date', 'tw-amount-date'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = dateTag;
+      });
+
       // taiex
       const t = d.taiex;
       const cc = posNeg(t.change_pts);
@@ -173,7 +192,8 @@
       // breadth card
       function renderBreadth(barId, rowId, lblId, b, label) {
         if (!b || !b.total) return;
-        document.getElementById(lblId).textContent = label + '（共 ' + fmt(b.total) + ' 支）';
+        document.getElementById(lblId).innerHTML = label + '（共 ' + fmt(b.total) + ' 支）' +
+          ' <span class="card-date-tag">' + dateTag + '</span>';
         // color bar
         document.getElementById(barId).innerHTML =
           '<div class="tw-bar-up" style="flex:' + b.up + '"></div>' +
