@@ -38,8 +38,9 @@ def _group(stocks: list[dict], descending: bool = True) -> list[dict]:
             "stocks":   d["stocks"],
         })
 
-    # primary: count desc; secondary: avg_pct (direction-aware)
-    result.sort(key=lambda x: (x["count"], x["avg_pct"]), reverse=descending)
+    # primary: count desc; secondary: avg_pct (gainers → highest first, losers → most negative first)
+    sign = 1 if descending else -1
+    result.sort(key=lambda x: (x["count"], sign * x["avg_pct"]), reverse=True)
     return result
 
 
