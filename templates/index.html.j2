@@ -164,12 +164,25 @@
     .then(d => {
       if (!d || !d.date) return;
 
+      // Taiwan today (UTC+8)
+      const taiwanToday = new Date(Date.now() + 8 * 3600000).toISOString().slice(0, 10);
+      const isStale = d.date < taiwanToday;
+
       // header
-      document.getElementById('tw-date').textContent = d.date + ' 盤後快訊';
+      const displayDate = isStale ? taiwanToday : d.date;
+      document.getElementById('tw-date').textContent = displayDate + ' 盤後快訊';
       const badge = document.getElementById('tw-badge');
-      if (d.complete) { badge.textContent = '完整版'; badge.className = 'today-badge'; }
-      else            { badge.textContent = '更新中'; badge.className = 'today-badge partial'; }
-      document.getElementById('tw-time').textContent = '資料時間 ' + d.generated_at;
+      if (!isStale && d.complete) { badge.textContent = '完整版'; badge.className = 'today-badge'; }
+      else                        { badge.textContent = '更新中'; badge.className = 'today-badge partial'; }
+      document.getElementById('tw-time').textContent = isStale
+        ? '今日資料尚未更新，最後資料：' + d.date
+        : '資料時間 ' + d.generated_at;
+
+      // if stale: show widget header only, no market cards
+      if (isStale) {
+        document.getElementById('today-widget').style.display = 'block';
+        return;
+      }
 
       // date tags on cards
       const dateTag = d.date;
