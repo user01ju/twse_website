@@ -1,5 +1,5 @@
 import logging
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed, TimeoutError as FuturesTimeout
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
 
@@ -38,13 +38,20 @@ def _parallel_fetch(tasks: dict) -> dict:
     raw = {}
     with ThreadPoolExecutor(max_workers=5) as pool:
         future_map = {pool.submit(fn, *args): key for key, (fn, args) in tasks.items()}
-        for future in as_completed(future_map, timeout=60):
-            key = future_map[future]
-            try:
-                raw[key] = future.result(timeout=30)
-            except Exception as e:
-                logger.error(f"Fetch {key} failed: {e}")
-                raw[key] = None
+        try:
+            for future in as_completed(future_map, timeout=90):
+                key = future_map[future]
+                try:
+                    raw[key] = future.result(timeout=30)
+                except Exception as e:
+                    logger.error(f"Fetch {key} failed: {e}")
+                    raw[key] = None
+        except FuturesTimeout:
+            # Some API calls didn't finish — mark them as None and continue
+            for future, key in future_map.items():
+                if key not in raw:
+                    logger.error(f"Fetch {key} timed out (global 90s limit)")
+                    raw[key] = None
     return raw
 
 
