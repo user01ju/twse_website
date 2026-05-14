@@ -172,3 +172,47 @@ def fetch_t86() -> dict:
     if data.get("stat") not in ("OK", "ok"):
         raise FetchError(f"twse_t86 stat={data.get('stat')}: {data.get('msg', '')}")
     return data
+
+
+def fetch_fmtqik(date_str: str = None) -> dict:
+    """
+    FMTQIK — 大盤成交統計 (官方每日總計)。
+    date_str: YYYYMMDD of any day in the target month.
+    Returns dict with keys: date, trade_volume, trade_value, transaction, close, change_pts.
+    成交金額/筆數 values are the OFFICIAL market-wide totals (all security types).
+    """
+    params = {"response": "json"}
+    if date_str:
+        params["date"] = date_str
+    data = _get("https://www.twse.com.tw/rwd/zh/afterTrading/FMTQIK", params=params)
+    if not isinstance(data, dict) or data.get("stat") not in ("OK", "ok"):
+        raise FetchError(f"FMTQIK stat={data.get('stat') if isinstance(data, dict) else '?'}")
+
+    rows = data.get("data", [])
+    if not rows:
+        raise FetchError("FMTQIK: no data rows")
+
+    # Target date in ROC slash format e.g. "115/05/13"
+    if date_str and len(date_str) == 8:
+        roc_year = int(date_str[:4]) - 1911
+        target_roc = f"{roc_year}/{date_str[4:6]}/{date_str[6:8]}"
+        row = next((r for r in rows if r[0] == target_roc), None)
+        if row is None:
+            raise FetchError(f"FMTQIK: date {target_roc} not found in response")
+    else:
+        row = rows[-1]  # latest available
+
+    def pn(s):
+        try:
+            return float(str(s).replace(",", ""))
+        except (ValueError, TypeError):
+            return 0.0
+
+    return {
+        "date":          row[0],
+        "trade_volume":  pn(row[1]),
+        "trade_value":   pn(row[2]),
+        "transaction":   int(pn(row[3])),
+        "close":         pn(row[4]),
+        "change_pts":    pn(row[5]),
+    }

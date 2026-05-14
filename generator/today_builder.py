@@ -27,10 +27,11 @@ def build(actual_date: date, raw: dict, complete: bool) -> bool:
     esb_stocks   = raw.get("tpex_esb")    or []
     twt84u       = raw.get("twse_twt84u") or {}
     tpex_hl      = raw.get("tpex_highlight") or {}
+    fmtqik       = raw.get("fmtqik")
 
     # ── taiex ───────────────────────────────────────────────────────────────
     try:
-        taiex = index_stats.build(twse_index, twse_stocks)
+        taiex = index_stats.build(twse_index, twse_stocks, fmtqik)
     except Exception as e:
         logger.warning(f"today_builder: index_stats failed: {e}")
         taiex = {}   # allow writing a date-only placeholder when raw is empty

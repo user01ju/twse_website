@@ -88,6 +88,7 @@ def build(target_date: date) -> None:
         "tpex_trust":  (tpex_client.fetch_3insti_trust,  [target_date]),
         "tpex_all":    (tpex_client.fetch_3insti_all,    [target_date]),
         "tpex_esb":    (tpex_client.fetch_esb_quotes,    [target_date]),
+        "fmtqik":      (twse_client.fetch_fmtqik,        [today_str]),
     })
 
     # Determine actual data date from STOCK_DAY_ALL / MI_5MINS_HIST response
@@ -164,6 +165,7 @@ def build(target_date: date) -> None:
         index_stats.build,
         raw.get("twse_index") or [],
         raw.get("twse_stocks") or [],
+        raw.get("fmtqik"),
     )
     sections["breadth"] = _safe(
         market_breadth.build,
