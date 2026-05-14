@@ -72,8 +72,21 @@ def build(actual_date: date, raw: dict, complete: bool) -> bool:
     new_text = json.dumps(payload, ensure_ascii=False, indent=2)
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    if TODAY_JSON.exists() and TODAY_JSON.read_text(encoding="utf-8") == new_text:
-        return False
+
+    # Never downgrade: if existing today.json is already complete for this date, keep it.
+    if TODAY_JSON.exists():
+        existing_text = TODAY_JSON.read_text(encoding="utf-8")
+        if existing_text == new_text:
+            return False
+        try:
+            existing = json.loads(existing_text)
+            if (not complete
+                    and existing.get("date") == actual_date.isoformat()
+                    and existing.get("complete")):
+                logger.info("today.json already complete for today — not downgrading to partial")
+                return False
+        except Exception:
+            pass
 
     TODAY_JSON.write_text(new_text, encoding="utf-8")
     logger.info(f"today.json written (complete={complete})")
