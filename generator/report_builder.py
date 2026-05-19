@@ -99,6 +99,17 @@ def build(target_date: date) -> None:
     else:
         logger.info(f"Actual data date from API: {actual_date.isoformat()}")
 
+    # If API returned a different date than requested, re-fetch TWT84U for the actual date.
+    # (target_date may be today while stocks are still yesterday's data.)
+    actual_date_str = actual_date.strftime("%Y%m%d")
+    if actual_date_str != today_str:
+        logger.info(f"Re-fetching TWT84U for actual date {actual_date_str}")
+        try:
+            raw["twse_twt84u"] = twse_client.fetch_twt84u(actual_date_str)
+        except Exception as e:
+            logger.warning(f"Re-fetch TWT84U failed: {e}")
+            raw["twse_twt84u"] = {}
+
     # ── Today-is-trading-day but data still yesterday? → show "更新中" for today ──
     today_tw = datetime.now(_TZ).date()
     if actual_date < today_tw and is_trading_day(today_tw) and not FORCE_REBUILD:
