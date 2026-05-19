@@ -51,12 +51,10 @@ def _count(stocks: list[dict], close_field: str, change_field: str,
                     status = "limit_up"
                 elif abs(close - ld) < 0.005:
                     status = "limit_down"
-                elif change > 0:
-                    status = "up"
-                elif change < 0:
-                    status = "down"
                 else:
-                    status = "flat"
+                    # TWT84U may contain next-day reference prices after market close;
+                    # exact match failed → fall back to ±10% heuristic.
+                    status = price_status(close, change)
             else:
                 status = price_status(close, change)
 
