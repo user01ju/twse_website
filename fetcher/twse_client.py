@@ -138,6 +138,12 @@ def fetch_twt84u(date_str: str = None) -> dict[str, tuple[float, float]]:
     if not isinstance(data, dict) or data.get("stat") not in ("OK", "ok"):
         raise FetchError(f"TWT84U stat={data.get('stat') if isinstance(data, dict) else '?'}")
 
+    # Validate response date — after market close TWSE may flip to next-day reference prices.
+    resp_date = str(data.get("date", "")).strip()
+    if date_str and resp_date and resp_date != date_str:
+        logger.warning(f"TWT84U date mismatch: requested {date_str}, got {resp_date} — skipping limit prices")
+        return {}
+
     def pf(s):
         try:
             return float(str(s).replace(",", ""))
