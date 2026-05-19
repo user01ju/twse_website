@@ -101,7 +101,7 @@ def build(target_date: date) -> None:
 
     # ── Today-is-trading-day but data still yesterday? → show "更新中" for today ──
     today_tw = datetime.now(_TZ).date()
-    if actual_date < today_tw and is_trading_day(today_tw):
+    if actual_date < today_tw and is_trading_day(today_tw) and not FORCE_REBUILD:
         logger.info(f"API still returning {actual_date.isoformat()} but today {today_tw.isoformat()} is a trading day — writing partial today.json")
         updated = today_builder.build(today_tw, {}, complete=False)
         if updated:
