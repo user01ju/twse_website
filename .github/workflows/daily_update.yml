@@ -3,7 +3,13 @@ name: 每日股市行情更新
 on:
   schedule:
     # 台灣時間 15:00 開始，每 30 分鐘重試一次，直到 00:00（UTC 07:00–16:00）
+    # 注意：GitHub Actions schedule 在公開 repo 常有大幅延遲，請搭配外部 cron 觸發
     - cron: '0,30 7-16 * * 1-5'
+  repository_dispatch:
+    # 外部 cron (cron-job.org) 透過 GitHub API 觸發，可帶 force_rebuild
+    # POST https://api.github.com/repos/user01ju/twse_website/dispatches
+    # {"event_type":"daily_update","client_payload":{"force_rebuild":"false"}}
+    types: [daily_update]
   workflow_dispatch:
     inputs:
       force_rebuild:
@@ -60,7 +66,7 @@ jobs:
         id: generate
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          FORCE_REBUILD: ${{ github.event.inputs.force_rebuild == 'true' && 'true' || 'false' }}
+          FORCE_REBUILD: ${{ (github.event.inputs.force_rebuild == 'true' || github.event.client_payload.force_rebuild == 'true') && 'true' || 'false' }}
         run: |
           set +e
           python update.py
