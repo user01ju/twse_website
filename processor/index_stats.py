@@ -25,6 +25,16 @@ def build(taiex_index: list[dict], stock_day_all: list[dict], fmtqik: dict = Non
         change_pts = -abs(change_pts)
         change_pct = -abs(change_pct)
 
+    # FMTQIK has authoritative close & change_pts (already signed).
+    # Use it when MI_5MINS_HIST only returns 1 row (change_pts=0) or as a cross-check.
+    if fmtqik and fmtqik.get("close") and change_pts == 0:
+        fmtqik_close = fmtqik["close"]
+        fmtqik_chg   = fmtqik["change_pts"]          # signed value from FMTQIK
+        close      = fmtqik_close
+        change_pts = fmtqik_chg
+        prev_close = fmtqik_close - fmtqik_chg
+        change_pct = round((fmtqik_chg / prev_close) * 100, 2) if prev_close else 0.0
+
     if fmtqik and fmtqik.get("trade_value"):
         trading_amount_yi = nt_to_yi(fmtqik["trade_value"])
         transaction_count = int(fmtqik.get("transaction", 0))
