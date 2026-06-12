@@ -100,6 +100,23 @@ def build(target_date: date) -> None:
     else:
         logger.info(f"Actual data date from API: {actual_date.isoformat()}")
 
+    today_tw = datetime.now(_TZ).date()
+
+    # ── Garbage-date guard ──────────────────────────────────────────────────
+    # TWSE legacy APIs occasionally return junk dates (e.g. 2017-12-18). A date
+    # far from the requested one means the whole payload is unreliable — don't
+    # build a report from it, and don't pass it to other endpoints (TWT84U
+    # rejects pre-2005 dates with "查詢日期小於94年12月19日").
+    if abs((actual_date - target_date).days) > 7:
+        logger.error(f"Implausible data date {actual_date.isoformat()} (requested {target_date.isoformat()}) — treating fetch as failed")
+        if is_trading_day(today_tw):
+            updated = today_builder.build(today_tw, {}, complete=False)
+            if updated:
+                renderer.copy_static()
+                index_builder.rebuild()
+            return "partial" if updated else False
+        return False
+
     # If API returned a different date than requested, re-fetch TWT84U for the actual date.
     # (target_date may be today while stocks are still yesterday's data.)
     actual_date_str = actual_date.strftime("%Y%m%d")
@@ -112,7 +129,6 @@ def build(target_date: date) -> None:
             raw["twse_twt84u"] = {}
 
     # ── Today-is-trading-day but data still yesterday? → show "更新中" for today ──
-    today_tw = datetime.now(_TZ).date()
     if actual_date < today_tw and is_trading_day(today_tw) and not FORCE_REBUILD:
         logger.info(f"API still returning {actual_date.isoformat()} but today {today_tw.isoformat()} is a trading day — writing partial today.json")
         updated = today_builder.build(today_tw, {}, complete=False)
