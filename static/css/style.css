@@ -779,3 +779,57 @@ table.inst-compact th:nth-child(n+3) { text-align: right; }
   margin-bottom: 8px;
   font-weight: 500;
 }
+
+/* ── Market trend (above-MA / new high-low) ──────────── */
+.trend-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 4px 0 8px;
+}
+@media (max-width: 640px) {
+  .trend-grid { grid-template-columns: 1fr; }
+}
+.trend-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px 18px;
+}
+.trend-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-bottom: 8px;
+  letter-spacing: 0.03em;
+}
+.trend-value {
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.trend-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+.trend-bar-wrap {
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.trend-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+.trend-bar-fill.pos-bg { background: var(--pos); }
+.trend-bar-fill.neg-bg { background: var(--neg); }
+.trend-bar-fill.flat-bg { background: var(--flat); }
+.trend-note {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 6px;
+}

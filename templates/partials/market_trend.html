@@ -1,0 +1,43 @@
+{% set s = sections.market_trend %}
+{% if s and s.ok %}
+{% set d = s.data %}
+{% set ma = d.above_ma20 %}
+{% set nh = d.new_high_low %}
+{% set pct = ma.pct %}
+{% set net = nh.net %}
+
+<div class="trend-grid">
+
+  {# ── Above 20MA ── #}
+  <div class="trend-card">
+    <div class="trend-label">收盤 &gt; 20MA 比例</div>
+    <div class="trend-value {{ 'pos' if pct >= 60 else ('neg' if pct <= 40 else 'flat') }}">
+      {{ pct }}%
+    </div>
+    <div class="trend-sub">{{ "{:,}".format(ma.count) }} / {{ "{:,}".format(ma.total) }} 支</div>
+    <div class="trend-bar-wrap">
+      <div class="trend-bar-fill {{ 'pos-bg' if pct >= 60 else ('neg-bg' if pct <= 40 else 'flat-bg') }}"
+           style="width:{{ [pct, 100] | min }}%"></div>
+    </div>
+  </div>
+
+  {# ── 52-week new high / low ── #}
+  <div class="trend-card">
+    <div class="trend-label">創52週新高 − 創52週新低</div>
+    <div class="trend-value {{ 'pos' if net > 0 else ('neg' if net < 0 else 'flat') }}">
+      {{ '+' if net > 0 else '' }}{{ net }}
+    </div>
+    <div class="trend-sub">
+      <span class="pos">▲ 新高 {{ "{:,}".format(nh.new_high) }}</span>
+      &nbsp;
+      <span class="neg">▼ 新低 {{ "{:,}".format(nh.new_low) }}</span>
+    </div>
+    {% if d.history_days < 252 %}
+    <div class="trend-note">資料僅 {{ d.history_days }} 個交易日（累積中）</div>
+    {% endif %}
+  </div>
+
+</div>
+{% else %}
+<p class="no-data">市場趨勢資料暫不可用</p>
+{% endif %}

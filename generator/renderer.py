@@ -41,8 +41,9 @@ def _ai_summary_html(text: str) -> Markup:
 
         def flush_bullets():
             if bullet_buf:
+                _strip_bullet = re.compile(r"^\s*[•\-\*]\s*")
                 items = "".join(
-                    f"<li>{escape(re.sub(r'^\s*[•\-\*]\s*', '', l))}</li>"
+                    f"<li>{escape(_strip_bullet.sub('', l))}</li>"
                     for l in bullet_buf
                 )
                 inner.append(f"<ul>{items}</ul>")

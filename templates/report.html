@@ -25,6 +25,25 @@
   </div>
 </div>
 
+{# Section 2b: 市場趨勢 #}
+<div class="section accent-amber">
+  <div class="section-header">
+    <span class="section-accent"></span>
+    <span class="section-title">市場趨勢（20MA 比例 / 52週新高低）</span>
+    {% if sections.market_trend and sections.market_trend.ok %}
+    {% set mt = sections.market_trend.data %}
+    {% set net = mt.new_high_low.net %}
+    <span class="section-subtitle {{ 'pos' if net > 0 else ('neg' if net < 0 else 'flat') }}">
+      淨新高 {{ '+' if net > 0 else '' }}{{ net }}　MA20 {{ mt.above_ma20.pct }}%
+    </span>
+    {% endif %}
+    <span class="section-toggle-icon">▼</span>
+  </div>
+  <div class="section-body">
+    {% include "partials/market_trend.html" %}
+  </div>
+</div>
+
 {# Sections 3+4: 三大法人彙總 #}
 <div class="section accent-blue">
   <div class="section-header">

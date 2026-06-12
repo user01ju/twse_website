@@ -8,7 +8,8 @@ _TZ = ZoneInfo("Asia/Taipei")
 from config import REPORTS_DIR, FORCE_REBUILD
 from fetcher import twse_client, tpex_client
 from fetcher.market_calendar import roc_to_date, is_trading_day
-from processor import index_stats, market_breadth, movers, institutional, foreign_trades, trust_trades, combined_inst, dealer_trades, ai_summary, sector_inst, mover_sector
+from processor import index_stats, market_breadth, movers, institutional, foreign_trades, trust_trades, combined_inst, dealer_trades, ai_summary, sector_inst, mover_sector, market_trend
+from fetcher import price_cache
 from generator import renderer, index_builder, today_builder
 
 logger = logging.getLogger(__name__)
@@ -245,6 +246,14 @@ def build(target_date: date) -> None:
         sections,
         actual_date.isoformat(),
     )
+
+    # ── Price cache: save today → compute trend metrics ─────────────────────
+    try:
+        price_cache.save(actual_date, raw.get("twse_stocks") or [], raw.get("tpex_daily") or [])
+    except Exception as e:
+        logger.warning(f"price_cache.save failed: {e}")
+
+    sections["market_trend"] = _safe(market_trend.build, actual_date)
 
     # ── Render & save ───────────────────────────────────────────────────────
     generated_at = datetime.now(_TZ).strftime("%Y-%m-%d %H:%M:%S")
