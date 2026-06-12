@@ -91,8 +91,13 @@ def build(today: date) -> dict:
                 total += 1
                 if px.get("c", 0) > sum(dq) / len(dq):
                     above += 1
-            pct = round(above / total * 100, 1) if total else 0.0
+            if total == 0:
+                continue  # not enough history yet — a 0.0% point would mislead
+            pct = round(above / total * 100, 1)
             daily.append((d, pct, above, total, new_high, new_low))
+
+    if not daily:
+        return _empty(history_days)
 
     last_d, last_pct, last_above, last_total, last_nh, last_nl = daily[-1]
 

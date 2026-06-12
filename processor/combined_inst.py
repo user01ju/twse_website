@@ -21,8 +21,10 @@ def _from_twse_t86(t86_data: dict, twse_prices: dict) -> list[dict]:
             net_zhang   = shares_to_zhang(net_shares)
             close_price = twse_prices.get(code, 0)
 
-            # Approximate buy/sell from sub-components
-            foreign_net = shares_to_zhang(parse_num(row[4]))  if len(row) > 4  else 0
+            # Sub-components. Foreign = 外陸資(4) + 外資自營商(7) so that
+            # foreign + trust + dealer == row[18] (三大法人合計) exactly.
+            foreign_shares = parse_num(row[4]) + (parse_num(row[7]) if len(row) > 7 else 0)
+            foreign_net = shares_to_zhang(foreign_shares)
             trust_net   = shares_to_zhang(parse_num(row[10])) if len(row) > 10 else 0
             dealer_net  = shares_to_zhang(parse_num(row[11])) if len(row) > 11 else 0
 

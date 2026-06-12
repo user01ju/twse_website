@@ -117,16 +117,22 @@ def build(target_date: date) -> None:
             return "partial" if updated else False
         return False
 
-    # If API returned a different date than requested, re-fetch TWT84U for the actual date.
-    # (target_date may be today while stocks are still yesterday's data.)
+    # If API returned a different date than requested, re-fetch date-sensitive
+    # endpoints for the actual date. (target_date may be today while stocks are
+    # still yesterday's data, e.g. when force-rebuilding yesterday's report.)
     actual_date_str = actual_date.strftime("%Y%m%d")
     if actual_date_str != today_str:
-        logger.info(f"Re-fetching TWT84U for actual date {actual_date_str}")
+        logger.info(f"Re-fetching TWT84U/FMTQIK for actual date {actual_date_str}")
         try:
             raw["twse_twt84u"] = twse_client.fetch_twt84u(actual_date_str)
         except Exception as e:
             logger.warning(f"Re-fetch TWT84U failed: {e}")
             raw["twse_twt84u"] = {}
+        try:
+            raw["fmtqik"] = twse_client.fetch_fmtqik(actual_date_str)
+        except Exception as e:
+            logger.warning(f"Re-fetch FMTQIK failed: {e}")
+            raw["fmtqik"] = None
 
     # ── Today-is-trading-day but data still yesterday? → show "更新中" for today ──
     if actual_date < today_tw and is_trading_day(today_tw) and not FORCE_REBUILD:
@@ -166,6 +172,9 @@ def build(target_date: date) -> None:
                 stale.append(f"{key}=no_date")
             elif inst_date != actual_date:
                 stale.append(f"{key}={inst_date.isoformat()}")
+        # TPEX daily quotes: _filter_date already enforces the date — empty means stale/missing
+        if not raw.get("tpex_daily"):
+            stale.append("tpex_daily=missing")
         return (len(stale) == 0, stale)
 
     ok, stale = _inst_date_ok()
@@ -257,12 +266,6 @@ def build(target_date: date) -> None:
         sector_inst.build_summary,
         sections["combined"].get("data", {}) if sections["combined"]["ok"] else {},
     )
-    sections["ai_summary"] = _safe(
-        ai_summary.build,
-        sections,
-        actual_date.isoformat(),
-    )
-
     # ── Price cache: save today → compute trend metrics ─────────────────────
     try:
         price_cache.save(actual_date, raw.get("twse_stocks") or [], raw.get("tpex_daily") or [])
@@ -270,6 +273,13 @@ def build(target_date: date) -> None:
         logger.warning(f"price_cache.save failed: {e}")
 
     sections["market_trend"] = _safe(market_trend.build, actual_date)
+
+    # AI summary last so its prompt can draw on every other section
+    sections["ai_summary"] = _safe(
+        ai_summary.build,
+        sections,
+        actual_date.isoformat(),
+    )
 
     # ── Render & save ───────────────────────────────────────────────────────
     generated_at = datetime.now(_TZ).strftime("%Y-%m-%d %H:%M:%S")

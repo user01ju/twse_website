@@ -69,7 +69,7 @@ def _ai_summary_html(text: str) -> Markup:
 def _make_env() -> Environment:
     env = Environment(
         loader=FileSystemLoader(str(TEMPLATES_DIR)),
-        autoescape=select_autoescape(["html"]),
+        autoescape=select_autoescape(["html", "j2"]),
     )
     env.globals["enumerate"] = enumerate
     env.filters["ai_summary_html"] = _ai_summary_html

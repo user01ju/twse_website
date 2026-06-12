@@ -37,6 +37,17 @@ def _build_prompt(sections: dict, date_str: str) -> str:
                     f"漲停 {m.get('limit_up', 0)} / 跌停 {m.get('limit_down', 0)}（共 {m.get('total', 0)} 支）"
                 )
 
+    # Market trend (20MA breadth / 52w new high-low)
+    if sections.get("market_trend", {}).get("ok"):
+        mt = sections["market_trend"]["data"]
+        ma = mt.get("above_ma20", {})
+        nh = mt.get("new_high_low", {})
+        if ma.get("total"):
+            lines.append(
+                f"【市場趨勢】收盤站上20日均線比例 {ma.get('pct', 0)}%（{ma.get('count', 0)}/{ma.get('total', 0)} 支），"
+                f"創52週新高 {nh.get('new_high', 0)} 支 / 新低 {nh.get('new_low', 0)} 支（淨 {nh.get('net', 0):+d}）"
+            )
+
     # Institutional aggregate
     if sections.get("institutional", {}).get("ok"):
         inst = sections["institutional"]["data"]

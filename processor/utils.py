@@ -1,12 +1,16 @@
 import re as _re
 
 
+_WARRANT_RE = _re.compile(r"[購售]\d")
+
+
 def is_warrant(code: str, name: str = "") -> bool:
     """Return True if this security is a warrant (認購/認售權證).
-    Warrants are identified by '購' or '售' in the name (e.g. 信驊凱基59售02).
-    Regular company names and ETFs never contain these characters.
+    Warrant names have '購' or '售' followed by a serial digit
+    (e.g. 信驊凱基59售02, 台積電群益9A購01). A bare 購/售 without a
+    trailing digit is a real company name (e.g. 2945 三商家購).
     """
-    return "購" in name or "售" in name
+    return bool(_WARRANT_RE.search(name))
 
 
 def is_stock_code(code: str) -> bool:

@@ -50,8 +50,10 @@ def _filter_date(records: list[dict], target: date, date_field: str = "Date") ->
 
     filtered = [r for r in records if r.get(date_field, "") in (roc_slash, roc_compact, iso)]
     if not filtered:
-        logger.debug(f"No TPEX records for {roc_slash} in '{date_field}'; returning all {len(records)} records")
-        return records
+        sample = records[0].get(date_field, "?") if records else "—"
+        logger.warning(f"No TPEX records dated {roc_slash} (got e.g. {sample}) — returning empty "
+                       f"instead of {len(records)} stale records")
+        return []
     return filtered
 
 

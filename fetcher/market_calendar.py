@@ -1,7 +1,8 @@
 import json
 import logging
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import requests
 
@@ -71,10 +72,11 @@ def is_trading_day(d: date) -> bool:
 
 
 def get_latest_trading_day() -> date:
-    """Return most recent trading day (today if after 15:05, else yesterday or earlier)."""
-    d = date.today()
+    """Return most recent trading day, anchored to Taiwan time (CI runs in UTC)."""
+    today_tw = datetime.now(ZoneInfo("Asia/Taipei")).date()
+    d = today_tw
     for _ in range(10):
         if is_trading_day(d):
             return d
         d -= timedelta(days=1)
-    return date.today()
+    return today_tw
