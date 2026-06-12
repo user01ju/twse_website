@@ -1,8 +1,10 @@
 """市場趨勢指標:
 1. 收盤價 > 20MA 的股票比例
 2. 創52週新高 - 創52週新低 淨值
+含近 30 個交易日的歷史序列（趨勢圖用）。
 """
 import logging
+from collections import deque
 from datetime import date
 
 from fetcher.price_cache import load_window
@@ -10,7 +12,8 @@ from fetcher.price_cache import load_window
 logger = logging.getLogger(__name__)
 
 _MA_DAYS = 20
-_WEEK52_DAYS = 252  # approx trading days in 52 weeks; we load up to 2x calendar days
+_WEEK52_DAYS = 252  # approx trading days in 52 weeks
+_CHART_DAYS = 30    # trend chart length
 
 
 def build(today: date) -> dict:
@@ -19,88 +22,98 @@ def build(today: date) -> dict:
     {
         "above_ma20": {"count": int, "total": int, "pct": float},
         "new_high_low": {"new_high": int, "new_low": int, "net": int},
-        "history_days": int,  # actual number of cached days used
+        "history_days": int,
+        "ma_days_used": int,
+        "history": {"dates": [...], "ma20_pct": [...], "net": [...]},
     }
     """
-    # Load 252-day window (enough for both MA20 and 52-week)
-    window = load_window(today, _WEEK52_DAYS)
+    # Extra lookback so the earliest chart point still has MA/52w context
+    window = load_window(today, _WEEK52_DAYS + _CHART_DAYS)
     history_days = len(window)
 
     if history_days == 0:
         logger.warning("market_trend: no price cache available")
         return _empty(0)
-
-    # Build per-code close/high/low arrays (oldest → newest)
-    # We only track codes present in today's snapshot
-    today_data = window[-1][1] if window else {}
-    if not today_data:
+    if not window[-1][1]:
         return _empty(history_days)
 
-    # --- 20MA ---
-    ma20_window = window[-_MA_DAYS:] if history_days >= _MA_DAYS else window
-    # {code: [close, close, ...]} for codes in today
-    closes_by_code: dict[str, list[float]] = {code: [] for code in today_data}
-    for _, snap in ma20_window:
-        for code in today_data:
-            if code in snap:
-                closes_by_code[code].append(snap[code]["c"])
+    chart_start = max(0, history_days - _CHART_DAYS)
 
-    above_ma20 = 0
-    total_ma20 = 0
-    for code, closes in closes_by_code.items():
-        if len(closes) < 2:
-            continue  # not enough data to compute MA
-        today_close = today_data[code]["c"]
-        ma20 = sum(closes) / len(closes)
-        total_ma20 += 1
-        if today_close > ma20:
-            above_ma20 += 1
+    # Single pass oldest → newest, maintaining running state per code:
+    #   closes: deque of last 20 closes (incl. current day when computing MA)
+    #   run_high / run_low: 52w running extremes (excl. current day at compare time)
+    closes: dict[str, deque] = {}
+    run_high: dict[str, float] = {}
+    run_low: dict[str, float] = {}
 
-    pct = round(above_ma20 / total_ma20 * 100, 1) if total_ma20 else 0.0
+    daily = []  # (date, ma20_pct, ma20_above, ma20_total, new_high, new_low)
 
-    # --- 52-week high / low ---
-    # High = max(high) over window; Low = min(low) over window (excluding today for comparison)
-    week52_window = window[:-1] if len(window) > 1 else []
+    for i, (d, snap) in enumerate(window):
+        in_chart = i >= chart_start
+        is_last = i == history_days - 1
 
-    highs_by_code: dict[str, float] = {}
-    lows_by_code: dict[str, float] = {}
-    for _, snap in week52_window:
+        new_high = new_low = 0
+        if in_chart or is_last:
+            # compare today's extremes vs running 52w extremes (excluding today)
+            for code, px in snap.items():
+                c = px.get("c", 0)
+                h = px.get("h", 0) or c
+                lo = px.get("l", 0) or c
+                ph = run_high.get(code)
+                pl = run_low.get(code)
+                if ph and h > ph:
+                    new_high += 1
+                if pl and lo < pl:
+                    new_low += 1
+
+        # update running state with current day
         for code, px in snap.items():
-            h = px.get("h", 0) or px.get("c", 0)
-            lo = px.get("l", 0) or px.get("c", 0)
-            if h > 0:
-                if code not in highs_by_code or h > highs_by_code[code]:
-                    highs_by_code[code] = h
-            if lo > 0:
-                if code not in lows_by_code or lo < lows_by_code[code]:
-                    lows_by_code[code] = lo
+            c = px.get("c", 0)
+            if c <= 0:
+                continue
+            h = px.get("h", 0) or c
+            lo = px.get("l", 0) or c
+            dq = closes.get(code)
+            if dq is None:
+                dq = closes[code] = deque(maxlen=_MA_DAYS)
+            dq.append(c)
+            if h > 0 and (code not in run_high or h > run_high[code]):
+                run_high[code] = h
+            if lo > 0 and (code not in run_low or lo < run_low[code]):
+                run_low[code] = lo
 
-    new_high = 0
-    new_low = 0
-    for code, px in today_data.items():
-        c = px["c"]
-        h_today = px.get("h", c) or c
-        lo_today = px.get("l", c) or c
-        prev_high = highs_by_code.get(code)
-        prev_low = lows_by_code.get(code)
-        if prev_high and h_today > prev_high:
-            new_high += 1
-        if prev_low and lo_today < prev_low:
-            new_low += 1
+        if in_chart or is_last:
+            above = total = 0
+            for code, px in snap.items():
+                dq = closes.get(code)
+                if not dq or len(dq) < 2:
+                    continue
+                total += 1
+                if px.get("c", 0) > sum(dq) / len(dq):
+                    above += 1
+            pct = round(above / total * 100, 1) if total else 0.0
+            daily.append((d, pct, above, total, new_high, new_low))
+
+    last_d, last_pct, last_above, last_total, last_nh, last_nl = daily[-1]
 
     return {
         "above_ma20": {
-            "count": above_ma20,
-            "total": total_ma20,
-            "pct":   pct,
+            "count": last_above,
+            "total": last_total,
+            "pct":   last_pct,
         },
         "new_high_low": {
-            "new_high": new_high,
-            "new_low":  new_low,
-            "net":      new_high - new_low,
+            "new_high": last_nh,
+            "new_low":  last_nl,
+            "net":      last_nh - last_nl,
         },
         "history_days": history_days,
-        "ma_days_used": len(ma20_window),
+        "ma_days_used": min(history_days, _MA_DAYS),
+        "history": {
+            "dates":    [d.strftime("%m/%d") for d, *_ in daily],
+            "ma20_pct": [p for _, p, *_ in daily],
+            "net":      [nh - nl for *_, nh, nl in daily],
+        },
     }
 
 
@@ -110,4 +123,5 @@ def _empty(history_days: int) -> dict:
         "new_high_low": {"new_high": 0, "new_low": 0, "net": 0},
         "history_days": history_days,
         "ma_days_used": 0,
+        "history": {"dates": [], "ma20_pct": [], "net": []},
     }

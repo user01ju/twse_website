@@ -38,6 +38,17 @@
   </div>
 
 </div>
+
+{% if d.history and d.history.dates | length > 1 %}
+<div class="trend-chart-title">近 {{ d.history.dates | length }} 個交易日趨勢</div>
+<div class="trend-chart-wrap">
+  <canvas id="trend-chart"
+    data-dates='{{ d.history.dates | tojson }}'
+    data-ma20='{{ d.history.ma20_pct | tojson }}'
+    data-net='{{ d.history.net | tojson }}'>
+  </canvas>
+</div>
+{% endif %}
 {% else %}
 <p class="no-data">市場趨勢資料暫不可用</p>
 {% endif %}

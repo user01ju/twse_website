@@ -53,6 +53,87 @@
   });
 })();
 
+// 市場趨勢折線圖（MA20 比例 + 淨新高低）
+(function () {
+  var canvas = document.getElementById("trend-chart");
+  if (!canvas || typeof Chart === "undefined") return;
+
+  var dates = JSON.parse(canvas.dataset.dates || "[]");
+  var ma20  = JSON.parse(canvas.dataset.ma20 || "[]");
+  var net   = JSON.parse(canvas.dataset.net || "[]");
+
+  var style = getComputedStyle(document.documentElement);
+  var posColor  = style.getPropertyValue("--pos").trim() || "#ff6b6b";
+  var negColor  = style.getPropertyValue("--neg").trim() || "#4ade80";
+  var amber     = "#f0b429";
+
+  // 淨新高低柱色：正紅負綠
+  var netColors = net.map(function (v) { return v >= 0 ? posColor : negColor; });
+
+  new Chart(canvas, {
+    data: {
+      labels: dates,
+      datasets: [
+        {
+          type: "line",
+          label: "收盤>20MA %",
+          data: ma20,
+          yAxisID: "y",
+          borderColor: amber,
+          backgroundColor: amber,
+          borderWidth: 2,
+          pointRadius: 2,
+          tension: 0.3,
+        },
+        {
+          type: "bar",
+          label: "淨新高(52週)",
+          data: net,
+          yAxisID: "y1",
+          backgroundColor: netColors,
+          borderRadius: 2,
+          barPercentage: 0.6,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: "index", intersect: false },
+      plugins: {
+        legend: {
+          labels: { color: "#8b9ab0", font: { size: 11 }, boxWidth: 12 }
+        },
+        tooltip: {
+          callbacks: {
+            label: function (ctx) {
+              if (ctx.dataset.yAxisID === "y") return " MA20以上 " + ctx.parsed.y + "%";
+              return " 淨新高 " + (ctx.parsed.y > 0 ? "+" : "") + ctx.parsed.y;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: "#8b9ab0", font: { size: 10 }, maxTicksLimit: 12 },
+          grid: { color: "rgba(255,255,255,0.05)" },
+        },
+        y: {
+          min: 0, max: 100,
+          position: "left",
+          ticks: { color: amber, font: { size: 11 }, callback: function (v) { return v + "%"; } },
+          grid: { color: "rgba(255,255,255,0.08)" },
+        },
+        y1: {
+          position: "right",
+          ticks: { color: "#8b9ab0", font: { size: 11 } },
+          grid: { drawOnChartArea: false },
+        }
+      }
+    }
+  });
+})();
+
 document.addEventListener("DOMContentLoaded", function () {
   // Collapsible sections
   document.querySelectorAll(".section-header").forEach(function (hdr) {
