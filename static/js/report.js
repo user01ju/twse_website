@@ -70,6 +70,11 @@
   // 淨新高低柱色：正紅負綠
   var netColors = net.map(function (v) { return v >= 0 ? posColor : negColor; });
 
+  // 右軸以 0 為中心對稱，使「0」對齊左軸的「50%」（兩軸中點重合）
+  var maxAbs = net.reduce(function (m, v) { return Math.max(m, Math.abs(v)); }, 0);
+  var step = maxAbs <= 20 ? 5 : maxAbs <= 50 ? 10 : maxAbs <= 100 ? 25 : 50;
+  var netBound = Math.max(step, Math.ceil(maxAbs / step) * step);
+
   new Chart(canvas, {
     data: {
       labels: dates,
@@ -121,12 +126,24 @@
         y: {
           min: 0, max: 100,
           position: "left",
-          ticks: { color: amber, font: { size: 11 }, callback: function (v) { return v + "%"; } },
-          grid: { color: "rgba(255,255,255,0.08)" },
+          ticks: {
+            color: amber, font: { size: 11 }, stepSize: 25,
+            callback: function (v) { return v + "%"; }
+          },
+          grid: {
+            // 50% 中線加亮，其餘格線維持淡色
+            color: function (ctx) {
+              return ctx.tick.value === 50
+                ? "rgba(255,255,255,0.35)"
+                : "rgba(255,255,255,0.08)";
+            },
+            lineWidth: function (ctx) { return ctx.tick.value === 50 ? 1.5 : 1; },
+          },
         },
         y1: {
+          min: -netBound, max: netBound,
           position: "right",
-          ticks: { color: "#8b9ab0", font: { size: 11 } },
+          ticks: { color: "#8b9ab0", font: { size: 11 }, stepSize: netBound / 2 },
           grid: { drawOnChartArea: false },
         }
       }
