@@ -175,16 +175,12 @@
       if (!isStale && d.complete) { badge.textContent = '完整版'; badge.className = 'today-badge'; }
       else                        { badge.textContent = '更新中'; badge.className = 'today-badge partial'; }
       document.getElementById('tw-time').textContent = isStale
-        ? '今日資料尚未更新，最後資料：' + d.date
+        ? '今日資料尚未更新，顯示最後收盤：' + d.date
         : '資料時間 ' + d.generated_at;
 
-      // if stale: show widget header only, no market cards
-      if (isStale) {
-        document.getElementById('today-widget').style.display = 'block';
-        return;
-      }
-
-      // date tags on cards
+      // Even when stale, still render the last available session's cards so the
+      // widget isn't blank before today's data is published. Cards are tagged
+      // with the data's own date (d.date), not today's.
       const dateTag = d.date;
       ['tw-taiex-date', 'tw-amount-date'].forEach(function(id) {
         var el = document.getElementById(id);

@@ -73,7 +73,13 @@ def build(actual_date: date, raw: dict, complete: bool) -> bool:
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    # Never downgrade: if existing today.json is already complete for this date, keep it.
+    # Never downgrade to a weaker snapshot. Two cases:
+    #   1. same date already complete → keep it
+    #   2. THIS payload carries no real index data (empty taiex), but an
+    #      existing one does → keep the existing close so the homepage widget
+    #      still shows the last session instead of going blank. Happens before
+    #      a new trading day's data is published by TWSE.
+    payload_has_data = bool(taiex.get("close"))
     if TODAY_JSON.exists():
         existing_text = TODAY_JSON.read_text(encoding="utf-8")
         if existing_text == new_text:
@@ -84,6 +90,11 @@ def build(actual_date: date, raw: dict, complete: bool) -> bool:
                     and existing.get("date") == actual_date.isoformat()
                     and existing.get("complete")):
                 logger.info("today.json already complete for today — not downgrading to partial")
+                return False
+            if (not payload_has_data
+                    and existing.get("taiex", {}).get("close")):
+                logger.info("today.json: incoming partial has no index data — keeping last snapshot "
+                            f"({existing.get('date')})")
                 return False
         except Exception:
             pass
