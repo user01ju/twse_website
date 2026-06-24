@@ -83,31 +83,83 @@ def fetch_taiex_index(date_str: str = None) -> list[dict]:
     }]
 
 
+# STOCK_DAY_ALL CSV column order (TWSE now ignores response=json and serves CSV):
+# 日期, 證券代號, 證券名稱, 成交股數, 成交金額, 開盤價, 最高價, 最低價, 收盤價, 漲跌價差, 成交筆數
+_STOCK_DAY_CSV = [
+    "Date", "Code", "Name", "TradeVolume", "TradeValue",
+    "OpeningPrice", "HighestPrice", "LowestPrice", "ClosingPrice",
+    "Change", "Transaction",
+]
+
+
+def _parse_stock_day_csv(text: str) -> list[dict]:
+    """Parse STOCK_DAY_ALL CSV body into the same dict shape as the JSON path."""
+    import csv as _csv
+    import io as _io
+
+    result = []
+    for row in _csv.reader(_io.StringIO(text)):
+        if len(row) < len(_STOCK_DAY_CSV):
+            continue
+        code = str(row[1]).strip()
+        if not code or not code[0].isdigit():   # skip header / non-data lines
+            continue
+        d = {k: row[i] for i, k in enumerate(_STOCK_DAY_CSV)}
+        result.append(d)
+    return result
+
+
 def fetch_stock_day_all(date_str: str = None) -> list[dict]:
     """
-    Legacy STOCK_DAY_ALL — 全部上市個股當日收盤資料。
-    回傳 list[dict]，欄位與 OpenAPI 版本相同（Code, Name, ClosingPrice, Change ...），
-    並附加 Date 欄位（ROC 格式如 '1150508'）供 report_builder._detect_data_date 使用。
+    STOCK_DAY_ALL — 全部上市個股當日收盤資料。
+    TWSE 已改為一律回傳 CSV（response=json 失效），本函式同時支援 JSON 與 CSV，
+    回傳 list[dict]（Code, Name, ClosingPrice, Change ...）並附加 Date（ROC '1150508'）。
     """
     if date_str is None:
         date_str = _date.today().strftime("%Y%m%d")
-    data = _get(ENDPOINTS["twse_stock_all"], params={"response": "json", "date": date_str})
-    if not isinstance(data, dict):
-        raise FetchError(f"Unexpected STOCK_DAY_ALL response type: {type(data)}")
-    if data.get("stat") not in ("OK", "ok"):
-        raise FetchError(f"STOCK_DAY_ALL stat={data.get('stat')}: {data.get('msg', '')}")
 
-    roc_date = _greg_to_roc(data.get("date", ""))
-    rows = data.get("data", [])
+    last_err = None
+    for attempt in range(FETCH_RETRIES):
+        try:
+            resp = requests.get(
+                ENDPOINTS["twse_stock_all"],
+                params={"response": "json", "date": date_str},
+                headers=HEADERS, timeout=FETCH_TIMEOUT,
+            )
+            resp.raise_for_status()
+            resp.encoding = "utf-8"
+            body = resp.text.lstrip()
 
-    result = []
-    for row in rows:
-        if len(row) < len(_STOCK_DAY_FIELDS):
-            continue
-        d = {k: row[i] for i, k in enumerate(_STOCK_DAY_FIELDS)}
-        d["Date"] = roc_date
-        result.append(d)
-    return result
+            # JSON path (in case TWSE reverts) ──────────────────────────────
+            if body[:1] in "{[":
+                data = resp.json()
+                if not isinstance(data, dict) or data.get("stat") not in ("OK", "ok"):
+                    raise FetchError(f"STOCK_DAY_ALL stat={data.get('stat') if isinstance(data, dict) else '?'}")
+                roc_date = _greg_to_roc(data.get("date", ""))
+                rows = data.get("data", [])
+                result = []
+                for row in rows:
+                    if len(row) < len(_STOCK_DAY_FIELDS):
+                        continue
+                    d = {k: row[i] for i, k in enumerate(_STOCK_DAY_FIELDS)}
+                    d["Date"] = roc_date
+                    result.append(d)
+                if not result:
+                    raise FetchError("STOCK_DAY_ALL: no data rows (JSON)")
+                return result
+
+            # CSV path (current TWSE behaviour) ─────────────────────────────
+            result = _parse_stock_day_csv(resp.text)
+            if not result:
+                raise FetchError("STOCK_DAY_ALL: no data rows (CSV)")
+            return result
+
+        except (requests.RequestException, FetchError, ValueError) as e:
+            last_err = e
+            if attempt < FETCH_RETRIES - 1:
+                time.sleep(2 ** attempt)
+
+    raise FetchError(f"STOCK_DAY_ALL failed after {FETCH_RETRIES} attempts: {last_err}")
 
 
 def _fetch_legacy(endpoint_key: str, date_str: str = None) -> dict:
