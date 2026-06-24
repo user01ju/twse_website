@@ -175,6 +175,12 @@ def build(target_date: date) -> None:
         # TPEX daily quotes: _filter_date already enforces the date — empty means stale/missing
         if not raw.get("tpex_daily"):
             stale.append("tpex_daily=missing")
+        # TWSE STOCK_DAY_ALL: required for 上市 breadth/movers AND for twse_prices
+        # (closing prices that convert institutional 張 → 億). A transient fetch
+        # failure here zeroes 上市 breadth and all TWSE institutional 億 amounts,
+        # so gate on it rather than shipping a hollow "complete" report.
+        if not raw.get("twse_stocks"):
+            stale.append("twse_stocks=missing")
         return (len(stale) == 0, stale)
 
     ok, stale = _inst_date_ok()
