@@ -18,9 +18,9 @@
       <th rowspan="2" class="sis-th-stocks">個股明細（代號 名稱 金額）</th>
     </tr>
     <tr class="sis-head-total">
-      <th class="sis-sub">合計<br><span class="pos">{{ "{:,.1f}".format(d.tot_foreign) }}&thinsp;億</span></th>
-      <th class="sis-sub">合計<br><span class="pos">{{ "{:,.1f}".format(d.tot_trust) }}&thinsp;億</span></th>
-      <th class="sis-sub">合計<br><span class="{{ 'pos' if d.tot_dealer >= 0 else 'neg' }}">{{ "{:+,.1f}".format(d.tot_dealer) }}&thinsp;億</span></th>
+      <th class="sis-sub">合計<br><span class="{{ 'pos' if d.tot_foreign >= 0 else 'neg' }}">{{ "{:,.1f}".format(d.tot_foreign) }}&thinsp;億</span></th>
+      <th class="sis-sub">合計<br><span class="{{ 'pos' if d.tot_trust >= 0 else 'neg' }}">{{ "{:,.1f}".format(d.tot_trust) }}&thinsp;億</span></th>
+      <th class="sis-sub">合計<br><span class="{{ 'pos' if d.tot_dealer >= 0 else 'neg' }}">{{ "{:,.1f}".format(d.tot_dealer) }}&thinsp;億</span></th>
       <th class="sis-sub sis-th-combined">合計<br><span class="pos">{{ "{:,.1f}".format(d.tot_combined) }}&thinsp;億</span></th>
     </tr>
   </thead>
@@ -33,16 +33,13 @@
         {% if r.parent %}<span class="si-parent">{{ r.parent }}</span>{% endif %}
       </td>
       <td class="si-num">{{ r.count }}</td>
-      {% for val in [r.foreign_yi, r.trust_yi] %}
-      <td class="sis-yi {{ 'pos' if val > 0 else 'flat' }}">
-        {% if val > 0 %}{{ "{:,.1f}".format(val) }}{% else %}—{% endif %}
+      {% for val in [r.foreign_yi, r.trust_yi, r.dealer_yi] %}
+      <td class="sis-yi {% if val > 0 %}pos{% elif val < 0 %}neg{% else %}flat{% endif %}">
+        {% if val == 0 %}—
+        {% elif val > 0 %}{{ "{:,.1f}".format(val) }}
+        {% else %}({{ "{:,.1f}".format(val | abs) }}){% endif %}
       </td>
       {% endfor %}
-      <td class="sis-yi {% if r.dealer_yi > 0 %}pos{% elif r.dealer_yi < 0 %}neg{% else %}flat{% endif %}">
-        {% if r.dealer_yi == 0 %}—
-        {% elif r.dealer_yi > 0 %}{{ "{:,.1f}".format(r.dealer_yi) }}
-        {% else %}({{ "{:,.1f}".format(r.dealer_yi | abs) }}){% endif %}
-      </td>
       <td class="sis-yi sis-yi-combined pos">{{ "{:,.1f}".format(r.combined_yi) }}</td>
       <td class="si-stocks">
         {% for st in r.stocks %}
