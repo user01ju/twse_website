@@ -268,6 +268,10 @@ def build(target_date: date) -> None:
         sections["combined"].get("data", {}) if sections["combined"]["ok"] else {},
         sections["dealer"].get("data", {})   if sections["dealer"]["ok"]   else {},
     )
+    sections["sector_merged"] = _safe(
+        sector_inst.build_merged,
+        sections["combined"].get("data", {}) if sections["combined"]["ok"] else {},
+    )
     sections["sector_summary"] = _safe(
         sector_inst.build_summary,
         sections["combined"].get("data", {}) if sections["combined"]["ok"] else {},

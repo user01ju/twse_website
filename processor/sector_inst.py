@@ -176,6 +176,48 @@ def build_summary(combined_data: dict) -> dict:
     }
 
 
+def build_merged(combined_data: dict) -> list[dict]:
+    """三大法人合併 by 子類股：買超+賣超個股一起看。
+    每個子類股的淨買賣超 = 該類股所有個股 net_yi 加總（含正負），
+    子類股依淨額排序（正到負），類股內個股亦依 net_yi 排序（正到負）。
+    """
+    sector_map, parent_map = _load_sector_map()
+
+    # buy_super (net_yi>0) + sell_super (net_yi<0) = 全部有量的個股
+    stocks = [s for s in (combined_data.get("buy_super") or []) if s.get("net_zhang", 0) != 0]
+    stocks += [s for s in (combined_data.get("sell_super") or []) if s.get("net_zhang", 0) != 0]
+
+    groups: dict[str, dict] = defaultdict(lambda: {"net_yi": 0.0, "net_zhang": 0, "stocks": [], "parent": ""})
+    for s in stocks:
+        code   = str(s.get("code", "")).strip()
+        sector = sector_map.get(code) or "其他"
+        groups[sector]["parent"]     = parent_map.get(code, "")
+        groups[sector]["net_yi"]    += s.get("net_yi", 0.0)
+        groups[sector]["net_zhang"] += s.get("net_zhang", 0)
+        groups[sector]["stocks"].append({
+            "code":      code,
+            "name":      s.get("name", ""),
+            "net_zhang": s.get("net_zhang", 0),
+            "net_yi":    s.get("net_yi", 0.0),
+            "market":    s.get("market", ""),
+        })
+
+    result = []
+    for sector, d in groups.items():
+        d["stocks"].sort(key=lambda x: x["net_yi"], reverse=True)   # 正到負
+        result.append({
+            "sector":    sector,
+            "parent":    d["parent"],
+            "count":     len(d["stocks"]),
+            "net_yi":    round(d["net_yi"], 2),
+            "net_zhang": d["net_zhang"],
+            "stocks":    d["stocks"],
+        })
+
+    result.sort(key=lambda x: x["net_yi"], reverse=True)            # 子類股正到負
+    return result
+
+
 def build(
     foreign_data:  dict,
     trust_data:    dict,

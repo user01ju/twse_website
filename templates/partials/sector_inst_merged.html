@@ -1,0 +1,59 @@
+{# 三大法人合併 by 子類股 — 買超+賣超個股一起看，依淨額排序（正到負） #}
+{% set s = sections.sector_merged %}
+{% if not s.ok %}
+<div class="error-box">合併子類股資料錯誤：{{ s.error }}</div>
+{% elif not s.data %}
+<div class="error-box">暫無資料</div>
+{% else %}
+{% set groups = s.data %}
+
+{% set net_total = namespace(v=0) %}
+{% set max_abs   = namespace(v=0) %}
+{% for g in groups %}
+  {% set net_total.v = net_total.v + g.net_yi %}
+  {% if (g.net_yi | abs) > max_abs.v %}{% set max_abs.v = g.net_yi | abs %}{% endif %}
+{% endfor %}
+
+<div class="si-meta">
+  共 <strong>{{ groups | length }}</strong> 個子類股　三大法人淨買賣超合計
+  <strong class="{{ 'pos' if net_total.v >= 0 else 'neg' }}">
+    {{ "{:+,.1f}".format(net_total.v) }} 億</strong>
+</div>
+
+<table class="si-table">
+  <thead>
+    <tr>
+      <th class="si-th-rank">#</th>
+      <th class="si-th-sector">子類股</th>
+      <th class="si-th-num">個股數</th>
+      <th class="si-th-yi">淨買賣超(億)</th>
+      <th class="si-th-stocks">個股明細（代號 名稱 金額，正買超 / 負賣超）</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for g in groups %}
+    <tr class="si-row {% if loop.index % 2 == 0 %}si-alt{% endif %}">
+      <td class="si-rank">{{ loop.index }}</td>
+      <td class="si-sector">
+        <span class="si-sector-name">{{ g.sector }}</span>
+        {% if g.parent %}<span class="si-parent">{{ g.parent }}</span>{% endif %}
+      </td>
+      <td class="si-num">{{ g.count }}</td>
+      <td class="si-yi {{ 'pos' if g.net_yi >= 0 else 'neg' }}" data-order="{{ g.net_yi }}">
+        {{ "{:+,.1f}".format(g.net_yi) }}
+      </td>
+      <td class="si-stocks">
+        {% for st in g.stocks %}
+        <span class="si-stock-tag">
+          <span class="si-code">{{ st.code }}</span>
+          <span class="si-sname">{{ st.name }}</span>
+          <span class="si-zhang {{ 'pos' if st.net_yi >= 0 else 'neg' }}">
+            {% if st.net_yi >= 0 %}+{{ "{:.2f}".format(st.net_yi) }}{% else %}({{ "{:.2f}".format(st.net_yi | abs) }}){% endif %}億</span>
+        </span>
+        {% endfor %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}

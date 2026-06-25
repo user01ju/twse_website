@@ -97,6 +97,19 @@
   <div class="section-body">{% include "partials/sector_inst_summary_sell.html" %}</div>
 </div>
 
+{# 三大法人合併 by 子類股（買賣超一起看） #}
+<div class="section accent-teal">
+  <div class="section-header">
+    <span class="section-accent"></span>
+    <span class="section-title">三大法人合併子類股分析（買賣超一起看，依淨額排序）</span>
+    {% if sections.sector_merged and sections.sector_merged.ok and sections.sector_merged.data %}
+    <span class="section-subtitle">{{ sections.sector_merged.data | length }} 個子類股</span>
+    {% endif %}
+    <span class="section-toggle-icon">▼</span>
+  </div>
+  <div class="section-body">{% include "partials/sector_inst_merged.html" %}</div>
+</div>
+
 {# 法人買超 by 子類股 #}
 <div class="section accent-blue">
   <div class="section-header">
