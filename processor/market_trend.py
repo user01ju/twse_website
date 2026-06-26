@@ -13,7 +13,12 @@ logger = logging.getLogger(__name__)
 
 _MA_DAYS = 20
 _WEEK52_DAYS = 252  # approx trading days in 52 weeks
+_HALF_YEAR = 126    # 上市/資料滿半年才計新高低(對齊 sector_gainer)
 _CHART_DAYS = 30    # trend chart length
+
+# NOTE: 仍使用「未還原」收盤價。除權息旺季(7–9 月)會因除息跳空造成假跌破
+# 20MA / 假新低,使 ma20_pct 與 net 系統性偏低。完整對齊 sector_gainer 需引入
+# 除權息參考價做還原鏈(見 sector_gainer 的 fetch_exrights + cum 邏輯)。
 
 
 def build(today: date) -> dict:
@@ -39,12 +44,12 @@ def build(today: date) -> dict:
 
     chart_start = max(0, history_days - _CHART_DAYS)
 
-    # Single pass oldest → newest, maintaining running state per code:
-    #   closes: deque of last 20 closes (incl. current day when computing MA)
-    #   run_high / run_low: 52w running extremes (excl. current day at compare time)
-    closes: dict[str, deque] = {}
-    run_high: dict[str, float] = {}
-    run_low: dict[str, float] = {}
+    # Single pass oldest → newest,每股維護收盤序列(對齊 sector_gainer):
+    #   d20:  近 20 日收盤(20MA,需滿 20 日才納入)
+    #   d252: 近 252 日收盤(嚴格滾動 52 週窗口;需滿半年才計新高低)
+    #   新高低一律以「收盤」判斷,且含當日窗口(c >= max → 新高 / c <= min → 新低)
+    closes20: dict[str, deque] = {}
+    closes252: dict[str, deque] = {}
 
     daily = []  # (date, ma20_pct, ma20_above, ma20_total, new_high, new_low)
 
@@ -52,49 +57,43 @@ def build(today: date) -> dict:
         in_chart = i >= chart_start
         is_last = i == history_days - 1
 
-        new_high = new_low = 0
-        if in_chart or is_last:
-            # compare today's extremes vs running 52w extremes (excluding today)
-            for code, px in snap.items():
-                c = px.get("c", 0)
-                h = px.get("h", 0) or c
-                lo = px.get("l", 0) or c
-                ph = run_high.get(code)
-                pl = run_low.get(code)
-                if ph and h > ph:
-                    new_high += 1
-                if pl and lo < pl:
-                    new_low += 1
-
-        # update running state with current day
+        # 先把當日收盤併入每股序列
         for code, px in snap.items():
             c = px.get("c", 0)
             if c <= 0:
                 continue
-            h = px.get("h", 0) or c
-            lo = px.get("l", 0) or c
-            dq = closes.get(code)
-            if dq is None:
-                dq = closes[code] = deque(maxlen=_MA_DAYS)
-            dq.append(c)
-            if h > 0 and (code not in run_high or h > run_high[code]):
-                run_high[code] = h
-            if lo > 0 and (code not in run_low or lo < run_low[code]):
-                run_low[code] = lo
+            d20 = closes20.get(code)
+            if d20 is None:
+                d20 = closes20[code] = deque(maxlen=_MA_DAYS)
+            d20.append(c)
+            d252 = closes252.get(code)
+            if d252 is None:
+                d252 = closes252[code] = deque(maxlen=_WEEK52_DAYS)
+            d252.append(c)
 
-        if in_chart or is_last:
-            above = total = 0
-            for code, px in snap.items():
-                dq = closes.get(code)
-                if not dq or len(dq) < 2:
-                    continue
+        if not (in_chart or is_last):
+            continue
+
+        above = total = new_high = new_low = 0
+        for code, px in snap.items():
+            c = px.get("c", 0)
+            if c <= 0:
+                continue
+            d20 = closes20.get(code)
+            if d20 and len(d20) >= _MA_DAYS:
                 total += 1
-                if px.get("c", 0) > sum(dq) / len(dq):
+                if c > sum(d20) / _MA_DAYS:
                     above += 1
-            if total == 0:
-                continue  # not enough history yet — a 0.0% point would mislead
-            pct = round(above / total * 100, 1)
-            daily.append((d, pct, above, total, new_high, new_low))
+            d252 = closes252.get(code)
+            if d252 and len(d252) >= _HALF_YEAR:
+                if c >= max(d252):
+                    new_high += 1
+                elif c <= min(d252):
+                    new_low += 1
+        if total == 0:
+            continue  # not enough history yet — a 0.0% point would mislead
+        pct = round(above / total * 100, 1)
+        daily.append((d, pct, above, total, new_high, new_low))
 
     if not daily:
         return _empty(history_days)
