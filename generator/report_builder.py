@@ -261,23 +261,12 @@ def build(target_date: date) -> None:
         twse_prices,
         tpex_prices,
     )
-    sections["sector_inst"] = _safe(
-        sector_inst.build,
-        sections["foreign"].get("data", {})  if sections["foreign"]["ok"]  else {},
-        sections["trust"].get("data", {})    if sections["trust"]["ok"]    else {},
-        sections["combined"].get("data", {}) if sections["combined"]["ok"] else {},
-        sections["dealer"].get("data", {})   if sections["dealer"]["ok"]   else {},
-    )
     sections["sector_merged"] = _safe(
         sector_inst.build_merged,
         sections["foreign"].get("data", {})  if sections["foreign"]["ok"]  else {},
         sections["trust"].get("data", {})    if sections["trust"]["ok"]    else {},
         sections["combined"].get("data", {}) if sections["combined"]["ok"] else {},
         sections["dealer"].get("data", {})   if sections["dealer"]["ok"]   else {},
-    )
-    sections["sector_summary"] = _safe(
-        sector_inst.build_summary,
-        sections["combined"].get("data", {}) if sections["combined"]["ok"] else {},
     )
     # ── Price cache: save today → compute trend metrics ─────────────────────
     try:

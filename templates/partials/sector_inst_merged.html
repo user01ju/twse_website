@@ -84,6 +84,16 @@
 .si-merged-table th.si-sort.desc .si-sort-ind { opacity: 1; }
 </style>
 <script>
+// 頁簽切換（此 section 自足，不依賴其他 partial）
+if (typeof window.siSwitch !== 'function') {
+  window.siSwitch = function (btn, panelId) {
+    var body = btn.closest('.section-body');
+    body.querySelectorAll('.si-tab').forEach(function (b) { b.classList.remove('active'); });
+    body.querySelectorAll('.si-panel').forEach(function (p) { p.classList.add('hidden'); });
+    btn.classList.add('active');
+    document.getElementById(panelId).classList.remove('hidden');
+  };
+}
 (function () {
   document.querySelectorAll('.si-merged-table').forEach(function (table) {
     var tbody = table.querySelector('tbody');
