@@ -102,8 +102,8 @@
   <div class="section-header">
     <span class="section-accent"></span>
     <span class="section-title">三大法人合併子類股分析（買賣超一起看，依淨額排序）</span>
-    {% if sections.sector_merged and sections.sector_merged.ok and sections.sector_merged.data %}
-    <span class="section-subtitle">{{ sections.sector_merged.data | length }} 個子類股</span>
+    {% if sections.sector_merged and sections.sector_merged.ok and sections.sector_merged.data.combined %}
+    <span class="section-subtitle">{{ sections.sector_merged.data.combined | length }} 個子類股</span>
     {% endif %}
     <span class="section-toggle-icon">▼</span>
   </div>

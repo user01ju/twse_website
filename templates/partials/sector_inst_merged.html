@@ -1,65 +1,78 @@
-{# 三大法人合併 by 子類股 — 買超+賣超個股一起看，依淨額排序（正到負） #}
+{# 法人合併 by 子類股 — 4 頁簽，買超+賣超個股一起看，可排序 #}
 {% set s = sections.sector_merged %}
 {% if not s.ok %}
 <div class="error-box">合併子類股資料錯誤：{{ s.error }}</div>
-{% elif not s.data %}
-<div class="error-box">暫無資料</div>
 {% else %}
-{% set groups = s.data %}
+{% set tabs = [
+  ('combined', '📊 三大法人', s.data.combined),
+  ('foreign',  '🌐 外資',     s.data.foreign),
+  ('trust',    '🏦 投信',     s.data.trust),
+  ('dealer',   '🏛️ 自營商',   s.data.dealer),
+] %}
 
-{% set net_total = namespace(v=0) %}
-{% set max_abs   = namespace(v=0) %}
-{% for g in groups %}
-  {% set net_total.v = net_total.v + g.net_yi %}
-  {% if (g.net_yi | abs) > max_abs.v %}{% set max_abs.v = g.net_yi | abs %}{% endif %}
-{% endfor %}
-
-<div class="si-meta">
-  共 <strong>{{ groups | length }}</strong> 個子類股　三大法人淨買賣超合計
-  <strong class="{{ 'pos' if net_total.v >= 0 else 'neg' }}">
-    {{ "{:+,.1f}".format(net_total.v) }} 億</strong>
+<div class="si-tabs">
+  {% for key, label, groups in tabs %}
+  <button class="si-tab {% if loop.first %}active{% endif %}"
+          onclick="siSwitch(this,'sim-panel-{{ key }}')">{{ label }}</button>
+  {% endfor %}
 </div>
 
-<table class="si-table si-merged-table">
-  <thead>
-    <tr>
-      <th class="si-th-rank">#</th>
-      <th class="si-th-sector">子類股</th>
-      <th class="si-th-num">個股數</th>
-      <th class="si-th-yi si-sort" data-col="3">淨買賣超(億)<span class="si-sort-ind"></span></th>
-      <th class="si-th-yi si-sort" data-col="4">總成交額(億)<span class="si-sort-ind"></span></th>
-      <th class="si-th-stocks">個股明細（代號 名稱 金額，正買超 / 負賣超）</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for g in groups %}
-    <tr class="si-row {% if loop.index % 2 == 0 %}si-alt{% endif %}">
-      <td class="si-rank">{{ loop.index }}</td>
-      <td class="si-sector">
-        <span class="si-sector-name">{{ g.sector }}</span>
-        {% if g.parent %}<span class="si-parent">{{ g.parent }}</span>{% endif %}
-      </td>
-      <td class="si-num">{{ g.count }}</td>
-      <td class="si-yi {{ 'pos' if g.net_yi >= 0 else 'neg' }}" data-order="{{ g.net_yi }}">
-        {{ "{:+,.1f}".format(g.net_yi) }}
-      </td>
-      <td class="si-yi" data-order="{{ g.abs_yi }}">
-        {{ "{:,.1f}".format(g.abs_yi) }}
-      </td>
-      <td class="si-stocks">
-        {% for st in g.stocks %}
-        <span class="si-stock-tag">
-          <span class="si-code">{{ st.code }}</span>
-          <span class="si-sname">{{ st.name }}</span>
-          <span class="si-zhang {{ 'pos' if st.net_yi >= 0 else 'neg' }}">
-            {% if st.net_yi >= 0 %}+{{ "{:.2f}".format(st.net_yi) }}{% else %}({{ "{:.2f}".format(st.net_yi | abs) }}){% endif %}億</span>
-        </span>
-        {% endfor %}
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+{% for key, label, groups in tabs %}
+<div id="sim-panel-{{ key }}" class="si-panel {% if not loop.first %}hidden{% endif %}">
+  {% if not groups %}
+  <div class="error-box">暫無資料</div>
+  {% else %}
+
+  {% set net_total = namespace(v=0) %}
+  {% for g in groups %}{% set net_total.v = net_total.v + g.net_yi %}{% endfor %}
+  <div class="si-meta">
+    共 <strong>{{ groups | length }}</strong> 個子類股　{{ label }}淨買賣超合計
+    <strong class="{{ 'pos' if net_total.v >= 0 else 'neg' }}">{{ "{:+,.1f}".format(net_total.v) }} 億</strong>
+  </div>
+
+  <table class="si-table si-merged-table">
+    <thead>
+      <tr>
+        <th class="si-th-rank">#</th>
+        <th class="si-th-sector">子類股</th>
+        <th class="si-th-num">個股數</th>
+        <th class="si-th-yi si-sort" data-col="3">淨買賣超(億)<span class="si-sort-ind"></span></th>
+        <th class="si-th-yi si-sort" data-col="4">總成交額(億)<span class="si-sort-ind"></span></th>
+        <th class="si-th-stocks">個股明細（代號 名稱 金額，正買超 / 負賣超）</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for g in groups %}
+      <tr class="si-row {% if loop.index % 2 == 0 %}si-alt{% endif %}">
+        <td class="si-rank">{{ loop.index }}</td>
+        <td class="si-sector">
+          <span class="si-sector-name">{{ g.sector }}</span>
+          {% if g.parent %}<span class="si-parent">{{ g.parent }}</span>{% endif %}
+        </td>
+        <td class="si-num">{{ g.count }}</td>
+        <td class="si-yi {{ 'pos' if g.net_yi >= 0 else 'neg' }}" data-order="{{ g.net_yi }}">
+          {{ "{:+,.1f}".format(g.net_yi) }}
+        </td>
+        <td class="si-yi" data-order="{{ g.abs_yi }}">
+          {{ "{:,.1f}".format(g.abs_yi) }}
+        </td>
+        <td class="si-stocks">
+          {% for st in g.stocks %}
+          <span class="si-stock-tag">
+            <span class="si-code">{{ st.code }}</span>
+            <span class="si-sname">{{ st.name }}</span>
+            <span class="si-zhang {{ 'pos' if st.net_yi >= 0 else 'neg' }}">
+              {% if st.net_yi >= 0 %}+{{ "{:.2f}".format(st.net_yi) }}{% else %}({{ "{:.2f}".format(st.net_yi | abs) }}){% endif %}億</span>
+          </span>
+          {% endfor %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</div>
+{% endfor %}
 
 <style>
 .si-merged-table th.si-sort { cursor: pointer; user-select: none; white-space: nowrap; }
@@ -72,30 +85,26 @@
 </style>
 <script>
 (function () {
-  var table = document.currentScript.previousElementSibling;
-  while (table && table.tagName !== 'TABLE') table = table.previousElementSibling;
-  if (!table) return;
-  var tbody = table.querySelector('tbody');
-
-  table.querySelectorAll('th.si-sort').forEach(function (th) {
-    th.addEventListener('click', function () {
-      var col = parseInt(th.dataset.col, 10);
-      var asc = th.classList.contains('desc') ? true : (th.classList.contains('asc') ? false : false);
-      // default first click = descending (大到小)
-      table.querySelectorAll('th.si-sort').forEach(function (o) { o.classList.remove('asc', 'desc'); });
-      th.classList.add(asc ? 'asc' : 'desc');
-
-      var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr'));
-      rows.sort(function (a, b) {
-        var va = parseFloat(a.children[col].dataset.order) || 0;
-        var vb = parseFloat(b.children[col].dataset.order) || 0;
-        return asc ? va - vb : vb - va;
-      });
-      rows.forEach(function (r, i) {
-        tbody.appendChild(r);
-        var rk = r.querySelector('.si-rank');
-        if (rk) rk.textContent = i + 1;
-        r.classList.toggle('si-alt', (i + 1) % 2 === 0);
+  document.querySelectorAll('.si-merged-table').forEach(function (table) {
+    var tbody = table.querySelector('tbody');
+    table.querySelectorAll('th.si-sort').forEach(function (th) {
+      th.addEventListener('click', function () {
+        var col = parseInt(th.dataset.col, 10);
+        var asc = th.classList.contains('desc');   // desc -> asc, otherwise default desc
+        table.querySelectorAll('th.si-sort').forEach(function (o) { o.classList.remove('asc', 'desc'); });
+        th.classList.add(asc ? 'asc' : 'desc');
+        var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr'));
+        rows.sort(function (a, b) {
+          var va = parseFloat(a.children[col].dataset.order) || 0;
+          var vb = parseFloat(b.children[col].dataset.order) || 0;
+          return asc ? va - vb : vb - va;
+        });
+        rows.forEach(function (r, i) {
+          tbody.appendChild(r);
+          var rk = r.querySelector('.si-rank');
+          if (rk) rk.textContent = i + 1;
+          r.classList.toggle('si-alt', (i + 1) % 2 === 0);
+        });
       });
     });
   });
