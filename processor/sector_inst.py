@@ -205,11 +205,14 @@ def build_merged(combined_data: dict) -> list[dict]:
     result = []
     for sector, d in groups.items():
         d["stocks"].sort(key=lambda x: x["net_yi"], reverse=True)   # 正到負
+        # 總成交額：買超與賣超金額取絕對值加總（不相扣）
+        abs_yi = sum(abs(st["net_yi"]) for st in d["stocks"])
         result.append({
             "sector":    sector,
             "parent":    d["parent"],
             "count":     len(d["stocks"]),
             "net_yi":    round(d["net_yi"], 2),
+            "abs_yi":    round(abs_yi, 2),
             "net_zhang": d["net_zhang"],
             "stocks":    d["stocks"],
         })
