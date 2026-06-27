@@ -155,7 +155,16 @@ document.addEventListener("DOMContentLoaded", function () {
   // Collapsible sections
   document.querySelectorAll(".section-header").forEach(function (hdr) {
     hdr.addEventListener("click", function () {
-      this.closest(".section").classList.toggle("collapsed");
+      var section = this.closest(".section");
+      section.classList.toggle("collapsed");
+      // Tables initialized while hidden mis-measure column widths; fix on expand.
+      if (!section.classList.contains("collapsed") && typeof $.fn.DataTable !== "undefined") {
+        $(section).find(".dt-table").each(function () {
+          if ($.fn.DataTable.isDataTable(this)) {
+            $(this).DataTable().columns.adjust();
+          }
+        });
+      }
     });
   });
 

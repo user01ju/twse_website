@@ -17,7 +17,7 @@
 <div class="section accent-teal">
   <div class="section-header">
     <span class="section-accent"></span>
-    <span class="section-title">市場統計（上市 / 上櫃 / 興櫃）</span>
+    <span class="section-title">1. 市場統計（上市 / 上櫃 / 興櫃）</span>
     <span class="section-toggle-icon">▼</span>
   </div>
   <div class="section-body">
@@ -29,7 +29,7 @@
 <div class="section accent-amber">
   <div class="section-header">
     <span class="section-accent"></span>
-    <span class="section-title">市場趨勢（20MA 比例 / 52週新高低）</span>
+    <span class="section-title">2. 市場趨勢（20MA 比例 / 52週新高低）</span>
     {% if sections.market_trend and sections.market_trend.ok %}
     {% set mt = sections.market_trend.data %}
     {% set net = mt.new_high_low.net %}
@@ -48,7 +48,7 @@
 <div class="section accent-blue">
   <div class="section-header">
     <span class="section-accent"></span>
-    <span class="section-title">三大法人買賣金額彙總（上市 + 上櫃）</span>
+    <span class="section-title">3. 三大法人買賣金額彙總</span>
     {% if sections.institutional.ok %}
     {% set inst = sections.institutional.data %}
     {% set twse_net = (inst.twse | selectattr('is_total') | list | first).net_yi | default(0) %}
@@ -69,7 +69,7 @@
 <div class="section accent-purple">
   <div class="section-header">
     <span class="section-accent"></span>
-    <span class="section-title">今日盤勢總覽</span>
+    <span class="section-title">4. 今日盤勢總覽</span>
     <span class="section-toggle-icon">▼</span>
   </div>
   <div class="section-body">
@@ -77,11 +77,23 @@
   </div>
 </div>
 
-{# 三大法人合併 by 子類股（買賣超一起看） #}
-<div class="section accent-teal">
+{# Sections 7+8+9: 法人買賣超合併三欄 #}
+<div class="section accent-blue collapsed">
   <div class="section-header">
     <span class="section-accent"></span>
-    <span class="section-title">三大法人合併子類股分析（買賣超一起看，依淨額排序）</span>
+    <span class="section-title">5. 法人買賣超個股</span>
+    <span class="section-toggle-icon">▼</span>
+  </div>
+  <div class="section-body">
+    {% include "partials/inst_combined_table.html" %}
+  </div>
+</div>
+
+{# 三大法人合併 by 子類股（買賣超一起看） #}
+<div class="section accent-teal collapsed">
+  <div class="section-header">
+    <span class="section-accent"></span>
+    <span class="section-title">6. 法人買賣超子類股分析</span>
     {% if sections.sector_merged and sections.sector_merged.ok and sections.sector_merged.data.combined %}
     <span class="section-subtitle">{{ sections.sector_merged.data.combined | length }} 個子類股</span>
     {% endif %}
@@ -91,10 +103,10 @@
 </div>
 
 {# Sections 5+6: 漲跌幅前100 #}
-<div class="section accent-amber">
+<div class="section accent-amber collapsed">
   <div class="section-header">
     <span class="section-accent"></span>
-    <span class="section-title">漲幅 / 跌幅前 100（上市 + 上櫃）</span>
+    <span class="section-title">7. 漲幅 / 跌幅前 100 個股</span>
     <span class="section-toggle-icon">▼</span>
   </div>
   <div class="section-body">
@@ -103,26 +115,14 @@
 </div>
 
 {# 漲跌幅前100 子類股分析 #}
-<div class="section accent-amber">
+<div class="section accent-amber collapsed">
   <div class="section-header">
     <span class="section-accent"></span>
-    <span class="section-title">漲幅 / 跌幅前 100 子類股分析（CMoney 分類）</span>
+    <span class="section-title">8. 漲幅 / 跌幅前 100 子類股分析</span>
     <span class="section-toggle-icon">▼</span>
   </div>
   <div class="section-body">
     {% include "partials/mover_sector.html" %}
-  </div>
-</div>
-
-{# Sections 7+8+9: 法人買賣超合併三欄 #}
-<div class="section accent-blue">
-  <div class="section-header">
-    <span class="section-accent"></span>
-    <span class="section-title">法人買賣超（上市 + 上櫃）</span>
-    <span class="section-toggle-icon">▼</span>
-  </div>
-  <div class="section-body">
-    {% include "partials/inst_combined_table.html" %}
   </div>
 </div>
 
