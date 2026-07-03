@@ -134,8 +134,8 @@ def build(sections: dict, date_str: str) -> dict:
     prompt = _build_prompt(sections, date_str)
     client = anthropic.Anthropic(api_key=api_key)
     msg = client.messages.create(
-        model="claude-haiku-4-5",
-        max_tokens=900,
+        model="claude-opus-4-8",
+        max_tokens=1500,
         messages=[{"role": "user", "content": prompt}],
     )
     text = msg.content[0].text.strip()
