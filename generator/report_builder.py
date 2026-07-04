@@ -9,7 +9,7 @@ from config import REPORTS_DIR, FORCE_REBUILD
 from fetcher import twse_client, tpex_client
 from fetcher.market_calendar import roc_to_date, is_trading_day
 from processor import index_stats, market_breadth, movers, institutional, foreign_trades, trust_trades, combined_inst, dealer_trades, ai_summary, sector_inst, mover_sector, market_trend
-from fetcher import price_cache
+from fetcher import price_cache, exrights
 from generator import renderer, index_builder, today_builder
 
 logger = logging.getLogger(__name__)
@@ -273,6 +273,13 @@ def build(target_date: date) -> None:
         price_cache.save(actual_date, raw.get("twse_stocks") or [], raw.get("tpex_daily") or [])
     except Exception as e:
         logger.warning(f"price_cache.save failed: {e}")
+
+    # 除權息參考價: build 當下自抓(今天+回補7天),還原鏈才不會有跨專案時間差。
+    # 失敗只降級為未還原,不擋報告。
+    try:
+        exrights.update(actual_date)
+    except Exception as e:
+        logger.warning(f"exrights.update failed: {e}")
 
     sections["market_trend"] = _safe(market_trend.build, actual_date)
 
