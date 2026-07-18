@@ -14,3 +14,5 @@ python rebuild_local.py %*
 
 echo.
 echo [EXIT %ERRORLEVEL%] 0=done, 2=no full report (see messages above)
+pause
+
