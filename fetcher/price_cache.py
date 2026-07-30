@@ -70,6 +70,29 @@ def load(d: date) -> dict[str, dict]:
         return {}
 
 
+def window_coverage(window: list[tuple[date, dict]], end: date) -> dict:
+    """窗口完整度：實得快照數 / 期望交易日數 → {got, expected, pct}。
+
+    期望值用「工作日數」近似（不扣國定假日），所以**完整**的 cache 大約落在
+    93~97% 而不是 100%。存在的意義：cache 缺一大塊時 load_window 會安靜地
+    往更早的日期湊滿天數，算出來的 20MA / 52 週新高低看起來合理但是錯的
+    （拿今天的價比兩個月前的均價）。用這個比率把它變成可見的訊號。
+    """
+    if not window:
+        return {"got": 0, "expected": 0, "pct": 0.0}
+    start = window[0][0]
+    expected = sum(
+        1 for i in range((end - start).days + 1)
+        if (start + timedelta(days=i)).weekday() < 5
+    )
+    got = len(window)
+    return {
+        "got":      got,
+        "expected": expected,
+        "pct":      round(got / expected * 100, 1) if expected else 0.0,
+    }
+
+
 def load_window(end: date, days: int) -> list[tuple[date, dict]]:
     """
     Return up to `days` cached snapshots ending at `end` (inclusive), oldest first.

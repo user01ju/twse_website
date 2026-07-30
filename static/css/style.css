@@ -334,6 +334,40 @@ main {
 .breadth-bar-flat { background: var(--flat); opacity: 0.4; }
 .breadth-bar-down { background: var(--neg); }
 
+/* 色塊 + 其下對應的漲跌持平數量／百分比 */
+.breadth-split {
+  display: flex;
+  gap: 6px;
+  margin: 12px 0 2px;
+}
+.breadth-seg {
+  min-width: 48px;      /* 佔比極小時仍讀得到數字（會犧牲一點比例精確度） */
+  text-align: center;
+}
+.breadth-seg .seg-bar {
+  height: 6px;
+  border-radius: 2px;
+  margin-bottom: 8px;
+}
+.breadth-seg.up   .seg-bar { background: var(--pos); }
+.breadth-seg.flat .seg-bar { background: var(--flat); opacity: 0.4; }
+.breadth-seg.down .seg-bar { background: var(--neg); }
+.breadth-seg .seg-label { font-size: 11px; color: var(--text-secondary); }
+.breadth-seg .seg-val {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.4;
+}
+.breadth-seg.up   .seg-val { color: var(--pos); }
+.breadth-seg.flat .seg-val { color: var(--flat); }
+.breadth-seg.down .seg-val { color: var(--neg); }
+.breadth-seg .seg-pct {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
 /* ── Institutional table ──────────────────────────────── */
 .inst-wrapper {
   display: grid;

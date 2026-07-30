@@ -18,25 +18,19 @@
   {% set m = d[market_key] %}
   <div class="breadth-card">
     <h4>{{ market_label }}（共 {{ "{:,}".format(m.total) }} 支）</h4>
-    <div class="breadth-bar-row">
-      <div class="breadth-bar-up" style="flex:{{ m.up }}"></div>
-      <div class="breadth-bar-flat" style="flex:{{ m.flat }}"></div>
-      <div class="breadth-bar-down" style="flex:{{ m.down }}"></div>
-    </div>
-    <div class="breadth-row">
-      <span class="blabel">上漲</span>
-      <span class="bval pos">{{ "{:,}".format(m.up) }}</span>
-      <span class="bpct">{{ m.up_pct }}%</span>
-    </div>
-    <div class="breadth-row">
-      <span class="blabel">下跌</span>
-      <span class="bval neg">{{ "{:,}".format(m.down) }}</span>
-      <span class="bpct">{{ m.down_pct }}%</span>
-    </div>
-    <div class="breadth-row">
-      <span class="blabel">持平</span>
-      <span class="bval flat">{{ "{:,}".format(m.flat) }}</span>
-      <span class="bpct">{{ m.flat_pct }}%</span>
+    <div class="breadth-split">
+      {% for cls, seg_label, cnt, pct in [
+        ('up',   '上漲', m.up,   m.up_pct),
+        ('flat', '持平', m.flat, m.flat_pct),
+        ('down', '下跌', m.down, m.down_pct)
+      ] %}
+      <div class="breadth-seg {{ cls }}" style="flex:{{ cnt }}">
+        <div class="seg-bar"></div>
+        <div class="seg-label">{{ seg_label }}</div>
+        <div class="seg-val">{{ "{:,}".format(cnt) }}</div>
+        <div class="seg-pct">{{ pct }}%</div>
+      </div>
+      {% endfor %}
     </div>
     {% if market_key != 'esb' %}
     <div class="breadth-row divider">

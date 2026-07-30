@@ -73,10 +73,14 @@ def build(
     tpex_trust: list[dict],
     twse_prices: dict,
     tpex_prices: dict,
+    pcts: dict | None = None,
 ) -> dict:
     twse_list = _from_twse_t86(twse_t86, twse_prices)
     tpex_list = _from_tpex_trust(tpex_trust, tpex_prices)
     combined  = twse_list + tpex_list
+    # 當日漲跌幅（無報價 → None，前端顯示 –）
+    for s in combined:
+        s["change_pct"] = (pcts or {}).get(s["code"])
 
     buy_super  = sorted([s for s in combined if s["net_zhang"] > 0],
                         key=lambda s: s["net_yi"], reverse=True)

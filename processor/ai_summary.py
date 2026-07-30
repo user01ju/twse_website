@@ -42,7 +42,8 @@ def _build_prompt(sections: dict, date_str: str) -> str:
         mt = sections["market_trend"]["data"]
         ma = mt.get("above_ma20", {})
         nh = mt.get("new_high_low", {})
-        if ma.get("total"):
+        # degraded(cache 缺天) 時整段不進 prompt — 錯的趨勢數字會污染摘要敘事
+        if ma.get("total") and not mt.get("degraded"):
             lines.append(
                 f"【市場趨勢】收盤站上20日均線比例 {ma.get('pct', 0)}%（{ma.get('count', 0)}/{ma.get('total', 0)} 支），"
                 f"創52週新高 {nh.get('new_high', 0)} 支 / 新低 {nh.get('new_low', 0)} 支（淨 {nh.get('net', 0):+d}）"

@@ -9,6 +9,7 @@ from config import REPORTS_DIR, FORCE_REBUILD
 from fetcher import twse_client, tpex_client
 from fetcher.market_calendar import roc_to_date, is_trading_day
 from processor import index_stats, market_breadth, movers, institutional, foreign_trades, trust_trades, combined_inst, dealer_trades, ai_summary, sector_inst, mover_sector, market_trend
+from processor.utils import parse_num, change_pct
 from fetcher import price_cache, exrights
 from generator import renderer, index_builder, today_builder
 
@@ -21,6 +22,39 @@ def _safe(fn, *args, **kwargs) -> dict:
     except Exception as e:
         logger.error(f"{fn.__name__} failed: {e}", exc_info=True)
         return {"ok": False, "error": str(e)}
+
+
+def _build_pct_lookup(
+    twse_stocks: list[dict],
+    tpex_daily: list[dict],
+    ex_refs: dict | None = None,
+) -> dict:
+    """code → 當日漲跌幅(%)。上市/上櫃代號全國唯一，故併成一張表。
+
+    除息/減資/面額變更當日交易所的 Change 欄不可用（TWSE 直接給 'X'），改用
+    exrights 的參考價當基準（券商軟體的標準做法）：pct = (close - ref) / ref。
+    沒有 ref 才退回 Change 欄。
+    """
+    ex_refs = ex_refs or {}
+
+    def _pct(code: str, close: float, change) -> float:
+        ref = ex_refs.get(code)
+        if ref and ref > 0:
+            return (close - ref) / ref * 100
+        return change_pct(close, parse_num(change))
+
+    result = {}
+    for s in twse_stocks:
+        code  = str(s.get("Code", "")).strip()
+        close = parse_num(s.get("ClosingPrice", 0))
+        if code and close > 0:
+            result[code] = _pct(code, close, s.get("Change", 0))
+    for s in tpex_daily:
+        code  = str(s.get("SecuritiesCompanyCode", "")).strip()
+        close = parse_num(s.get("Close", 0))
+        if code and close > 0:
+            result[code] = _pct(code, close, s.get("Change", 0))
+    return result
 
 
 def _build_price_lookup(stock_list: list[dict], code_field: str, price_field: str) -> dict:
@@ -197,9 +231,23 @@ def build(target_date: date) -> None:
         logger.info(f"Report already exists: {output_path}, skipping (set FORCE_REBUILD=True to override)")
         return False
 
+    # 除權息參考價: build 當下自抓(今天+回補7天),還原鏈才不會有跨專案時間差。
+    # 失敗只降級為未還原,不擋報告。market_trend 的還原鏈與 _build_pct_lookup
+    # 的除息日基準都吃這份 cache,所以必須排在 sections 之前。
+    try:
+        exrights.update(actual_date)
+    except Exception as e:
+        logger.warning(f"exrights.update failed: {e}")
+    try:
+        ex_refs = exrights.load_refs().get(actual_date.isoformat(), {})
+    except Exception as e:
+        logger.warning(f"exrights.load_refs failed: {e}")
+        ex_refs = {}
+
     # ── Price lookups ───────────────────────────────────────────────────────
     twse_prices = _build_price_lookup(raw.get("twse_stocks") or [], "Code", "ClosingPrice")
     tpex_prices = _build_price_lookup(raw.get("tpex_daily") or [],  "SecuritiesCompanyCode", "Close")
+    pcts        = _build_pct_lookup(raw.get("twse_stocks") or [], raw.get("tpex_daily") or [], ex_refs)
 
     # ── Process sections ────────────────────────────────────────────────────
     sections = {}
@@ -227,6 +275,7 @@ def build(target_date: date) -> None:
         movers.build,
         raw.get("twse_stocks") or [],
         raw.get("tpex_daily") or [],
+        ex_refs,
     )
     sections["mover_sector"] = _safe(
         mover_sector.build,
@@ -239,6 +288,7 @@ def build(target_date: date) -> None:
         raw.get("tpex_qfii") or [],
         twse_prices,
         tpex_prices,
+        pcts,
     )
     sections["trust"] = _safe(
         trust_trades.build,
@@ -246,6 +296,7 @@ def build(target_date: date) -> None:
         raw.get("tpex_trust") or [],
         twse_prices,
         tpex_prices,
+        pcts,
     )
     sections["combined"] = _safe(
         combined_inst.build,
@@ -253,6 +304,7 @@ def build(target_date: date) -> None:
         raw.get("tpex_all") or [],
         twse_prices,
         tpex_prices,
+        pcts,
     )
     sections["dealer"] = _safe(
         dealer_trades.build,
@@ -273,13 +325,6 @@ def build(target_date: date) -> None:
         price_cache.save(actual_date, raw.get("twse_stocks") or [], raw.get("tpex_daily") or [])
     except Exception as e:
         logger.warning(f"price_cache.save failed: {e}")
-
-    # 除權息參考價: build 當下自抓(今天+回補7天),還原鏈才不會有跨專案時間差。
-    # 失敗只降級為未還原,不擋報告。
-    try:
-        exrights.update(actual_date)
-    except Exception as e:
-        logger.warning(f"exrights.update failed: {e}")
 
     sections["market_trend"] = _safe(market_trend.build, actual_date)
 

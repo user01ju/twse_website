@@ -12,6 +12,7 @@ from zoneinfo import ZoneInfo
 _TZ = ZoneInfo("Asia/Taipei")
 
 from config import OUTPUT_DIR
+from fetcher import exrights
 from processor import index_stats, market_breadth, movers
 from processor.movers import _normalize_twse, _normalize_tpex
 
@@ -45,7 +46,12 @@ def build(actual_date: date, raw: dict, complete: bool) -> bool:
 
     # ── top 5 gainers / losers ───────────────────────────────────────────────
     try:
-        combined = [s for s in _normalize_twse(twse_stocks) + _normalize_tpex(tpex_stocks)
+        # 除息日的漲跌幅要以除權息參考價為基準（cache 沒有就退回交易所 Change 欄）
+        try:
+            ex_refs = exrights.load_refs().get(actual_date.isoformat(), {})
+        except Exception:
+            ex_refs = {}
+        combined = [s for s in _normalize_twse(twse_stocks, ex_refs) + _normalize_tpex(tpex_stocks, ex_refs)
                     if abs(s["change_pct"]) < 50]
         top_gainers = sorted(combined, key=lambda s: s["change_pct"], reverse=True)[:5]
         top_losers  = sorted(combined, key=lambda s: s["change_pct"])[:5]

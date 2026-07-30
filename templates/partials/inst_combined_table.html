@@ -1,4 +1,9 @@
 {# Combined 外資 / 投信 / 三大法人合計 side-by-side buy/sell super tables #}
+{% macro pct_cell(p) -%}
+{% if p is none %}<td class="flat" data-order="0">–</td>
+{%- else %}<td class="{{ 'pos' if p > 0 else ('neg' if p < 0 else 'flat') }}" data-order="{{ p }}">{{ "{:+.2f}".format(p) }}%</td>
+{%- endif %}
+{%- endmacro %}
 {% set panels = [
   ('🌐', '外資買賣超',   sections.foreign),
   ('🏦', '投信買賣超',   sections.trust),
@@ -12,13 +17,14 @@
     <div class="inst-combined-sub">
       <div class="inst-combined-head">{{ icon }} {{ label }} 買超</div>
       {% if sec.ok %}
-      <table class="dt-table inst-compact" data-sort-col="3" data-sort-dir="desc">
-        <thead><tr><th>代號</th><th>名稱</th><th>張數</th><th>金額</th></tr></thead>
+      <table class="dt-table inst-compact" data-sort-col="4" data-sort-dir="desc">
+        <thead><tr><th>代號</th><th>名稱</th><th>漲跌幅</th><th>張數</th><th>金額</th></tr></thead>
         <tbody>
           {% for s in sec.data.buy_super %}
           <tr>
             <td>{{ s.code }}</td>
             <td>{{ s.name }}</td>
+            {{ pct_cell(s.change_pct) }}
             <td class="pos" data-order="{{ s.net_zhang }}">+{{ "{:,}".format(s.net_zhang) }}張</td>
             <td class="pos" data-order="{{ s.net_yi }}">+{{ "{:.1f}".format(s.net_yi) }}億</td>
           </tr>
@@ -34,13 +40,14 @@
     <div class="inst-combined-sub" style="margin-top:16px">
       <div class="inst-combined-head">{{ icon }} {{ label }} 賣超</div>
       {% if sec.ok %}
-      <table class="dt-table inst-compact" data-sort-col="3" data-sort-dir="asc">
-        <thead><tr><th>代號</th><th>名稱</th><th>張數</th><th>金額</th></tr></thead>
+      <table class="dt-table inst-compact" data-sort-col="4" data-sort-dir="asc">
+        <thead><tr><th>代號</th><th>名稱</th><th>漲跌幅</th><th>張數</th><th>金額</th></tr></thead>
         <tbody>
           {% for s in sec.data.sell_super %}
           <tr>
             <td>{{ s.code }}</td>
             <td>{{ s.name }}</td>
+            {{ pct_cell(s.change_pct) }}
             <td class="neg" data-order="{{ s.net_zhang }}">{{ "{:,}".format(s.net_zhang) }}張</td>
             <td class="neg" data-order="{{ s.net_yi }}">{{ "{:.1f}".format(s.net_yi) }}億</td>
           </tr>

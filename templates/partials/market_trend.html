@@ -6,6 +6,14 @@
 {% set pct = ma.pct %}
 {% set net = nh.net %}
 
+{% if d.degraded %}
+<div class="error-box">
+  ⚠️ 歷史價格快取不完整：窗口內只有 {{ d.coverage.got }} / {{ d.coverage.expected }} 個交易日（全窗 {{ d.coverage.pct }}%、近 20 日 {{ d.coverage.recent_pct }}%）。
+  20MA 比例與 52 週新高低會失真（等於拿今天的價去比更早的均價），本區塊數字勿採用。
+  修法：<code>git archive origin/gh-pages | tar -x -C output/</code> 還原 <code>output/data/prices</code> 後重建。
+</div>
+{% endif %}
+
 <div class="trend-grid">
 
   {# ── Above 20MA ── #}

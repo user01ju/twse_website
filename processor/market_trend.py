@@ -14,7 +14,7 @@ import logging
 from collections import deque
 from datetime import date
 
-from fetcher.price_cache import load_window
+from fetcher.price_cache import load_window, window_coverage
 from fetcher import exrights
 
 logger = logging.getLogger(__name__)
@@ -24,6 +24,7 @@ _WEEK52_DAYS = 252  # approx trading days in 52 weeks
 _HALF_YEAR = 126    # 上市/資料滿半年才計新高低(對齊 sector_gainer)
 _CHART_DAYS = 30    # trend chart length
 _WILD = 1.12        # 單日 ±12% 限制外跳動 = 未知資本事件，視為價值中性
+_MIN_COVERAGE = 90.0  # 窗口完整度低於此 → 標 degraded(完整 cache 約 93~97%)
 
 
 class _Chain:
@@ -53,11 +54,26 @@ def build(today: date) -> dict:
     window = load_window(today, _WEEK52_DAYS + _CHART_DAYS)
     history_days = len(window)
 
+    # 窗口完整度: 缺一大塊時 load_window 會往更早日期湊滿天數,指標看起來
+    # 合理但錯(常見於未從 gh-pages 還原 cache 的本機重建) → 標 degraded。
+    # 全窗口比率對「洞在遠端」比較鈍(缺 18 天也只掉到 88%),所以另外看近
+    # 20 日 — MA20 就靠這段,洞在這裡的話比率會直接崩,是更利的偵測器。
+    coverage = window_coverage(window, today)
+    coverage["recent_pct"] = window_coverage(window[-_MA_DAYS:], today)["pct"]
+    degraded = min(coverage["pct"], coverage["recent_pct"]) < _MIN_COVERAGE
+    if degraded:
+        logger.warning(
+            f"market_trend: price cache 窗口只有 {coverage['got']}/{coverage['expected']} "
+            f"個交易日 (全窗 {coverage['pct']}% / 近20日 {coverage['recent_pct']}%) → "
+            f"指標標為 degraded。本機重建請先還原: "
+            f"git archive origin/gh-pages | tar -x -C output/"
+        )
+
     if history_days == 0:
         logger.warning("market_trend: no price cache available")
-        return _empty(0)
+        return _empty(0, coverage)
     if not window[-1][1]:
-        return _empty(history_days)
+        return _empty(history_days, coverage)
 
     refs = exrights.load_refs()
     if not refs:
@@ -124,7 +140,7 @@ def build(today: date) -> dict:
         daily.append((d, pct, above, total, new_high, new_low))
 
     if not daily:
-        return _empty(history_days)
+        return _empty(history_days, coverage)
 
     last_d, last_pct, last_above, last_total, last_nh, last_nl = daily[-1]
 
@@ -141,6 +157,8 @@ def build(today: date) -> dict:
         },
         "history_days": history_days,
         "ma_days_used": min(history_days, _MA_DAYS),
+        "coverage":     coverage,
+        "degraded":     degraded,
         "history": {
             "dates":    [d.strftime("%m/%d") for d, *_ in daily],
             "ma20_pct": [p for _, p, *_ in daily],
@@ -149,11 +167,13 @@ def build(today: date) -> dict:
     }
 
 
-def _empty(history_days: int) -> dict:
+def _empty(history_days: int, coverage: dict | None = None) -> dict:
     return {
         "above_ma20":   {"count": 0, "total": 0, "pct": 0.0},
         "new_high_low": {"new_high": 0, "new_low": 0, "net": 0},
         "history_days": history_days,
         "ma_days_used": 0,
+        "coverage":     coverage or {"got": 0, "expected": 0, "pct": 0.0, "recent_pct": 0.0},
+        "degraded":     True,
         "history": {"dates": [], "ma20_pct": [], "net": []},
     }

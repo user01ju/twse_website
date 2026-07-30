@@ -17,8 +17,27 @@
     return idx < 6 ? negColor : posColor;
   });
 
+  // 柱頂數值標記（Chart.js 無內建 datalabels，自繪）
+  var valueLabels = {
+    id: "distValueLabels",
+    afterDatasetsDraw: function (chart) {
+      var ctx = chart.ctx;
+      ctx.save();
+      ctx.fillStyle = "#8b9ab0";
+      ctx.font = "600 11px 'IBM Plex Mono', monospace";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "bottom";
+      chart.getDatasetMeta(0).data.forEach(function (bar, i) {
+        if (!counts[i]) return;
+        ctx.fillText(counts[i], bar.x, bar.y - 3);
+      });
+      ctx.restore();
+    }
+  };
+
   new Chart(canvas, {
     type: "bar",
+    plugins: [valueLabels],
     data: {
       labels: labels,
       datasets: [{
@@ -31,6 +50,7 @@
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      layout: { padding: { top: 14 } },
       plugins: {
         legend: { display: false },
         tooltip: {
