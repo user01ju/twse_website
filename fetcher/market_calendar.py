@@ -1,6 +1,7 @@
 import json
 import logging
 from datetime import date, datetime, timedelta
+from functools import lru_cache
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -29,13 +30,26 @@ def date_to_roc(d: date) -> str:
     return f"{d.year - 1911:03d}{d.month:02d}{d.day:02d}"
 
 
+@lru_cache(maxsize=None)
 def _load_holidays(year: int) -> set[str]:
+    """休市日集合 (ISO date strings)。
+
+    holidaySchedule 的雷：
+      - 日期欄是西元 ISO `YYYY-MM-DD`，不是 ROC。
+      - `year` 參數收得下但**完全被忽略**，永遠回當年度表 → 必須自行按年份
+        過濾，否則會把今年的假日寫進去年的 cache（跨年度只能改用外部來源）。
+      - 表中混有「交易日」列（國曆新年開始交易日/農曆春節前最後交易日…），
+        那些是有交易的，不能算休市。
+      - 解出 0 筆視為失敗，不寫 cache，免得空集合永久化。
+    """
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     cache_file = CACHE_DIR / f"holidays_{year}.json"
 
     if cache_file.exists():
         try:
-            return set(json.loads(cache_file.read_text(encoding="utf-8")))
+            cached = set(json.loads(cache_file.read_text(encoding="utf-8")))
+            if cached:
+                return cached
         except Exception:
             pass
 
@@ -50,13 +64,21 @@ def _load_holidays(year: int) -> set[str]:
         data = resp.json()
         holidays = set()
         for row in data.get("data", []):
-            date_str = row[0].strip()
-            if len(date_str) == 7:
-                try:
-                    d = roc_to_date(date_str)
-                    holidays.add(d.isoformat())
-                except Exception:
-                    pass
+            try:
+                d = date.fromisoformat(str(row[0]).strip())
+            except Exception:
+                continue
+            if d.year != year:
+                continue
+            name = str(row[1]).strip() if len(row) > 1 else ""
+            if "交易日" in name:      # 開始/最後交易日 — 有交易，不是休市
+                continue
+            holidays.add(d.isoformat())
+
+        if not holidays:
+            logger.warning(f"holidaySchedule returned no holidays for {year} — not caching")
+            return set()
+
         cache_file.write_text(json.dumps(sorted(holidays)), encoding="utf-8")
         return holidays
     except Exception as e:

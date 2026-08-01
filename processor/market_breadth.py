@@ -1,5 +1,6 @@
 """Section 2: 市場統計 (上漲/下跌/持平/漲停/跌停)."""
-from .utils import parse_num, price_status, is_warrant, change_pct as _change_pct
+from .utils import parse_num, price_status, is_warrant
+from .movers import _vs_ref
 
 # 漲跌幅分布區間 (label, lo_inclusive, hi_exclusive); None = unbounded
 _DIST_BINS = [
@@ -20,12 +21,15 @@ _DIST_BINS = [
 
 def _count(stocks: list[dict], close_field: str, change_field: str,
            code_field: str = "", name_field: str = "",
-           limit_prices: dict = None) -> dict:
+           limit_prices: dict = None, ex_refs: dict = None) -> dict:
     """
     limit_prices: {code: (limit_up_price, limit_down_price)} from TWT84U (fetched with trading date).
     When provided, use official limit prices only — no formula fallback.
     Stocks not in limit_prices (e.g. TPEX) fall back to price_status() heuristic.
+    ex_refs: {code: 除權息參考價} — 除息/減資當日交易所 Change 給 'X'（parse 成 0
+    會誤判持平），有參考價就改以 close vs ref 判方向。
     """
+    ex_refs = ex_refs or {}
     counts = {"up": 0, "down": 0, "flat": 0, "limit_up": 0, "limit_down": 0, "total": 0}
     for s in stocks:
         try:
@@ -38,6 +42,7 @@ def _count(stocks: list[dict], close_field: str, change_field: str,
             if close <= 0:
                 continue
             counts["total"] += 1
+            change, _ = _vs_ref(code, close, change, ex_refs)
 
             # Use official limit prices when available (TWSE TWT84U).
             # Note: TWT84U may return *next* trading day reference prices after
@@ -133,8 +138,10 @@ def _from_tpex_highlight(h: dict) -> dict:
     return counts
 
 
-def _distribution(twse_stocks: list[dict], tpex_stocks: list[dict]) -> dict:
+def _distribution(twse_stocks: list[dict], tpex_stocks: list[dict],
+                  ex_refs: dict = None) -> dict:
     """Combined TWSE+TPEX change_pct distribution across 12 bins."""
+    ex_refs = ex_refs or {}
     pcts = []
     for s in twse_stocks:
         try:
@@ -144,7 +151,7 @@ def _distribution(twse_stocks: list[dict], tpex_stocks: list[dict]) -> dict:
             close  = parse_num(s.get("ClosingPrice", 0))
             change = parse_num(str(s.get("Change", "0")).replace(",", ""))
             if close > 0:
-                pcts.append(_change_pct(close, change))
+                pcts.append(_vs_ref(code, close, change, ex_refs)[1])
         except Exception:
             pass
     for s in tpex_stocks:
@@ -156,7 +163,7 @@ def _distribution(twse_stocks: list[dict], tpex_stocks: list[dict]) -> dict:
             close  = parse_num(s.get("Close", 0))
             change = parse_num(str(s.get("Change", "0")))
             if close > 0:
-                pcts.append(_change_pct(close, change))
+                pcts.append(_vs_ref(code, close, change, ex_refs)[1])
         except Exception:
             pass
 
@@ -174,18 +181,20 @@ def _distribution(twse_stocks: list[dict], tpex_stocks: list[dict]) -> dict:
 
 
 def build(twse_stocks: list[dict], tpex_stocks: list[dict], esb_stocks: list[dict],
-          twt84u_limits: dict = None, tpex_highlight: dict = None) -> dict:
+          twt84u_limits: dict = None, tpex_highlight: dict = None,
+          ex_refs: dict = None) -> dict:
     # TPEX: use official highlight data when available, fall back to per-stock computation
     if tpex_highlight:
         tpex_counts = _from_tpex_highlight(tpex_highlight)
     else:
         tpex_counts = _count(tpex_stocks, "Close", "Change",
-                             code_field="SecuritiesCompanyCode", name_field="CompanyName")
+                             code_field="SecuritiesCompanyCode", name_field="CompanyName",
+                             ex_refs=ex_refs)
 
     return {
         "twse": _count(twse_stocks, "ClosingPrice", "Change",
-                       code_field="Code", limit_prices=twt84u_limits),
+                       code_field="Code", limit_prices=twt84u_limits, ex_refs=ex_refs),
         "tpex": tpex_counts,
         "esb":  _count_esb(esb_stocks),
-        "distribution": _distribution(twse_stocks, tpex_stocks),
+        "distribution": _distribution(twse_stocks, tpex_stocks, ex_refs),
     }

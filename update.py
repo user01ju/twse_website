@@ -6,6 +6,7 @@ Exit codes:
   1 — unexpected error
 """
 import logging
+import os
 import sys
 
 logging.basicConfig(
@@ -18,6 +19,14 @@ from fetcher.market_calendar import get_latest_trading_day
 from generator import report_builder
 
 
+def _export_report_date(target):
+    """CI 用：把日期丟給後續 step 當 commit message（本機執行時 no-op）。"""
+    github_env = os.environ.get("GITHUB_ENV")
+    if github_env:
+        with open(github_env, "a", encoding="utf-8") as f:
+            f.write(f"REPORT_DATE={target.isoformat()}\n")
+
+
 def main():
     target = get_latest_trading_day()
     print(f"Building report for trading day: {target.isoformat()}")
@@ -28,9 +37,11 @@ def main():
         sys.exit(1)
 
     if generated is True:
+        _export_report_date(target)
         print("Done. New report generated.")
         sys.exit(0)
     elif generated == "partial":
+        _export_report_date(target)
         print("Done. Partial today.json written (institutional data not yet available).")
         sys.exit(0)
     else:

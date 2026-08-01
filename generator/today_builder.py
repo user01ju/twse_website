@@ -37,20 +37,21 @@ def build(actual_date: date, raw: dict, complete: bool) -> bool:
         logger.warning(f"today_builder: index_stats failed: {e}")
         taiex = {}   # allow writing a date-only placeholder when raw is empty
 
+    # 除息/減資日的漲跌要以除權息參考價為基準（cache 沒有就退回交易所 Change 欄）
+    try:
+        ex_refs = exrights.load_refs().get(actual_date.isoformat(), {})
+    except Exception:
+        ex_refs = {}
+
     # ── breadth ─────────────────────────────────────────────────────────────
     try:
-        breadth = market_breadth.build(twse_stocks, tpex_stocks, esb_stocks, twt84u, tpex_hl)
+        breadth = market_breadth.build(twse_stocks, tpex_stocks, esb_stocks, twt84u, tpex_hl, ex_refs)
     except Exception as e:
         logger.warning(f"today_builder: market_breadth failed: {e}")
         breadth = {}
 
     # ── top 5 gainers / losers ───────────────────────────────────────────────
     try:
-        # 除息日的漲跌幅要以除權息參考價為基準（cache 沒有就退回交易所 Change 欄）
-        try:
-            ex_refs = exrights.load_refs().get(actual_date.isoformat(), {})
-        except Exception:
-            ex_refs = {}
         combined = [s for s in _normalize_twse(twse_stocks, ex_refs) + _normalize_tpex(tpex_stocks, ex_refs)
                     if abs(s["change_pct"]) < 50]
         top_gainers = sorted(combined, key=lambda s: s["change_pct"], reverse=True)[:5]

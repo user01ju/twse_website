@@ -2,9 +2,10 @@ name: 每日股市行情更新
 
 on:
   schedule:
-    # 台灣時間 15:00 開始，每 30 分鐘重試一次，直到 00:00（UTC 07:00–16:00）
+    # 台灣時間 15:00 開始，每 30 分鐘重試一次，直到 23:30（UTC 07:00–15:30）
+    # UTC 16:00 之後的班次一定被下面的 timecheck 跳過，所以不排。
     # 注意：GitHub Actions schedule 在公開 repo 常有大幅延遲，請搭配外部 cron 觸發
-    - cron: '0,30 7-16 * * 1-5'
+    - cron: '0,30 7-15 * * 1-5'
   repository_dispatch:
     # 外部 cron (cron-job.org) 透過 GitHub API 觸發，可帶 force_rebuild
     # POST https://api.github.com/repos/user01ju/twse_website/dispatches
@@ -80,6 +81,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./output
           keep_files: false
+          force_orphan: true
           commit_message: "chore: update market report ${{ env.REPORT_DATE }}"
 
       - name: 輸出執行結果

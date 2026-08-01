@@ -103,7 +103,8 @@ def _detect_data_date(twse_stocks: list | None, twse_index: list | None) -> date
     return None
 
 
-def build(target_date: date) -> None:
+def build(target_date: date) -> "bool | str":
+    """回傳 True（完整報告）/ "partial"（只寫了 today.json）/ False（沒東西可部署）。"""
     logger.info(f"Fetching market data (requested date: {target_date.isoformat()})")
 
     today_str = target_date.strftime("%Y%m%d")
@@ -265,6 +266,7 @@ def build(target_date: date) -> None:
         raw.get("tpex_esb") or [],
         raw.get("twse_twt84u") or {},
         raw.get("tpex_highlight") or {},
+        ex_refs,
     )
     sections["institutional"] = _safe(
         institutional.build,
