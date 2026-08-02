@@ -17,12 +17,17 @@ on:
         description: '強制重建報告 (FORCE_REBUILD=true)'
         type: boolean
         default: false
+      skip_verify:
+        description: '略過資料驗證直接部署（確定是假警報、門檻還沒空修時的逃生門）'
+        type: boolean
+        default: false
 
 jobs:
   update:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      actions: read   # 查今天是否已經紅過一次（告警降噪，見驗證步驟）
 
     steps:
       - name: 檢查是否超過台灣時間 00:00（UTC 16:00）
@@ -81,24 +86,61 @@ jobs:
             exit "$RESULT"
           fi
 
+      # 「擋部署」與「發紅燈寄信」是兩件事，這裡刻意分開處理：
+      #   擋部署 → FAIL 一律擋，透過 outputs.ok 傳給下面的部署步驟。
+      #   發紅燈 → 每天只發第一次。本 workflow 平日 15:00–23:30 每 30 分跑一輪，
+      #            上游一旦改版導致每輪都 FAIL，一天會寄出最多 17 封同樣的信；
+      #            第二天你就會開始無視它，這套告警等於死了。告警疲勞比沒告警更糟。
+      # 刻意「不」做熔斷（今天紅過就不再跑）：盤後資料齊全時間不定，重試迴圈是
+      # 本專案自我修復的機制，停掉它會讓暫時性失敗變成整天停更。
       - name: 資料驗證 Tier A（零外部呼叫，FAIL 擋部署）
         # 只在真的產出了新資料時驗；exit 2（沒東西可更新）沒有新產物可驗。
-        if: steps.timecheck.outputs.skip != 'true' && steps.generate.outputs.result == '0'
+        id: verify
+        if: >-
+          steps.timecheck.outputs.skip != 'true'
+          && steps.generate.outputs.result == '0'
+          && github.event.inputs.skip_verify != 'true'
+          && github.event.client_payload.skip_verify != '1'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set +e
           python verify.py --tier a
           RC=$?
           set -e
-          if [ "$RC" = "1" ]; then
-            echo "::error::Tier A 驗證 FAIL — 中止部署（見上方 [FAIL] 行）"
-            exit 1
-          fi
-          if [ "$RC" = "2" ]; then
-            echo "::warning::Tier A 有 WARN（不擋部署）"
+
+          if [ "$RC" != "1" ]; then
+            echo "ok=true" >> $GITHUB_OUTPUT
+            [ "$RC" = "2" ] && echo "::warning::Tier A 有 WARN（不擋部署）"
+            exit 0
           fi
 
+          echo "ok=false" >> $GITHUB_OUTPUT
+
+          # 今天這個 workflow 是否已經失敗過？有的話就不再發紅燈，只留 warning。
+          # 注意這是「本 workflow 今天的任何失敗」而非只算驗證失敗 —— 反正你今天
+          # 已經收過一封信了，一天一封是刻意的上限。
+          TODAY=$(TZ=Asia/Taipei date +%F)
+          PRIOR=$(gh run list --repo "$GITHUB_REPOSITORY" \
+                    --workflow daily_update.yml --status failure --limit 40 \
+                    --json createdAt --jq '.[].createdAt' 2>/dev/null \
+                  | while read -r ts; do TZ=Asia/Taipei date -d "$ts" +%F; done \
+                  | grep -c "^$TODAY$" || true)
+          PRIOR=${PRIOR:-0}
+
+          if [ "$PRIOR" -gt 0 ]; then
+            echo "::warning::Tier A 驗證 FAIL — 已擋下部署。今天稍早已紅過 $PRIOR 次，本輪不重複發告警（見上方 [FAIL] 行）"
+            exit 0
+          fi
+
+          echo "::error::Tier A 驗證 FAIL — 中止部署（見上方 [FAIL] 行）"
+          exit 1
+
       - name: 部署到 GitHub Pages
-        if: steps.timecheck.outputs.skip != 'true' && steps.generate.outputs.result == '0'
+        if: >-
+          steps.timecheck.outputs.skip != 'true'
+          && steps.generate.outputs.result == '0'
+          && steps.verify.outputs.ok != 'false'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -111,7 +153,10 @@ jobs:
         if: steps.timecheck.outputs.skip != 'true'
         run: |
           RESULT="${{ steps.generate.outputs.result }}"
-          if [ "$RESULT" = "0" ]; then
+          VERIFY_OK="${{ steps.verify.outputs.ok }}"
+          if [ "$RESULT" = "0" ] && [ "$VERIFY_OK" = "false" ]; then
+            echo "報告已生成但驗證 FAIL —— 未部署，線上維持前一份。修好後下一輪會自動補上"
+          elif [ "$RESULT" = "0" ]; then
             echo "新報告已生成並部署"
           elif [ "$RESULT" = "2" ]; then
             echo "無新資料（非交易日或資料未就緒），等待下次重試"

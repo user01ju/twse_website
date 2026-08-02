@@ -31,6 +31,46 @@ exit code：`0` 全過（或只有 SKIP）／`1` 至少一條 FAIL／`2` 沒 FAI
 - `exit 2` = 非交易日／資料未就緒 → **保持綠燈安靜重試**（這個語意是刻意的，別讓非交易日變紅燈）
 - 其餘（`exit 1` = 非預期錯誤）→ `::error::` + 中止，workflow 變紅
 
+## 紅燈了怎麼辦
+
+**資料不會壞。**FAIL 只擋部署，線上維持前一份好的報告；這一輪的產出直接丟棄，下一輪重新抓、重新驗。暫時性的上游抽風會自我修復，你什麼都不用做。
+
+判斷成因看 FAIL 訊息裡的實際值與門檻：
+
+- 數字接近門檻 → 上游延遲或門檻訂太緊 → 調門檻或不理它
+- 數字差很遠 → 我們的解析/計算壞了（多半是上游改版）→ 修程式
+- `檢查本身拋例外` → 上游欄位改名/消失 → 修 fetcher
+
+本機重現要先還原線上狀態，否則 `output/` 不全會得到一堆假訊號：
+
+```bash
+git fetch origin gh-pages && git archive origin/gh-pages | tar -x -C output/
+python verify.py --tier a
+```
+
+### 逃生門
+
+確定是假警報、但門檻還沒空修時，跳過驗證直接部署：
+
+```bash
+gh workflow run --repo user01ju/twse_website daily_update.yml -f skip_verify=true
+```
+
+外部 cron 那條路徑帶 `client_payload.skip_verify=1` 同效。
+
+### 告警降噪（本 repo 特有）
+
+本 workflow 平日 15:00–23:30 每 30 分跑一輪。上游一旦改版導致每輪都 FAIL，**一天會寄出最多 17 封同樣的信**——第二天你就會開始無視它，這套告警等於死了。告警疲勞比沒告警更糟，因為你以為有在看。
+
+所以「擋部署」與「發紅燈」刻意分開：
+
+- **擋部署**：FAIL 一律擋，透過 `steps.verify.outputs.ok` 傳給部署步驟。
+- **發紅燈**：查今天本 workflow 是否已失敗過（`gh run list --status failure`），已經紅過就只留 `::warning::` 不再讓 workflow 變紅。**每天上限一封信**，隔天沒修好會再紅一次，形成每日提醒節奏。
+
+刻意**不**做熔斷（今天紅過就整天不再跑）：盤後資料齊全時間不定，重試迴圈是本專案自我修復的機制，停掉它會讓暫時性失敗變成整天停更。
+
+副作用是「job 綠燈但沒部署」的狀態會存在。最後的「輸出執行結果」步驟會明講這件事，log 裡也有 warning。
+
 ## Tier A（6 條，零外部呼叫）
 
 | check-id | 驗什麼 |
