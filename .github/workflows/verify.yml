@@ -1,0 +1,57 @@
+name: 資料交叉驗證 (Tier B)
+
+# Tier B = 交叉源不變量，會打外部 API（MI_INDEX / T86 / BFI82U，共 3 次呼叫）。
+# 刻意跟 daily_update.yml 分開：這裡紅了只代表「資料對不起來」，不該擋每日更新
+# 與部署。反過來說，這個 workflow 不寫任何東西，permissions 只要 read。
+on:
+  schedule:
+    # UTC 10:30 = 台灣 18:30 — 遠在 15:00 那輪之後，法人資料早已就緒。
+    # 若當天資料還沒出來，verify.py 會因日期對不上回 SKIP，不會誤報。
+    - cron: '30 10 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v7
+
+      - name: 還原 output/（從 gh-pages）
+        # today.json / data/exrights.csv / data/prices 都不在 source branch
+        # （.gitignore），只存在於 gh-pages。沒還原成功就沒東西可驗。
+        run: |
+          mkdir -p output
+          git fetch origin gh-pages 2>/dev/null || true
+          if git show-ref --verify --quiet refs/remotes/origin/gh-pages; then
+            git archive origin/gh-pages | tar -x -C output/
+            echo "已還原 output/：$(ls output | tr '\n' ' ')"
+          else
+            echo "::warning::gh-pages 不存在，Tier B 將全數 SKIP"
+          fi
+
+      - name: 設定 Python 3.12
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: 安裝套件
+        run: pip install -r requirements.txt
+
+      - name: 執行 Tier B
+        run: |
+          set +e
+          python verify.py --tier b
+          RC=$?
+          set -e
+          if [ "$RC" = "1" ]; then
+            echo "::error::Tier B 驗證 FAIL — 兩個來源的數字對不起來（見上方 [FAIL] 行）"
+            exit 1
+          fi
+          if [ "$RC" = "2" ]; then
+            echo "::warning::Tier B 有 WARN"
+          fi

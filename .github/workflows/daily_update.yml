@@ -72,7 +72,30 @@ jobs:
           set +e
           python update.py
           RESULT=$?
+          set -e
           echo "result=$RESULT" >> $GITHUB_OUTPUT
+          # exit 0 = 有新產出、exit 2 = 非交易日/資料未就緒（刻意安靜重試，保持綠燈）。
+          # 其餘（1 = 非預期錯誤）以前被吞掉、workflow 照樣綠 → 沒人收到告警。
+          if [ "$RESULT" != "0" ] && [ "$RESULT" != "2" ]; then
+            echo "::error::update.py 非預期失敗 (exit $RESULT)"
+            exit "$RESULT"
+          fi
+
+      - name: 資料驗證 Tier A（零外部呼叫，FAIL 擋部署）
+        # 只在真的產出了新資料時驗；exit 2（沒東西可更新）沒有新產物可驗。
+        if: steps.timecheck.outputs.skip != 'true' && steps.generate.outputs.result == '0'
+        run: |
+          set +e
+          python verify.py --tier a
+          RC=$?
+          set -e
+          if [ "$RC" = "1" ]; then
+            echo "::error::Tier A 驗證 FAIL — 中止部署（見上方 [FAIL] 行）"
+            exit 1
+          fi
+          if [ "$RC" = "2" ]; then
+            echo "::warning::Tier A 有 WARN（不擋部署）"
+          fi
 
       - name: 部署到 GitHub Pages
         if: steps.timecheck.outputs.skip != 'true' && steps.generate.outputs.result == '0'
