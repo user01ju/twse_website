@@ -5,9 +5,11 @@ name: 資料交叉驗證 (Tier B)
 # 與部署。反過來說，這個 workflow 不寫任何東西，permissions 只要 read。
 on:
   schedule:
-    # UTC 10:30 = 台灣 18:30 — 遠在 15:00 那輪之後，法人資料早已就緒。
+    # UTC 13:00 = 台灣 21:00 — daily_update 的重試窗是 15:00~23:30，18:30 那個時間點
+    # 有機會撞上「當天資料還沒齊、gh-pages 上還是舊報告」而拿到一堆 SKIP。
+    # 21:00 跟另外三個 repo 的 Tier B 對齊（sector_gainer 21:00 / financial_report 21:30）。
     # 若當天資料還沒出來，verify.py 會因日期對不上回 SKIP，不會誤報。
-    - cron: '30 10 * * 1-5'
+    - cron: '0 13 * * 1-5'
   workflow_dispatch:
 
 permissions:
