@@ -51,20 +51,23 @@ jobs:
           set -o pipefail
           mkdir -p output/reports
 
-          # 部署是 force_orphan（gh-pages 不留歷史），所以「還原失敗」不是退化
-          # 而是資料毀損：整包 output/ 會用只有今天的內容覆蓋線上，282 天 price
-          # cache + 全部歷史報告一次抹光，且沒有 commit 可以回滾。
+          # gh-pages 同時是成品 host 和狀態 store（price cache / exrights），所以
+          # 「還原失敗」不是退化而是資料毀損：整包 output/ 會用只有今天的內容覆蓋
+          # 線上，282 天 price cache + 全部歷史報告一次抹光。
           # 2026-08-03 就這樣炸過一次 —— 那天 fetch 卡了 29 秒後失敗，被舊寫法
           # （2>/dev/null || true 再看 show-ref）誤判成「gh-pages 尚未建立」而
-          # 走冷啟動路徑。所以這裡：先問遠端分支到底存不存在，存在就一定要還原
-          # 成功，失敗寧可讓 job 紅掉也不部署。
+          # 走冷啟動路徑，當時還配 force_orphan: true 所以連回滾點都沒有。所以
+          # 這裡：先問遠端分支到底存不存在，存在就一定要還原成功，失敗寧可讓
+          # job 紅掉也不部署。
           if ! git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
             echo "gh-pages 尚未建立，從頭部署"
             exit 0
           fi
 
+          # --depth=1：gh-pages 現在會累積歷史（force_orphan 已關掉），但還原只需要
+          # 最新那棵 tree，不必把整條歷史拉下來。
           for i in 1 2 3; do
-            if git fetch --force origin gh-pages:refs/remotes/origin/gh-pages; then
+            if git fetch --force --depth=1 origin gh-pages:refs/remotes/origin/gh-pages; then
               break
             fi
             echo "gh-pages fetch 第 $i 次失敗，10 秒後重試"
@@ -167,8 +170,15 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./output
+          # keep_files: false → publish_dir 沒有的檔案會被刪掉，所以「刪除」照樣
+          # 傳播，不會累積孤兒檔。
           keep_files: false
-          force_orphan: true
+          # force_orphan 刻意**不開**：開了每次部署都是 root commit，gh-pages 沒有
+          # 任何回滾點，而這個分支同時存放 price cache / exrights，一次壞部署就是
+          # 不可逆的資料毀損（2026-08-03 實際發生，靠 GitHub 尚未 gc 的 unreachable
+          # commit 才撈回來，那條路沒有任何保證）。
+          # 留歷史的代價實測 ~90 KiB/交易日（報告 HTML 壓縮率極高）≈ 22 MiB/年，
+          # 相對 GitHub 1 GB 軟上限可忽略。嫌長了就手動 orphan squash 一次壓平。
           commit_message: "chore: update market report ${{ env.REPORT_DATE }}"
 
       - name: 輸出執行結果
