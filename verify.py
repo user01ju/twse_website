@@ -59,6 +59,11 @@ MAX_TRADING_DAY_LAG = 1
 # 正常；超過 30 天多半是 gh-pages cache 沒還原或 exrights.update() 一直失敗。
 EXRIGHTS_STALE_DAYS = 30
 
+# price cache 窗口的**絕對**天數下限（覆蓋率比率之外的第二道，理由見
+# check_price_window_coverage）。滿窗是 252+30=282 天，健康值 280 上下；
+# 52 週新高低本來就要 _HALF_YEAR≈126 天才開始計，200 以下這區塊已無意義。
+_MIN_WINDOW_DAYS = 200
+
 # T86 個股股數 × 收盤價 Σ vs BFI82U 金額。差異來源是「收盤價 ≠ 當日成交均價」，
 # 2026-07-31 實測買進 +0.31% / 賣出 +0.19%（那天大盤 +7.98%，波動已算大）。
 # 3% 給足空間，8% 以上幾乎不可能是均價偏差，一定是單位錯/漏股/parse 壞。
@@ -408,21 +413,30 @@ def check_report_html_present(ctx: Ctx):
 
 def check_price_window_coverage(ctx: Ctx):
     """趨勢窗口完整度。跟 market_trend 用同一個 _MIN_COVERAGE，但這裡是在
-    **部署之前**看：CI 的 gh-pages 還原是 `|| true` 靜默跳過的，還原失敗時
-    20MA / 52 週新高低會「合理但錯」（2026-07-30 踩過：42.7% vs 正確 12.4%）。
-    生產端已經會標 degraded 並顯示紅色橫幅，所以這裡只 WARN，不擋部署。"""
+    **部署之前**看：CI 的 gh-pages 還原失敗時 20MA / 52 週新高低會「合理但錯」
+    （2026-07-30 踩過：42.7% vs 正確 12.4%）。生產端會標 degraded 並顯示紅色
+    橫幅，所以覆蓋率不足只 WARN，不擋部署。
+
+    但**窗口本身縮到只剩幾天**是另一回事，必須 FAIL：比率的分母是窗口起點
+    到報告日的工作日數，窗口塌成 1 天時分子分母一起縮 → 1/1 = 100% 過關
+    （2026-08-03 踩過：gh-pages 還原失敗 → 冷啟動 → 這條 PASS → force_orphan
+    部署把 282 天快取和全部歷史報告抹光）。部署不可逆，所以絕對天數要獨立看。"""
     if not TODAY_JSON.exists():
         return _missing(str(TODAY_JSON))
     rd = ctx.report_date
     window = price_cache.load_window(rd, 252 + 30)
     if not window:
-        return (WARN, f"output/data/prices/ 沒有任何 {rd} 之前的快照 — "
-                      f"趨勢區塊會完全空白")
+        return (FAIL, f"output/data/prices/ 沒有任何 {rd} 之前的快照 — "
+                      f"gh-pages 還原必定失敗了，部署會把線上快取清空")
     cov = price_cache.window_coverage(window, rd)
     recent = price_cache.window_coverage(window[-20:], rd)["pct"]
     worst = min(cov["pct"], recent)
     msg = (f"price cache {cov['got']}/{cov['expected']} 個交易日"
            f"（全窗 {cov['pct']}% / 近20日 {recent}%，門檻 {_MIN_COVERAGE}%）")
+    if cov["got"] < _MIN_WINDOW_DAYS:
+        return FAIL, msg + (f" — 實得天數低於 {_MIN_WINDOW_DAYS}，窗口已塌陷"
+                            f"（比率會假性 100%）；八成是 gh-pages 還原失敗，"
+                            f"部署會抹掉線上歷史")
     if worst < _MIN_COVERAGE:
         return WARN, msg + " — 趨勢指標會被標 degraded；CI 請確認 gh-pages 還原成功"
     return PASS, msg

@@ -48,14 +48,36 @@ jobs:
       - name: 還原歷史報告（從 gh-pages）
         if: steps.timecheck.outputs.skip != 'true'
         run: |
+          set -o pipefail
           mkdir -p output/reports
-          git fetch origin gh-pages 2>/dev/null || true
-          if git show-ref --verify --quiet refs/remotes/origin/gh-pages; then
-            git archive origin/gh-pages | tar -x -C output/ 2>/dev/null || true
-            echo "歷史報告已還原"
-          else
+
+          # 部署是 force_orphan（gh-pages 不留歷史），所以「還原失敗」不是退化
+          # 而是資料毀損：整包 output/ 會用只有今天的內容覆蓋線上，282 天 price
+          # cache + 全部歷史報告一次抹光，且沒有 commit 可以回滾。
+          # 2026-08-03 就這樣炸過一次 —— 那天 fetch 卡了 29 秒後失敗，被舊寫法
+          # （2>/dev/null || true 再看 show-ref）誤判成「gh-pages 尚未建立」而
+          # 走冷啟動路徑。所以這裡：先問遠端分支到底存不存在，存在就一定要還原
+          # 成功，失敗寧可讓 job 紅掉也不部署。
+          if ! git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
             echo "gh-pages 尚未建立，從頭部署"
+            exit 0
           fi
+
+          for i in 1 2 3; do
+            if git fetch --force origin gh-pages:refs/remotes/origin/gh-pages; then
+              break
+            fi
+            echo "gh-pages fetch 第 $i 次失敗，10 秒後重試"
+            sleep 10
+          done
+
+          if ! git show-ref --verify --quiet refs/remotes/origin/gh-pages; then
+            echo "::error::gh-pages 分支存在但 fetch 三次都失敗 — 中止，避免用空快取覆蓋線上"
+            exit 1
+          fi
+
+          git archive origin/gh-pages | tar -x -C output/
+          echo "歷史報告已還原（price cache $(ls output/data/prices 2>/dev/null | wc -l) 檔）"
 
       - name: 設定 Python 3.12
         if: steps.timecheck.outputs.skip != 'true'
