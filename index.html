@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>台股每日行情</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="static/css/style.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+</head>
+<body>
+  <nav class="topnav">
+    <a class="brand" href="index.html">台股每日行情</a>
+    
+  </nav>
+  <main>
+<h1 class="page-title">台股每日行情匯總</h1>
+
+<!-- 即時大盤 widget (從 today.json 動態載入) -->
+<div id="today-widget" style="display:none">
+  <div class="today-header">
+    <span id="tw-date"></span>
+    <span id="tw-badge" class="today-badge"></span>
+    <span id="tw-time" style="color:var(--text-muted);font-size:12px;margin-left:auto"></span>
+  </div>
+  <div class="today-grid">
+    <div class="today-card">
+      <div class="today-card-label">加權指數 <span id="tw-taiex-date" class="card-date-tag"></span></div>
+      <div id="tw-close" class="today-card-value"></div>
+      <div id="tw-change" class="today-card-sub"></div>
+    </div>
+    <div class="today-card">
+      <div class="today-card-label">成交金額 <span id="tw-amount-date" class="card-date-tag"></span></div>
+      <div id="tw-amount" class="today-card-value"></div>
+      <div id="tw-txn" class="today-card-sub" style="color:var(--text-muted)"></div>
+    </div>
+    <div class="today-card" id="card-twse">
+      <div class="today-card-label" id="lbl-twse">上市漲跌</div>
+      <div id="tw-bar-twse" class="tw-bar-row"></div>
+      <div id="tw-breadth-twse"></div>
+    </div>
+    <div class="today-card" id="card-tpex">
+      <div class="today-card-label" id="lbl-tpex">上櫃漲跌</div>
+      <div id="tw-bar-tpex" class="tw-bar-row"></div>
+      <div id="tw-breadth-tpex"></div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="latest-banner">
+  <div>
+    <div class="latest-label">最新報告</div>
+    <a href="reports/2026-08-03.html">2026-08-03 收盤行情</a>
+  </div>
+  <div style="color:var(--text-muted);font-size:12px;margin-left:auto">
+    更新於 2026-08-03 19:52:42
+  </div>
+</div>
+
+
+<table class="archive-table">
+  <thead>
+    <tr><th>日期</th><th>產生時間</th><th>連結</th></tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>2026-08-03</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-08-03 19:52:42</td>
+      <td><a href="reports/2026-08-03.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-07-31</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-08-01 22:34:45</td>
+      <td><a href="reports/2026-07-31.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-07-30</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-07-30 21:43:28</td>
+      <td><a href="reports/2026-07-30.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-07-29</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-07-29 17:01:49</td>
+      <td><a href="reports/2026-07-29.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-07-28</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-07-28 17:01:41</td>
+      <td><a href="reports/2026-07-28.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-07-27</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-07-27 17:01:53</td>
+      <td><a href="reports/2026-07-27.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-07-24</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-07-24 17:01:54</td>
+      <td><a href="reports/2026-07-24.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-07-23</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-07-23 17:01:47</td>
+      <td><a href="reports/2026-07-23.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-07-22</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-07-22 17:01:37</td>
+      <td><a href="reports/2026-07-22.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-07-21</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-07-21 17:02:13</td>
+      <td><a href="reports/2026-07-21.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-07-20</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-07-20 17:02:01</td>
+      <td><a href="reports/2026-07-20.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-07-17</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-07-17 17:04:55</td>
+      <td><a href="reports/2026-07-17.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-07-16</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-07-16 17:01:59</td>
+      <td><a href="reports/2026-07-16.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-07-15</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-07-15 17:02:00</td>
+      <td><a href="reports/2026-07-15.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-07-14</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-07-14 17:02:24</td>
+      <td><a href="reports/2026-07-14.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-07-13</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-07-13 17:02:10</td>
+      <td><a href="reports/2026-07-13.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-07-09</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-07-09 18:02:16</td>
+      <td><a href="reports/2026-07-09.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-07-08</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-07-08 17:02:03</td>
+      <td><a href="reports/2026-07-08.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-07-07</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-07-07 17:02:08</td>
+      <td><a href="reports/2026-07-07.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-07-06</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-07-06 17:02:34</td>
+      <td><a href="reports/2026-07-06.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-07-03</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-07-03 17:51:49</td>
+      <td><a href="reports/2026-07-03.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-07-02</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-07-02 18:01:44</td>
+      <td><a href="reports/2026-07-02.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-07-01</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-07-01 17:01:39</td>
+      <td><a href="reports/2026-07-01.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-06-30</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-06-30 17:01:50</td>
+      <td><a href="reports/2026-06-30.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-06-29</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-06-29 17:01:17</td>
+      <td><a href="reports/2026-06-29.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-06-26</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-06-27 00:45:56</td>
+      <td><a href="reports/2026-06-26.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-06-25</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-06-25 22:41:21</td>
+      <td><a href="reports/2026-06-25.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-06-24</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-06-24 21:01:22</td>
+      <td><a href="reports/2026-06-24.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-06-23</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-06-23 20:23:56</td>
+      <td><a href="reports/2026-06-23.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-06-22</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-06-22 18:02:18</td>
+      <td><a href="reports/2026-06-22.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-06-18</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-06-22 09:27:26</td>
+      <td><a href="reports/2026-06-18.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-06-17</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-06-17 17:01:37</td>
+      <td><a href="reports/2026-06-17.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-06-16</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-06-16 20:06:24</td>
+      <td><a href="reports/2026-06-16.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-06-15</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-06-15 18:02:39</td>
+      <td><a href="reports/2026-06-15.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-06-12</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-06-14 00:41:33</td>
+      <td><a href="reports/2026-06-12.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-06-11</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-06-11 18:02:03</td>
+      <td><a href="reports/2026-06-11.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-06-10</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-06-10 21:12:32</td>
+      <td><a href="reports/2026-06-10.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-06-09</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-06-09 18:30:23</td>
+      <td><a href="reports/2026-06-09.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-06-08</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-06-08 17:01:27</td>
+      <td><a href="reports/2026-06-08.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-06-05</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-06-05 18:01:09</td>
+      <td><a href="reports/2026-06-05.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-06-04</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-06-04 17:01:49</td>
+      <td><a href="reports/2026-06-04.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-06-03</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-06-03 18:01:24</td>
+      <td><a href="reports/2026-06-03.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-06-02</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-06-02 17:01:09</td>
+      <td><a href="reports/2026-06-02.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-06-01</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-06-01 21:08:46</td>
+      <td><a href="reports/2026-06-01.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-05-29</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-05-30 10:46:23</td>
+      <td><a href="reports/2026-05-29.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-05-28</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-05-28 18:48:10</td>
+      <td><a href="reports/2026-05-28.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-05-27</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-05-27 18:01:21</td>
+      <td><a href="reports/2026-05-27.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-05-26</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-05-26 17:01:01</td>
+      <td><a href="reports/2026-05-26.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-05-25</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-05-25 18:00:56</td>
+      <td><a href="reports/2026-05-25.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-05-22</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-05-22 17:01:11</td>
+      <td><a href="reports/2026-05-22.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-05-21</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-05-21 21:44:43</td>
+      <td><a href="reports/2026-05-21.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-05-20</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-05-20 18:21:29</td>
+      <td><a href="reports/2026-05-20.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-05-19</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-05-19 16:20:02</td>
+      <td><a href="reports/2026-05-19.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-05-18</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-05-19 10:20:07</td>
+      <td><a href="reports/2026-05-18.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-05-15</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-05-15 17:41:37</td>
+      <td><a href="reports/2026-05-15.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-05-14</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-05-14 17:11:01</td>
+      <td><a href="reports/2026-05-14.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-05-13</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-05-13 16:27:12</td>
+      <td><a href="reports/2026-05-13.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-05-12</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-05-12 20:37:38</td>
+      <td><a href="reports/2026-05-12.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-05-11</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-05-11 21:01:38</td>
+      <td><a href="reports/2026-05-11.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-05-08</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-05-10 16:22:34</td>
+      <td><a href="reports/2026-05-08.html">查看報告</a></td>
+    </tr>
+    
+    <tr>
+      <td>2026-05-06</td>
+      <td style="color:var(--text-muted);font-size:13px">2026-05-07 23:03:15</td>
+      <td><a href="reports/2026-05-06.html">查看報告</a></td>
+    </tr>
+    
+  </tbody>
+</table>
+
+
+
+<div style="margin-top:32px;color:var(--text-muted);font-size:12px">
+  資料來源：臺灣證券交易所 (TWSE) · 證券櫃檯買賣中心 (TPEX)
+</div>
+</main>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="static/js/report.js"></script>
+  
+<style>
+.today-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.today-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--pos);
+  color: #fff;
+}
+.today-badge.partial { background: var(--text-muted); }
+.card-date-tag {
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  vertical-align: middle;
+  margin-left: 4px;
+  letter-spacing: 0;
+}
+.today-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.today-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.today-card-label { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+.today-card-value { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.today-card-sub   { font-size: 13px; margin-top: 4px; }
+
+/* 色條（對齊 report breadth-bar-row） */
+.tw-bar-row {
+  display: flex;
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 8px 0 10px;
+  gap: 1px;
+}
+.tw-bar-up   { background: var(--pos); border-radius: 3px 0 0 3px; }
+.tw-bar-flat { background: var(--flat); opacity: 0.4; }
+.tw-bar-down { background: var(--neg); border-radius: 0 3px 3px 0; }
+
+/* 漲跌明細列（對齊 report .breadth-row） */
+.tw-brow {
+  display: flex;
+  align-items: center;
+  padding: 3px 0;
+  font-size: 13px;
+  gap: 6px;
+}
+.tw-brow + .tw-brow { border-top: 1px solid var(--border); }
+.tw-brow.divider { margin-top: 4px; border-top: 1px dashed var(--border) !important; }
+.tw-blabel { color: var(--text-muted); width: 28px; flex-shrink: 0; }
+.tw-bval   { font-weight: 700; min-width: 38px; text-align: right; font-variant-numeric: tabular-nums; }
+.tw-bpct   { color: var(--text-muted); font-size: 11px; margin-left: auto; }
+
+#today-widget { margin-bottom: 28px; }
+</style>
+<script>
+(function() {
+  function fmt(n, d) {
+    return Number(n).toLocaleString('zh-TW', {minimumFractionDigits: d == null ? 0 : d, maximumFractionDigits: d == null ? 0 : d});
+  }
+  function pctStr(p, d) { return (p >= 0 ? '+' : '') + fmt(p, d == null ? 2 : d) + '%'; }
+  function posNeg(n) { return n > 0 ? 'pos' : n < 0 ? 'neg' : 'flat'; }
+
+  fetch('./today.json?_=' + Date.now())
+    .then(r => r.ok ? r.json() : null)
+    .catch(() => null)
+    .then(d => {
+      if (!d || !d.date) return;
+
+      // Taiwan today (UTC+8)
+      const taiwanToday = new Date(Date.now() + 8 * 3600000).toISOString().slice(0, 10);
+      const isStale = d.date < taiwanToday;
+
+      // header
+      const displayDate = isStale ? taiwanToday : d.date;
+      document.getElementById('tw-date').textContent = displayDate + ' 盤後快訊';
+      const badge = document.getElementById('tw-badge');
+      if (!isStale && d.complete) { badge.textContent = '完整版'; badge.className = 'today-badge'; }
+      else                        { badge.textContent = '更新中'; badge.className = 'today-badge partial'; }
+      document.getElementById('tw-time').textContent = isStale
+        ? '今日資料尚未更新，顯示最後收盤：' + d.date
+        : '資料時間 ' + d.generated_at;
+
+      // Even when stale, still render the last available session's cards so the
+      // widget isn't blank before today's data is published. Cards are tagged
+      // with the data's own date (d.date), not today's.
+      const dateTag = d.date;
+      ['tw-taiex-date', 'tw-amount-date'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = dateTag;
+      });
+
+      // taiex
+      const t = d.taiex;
+      if (!t || !t.close) {
+        document.getElementById('today-widget').style.display = 'block';
+        return;
+      }
+      const cc = posNeg(t.change_pts);
+      document.getElementById('tw-close').innerHTML =
+        '<span class="' + cc + '">' + fmt(t.close, 2) + '</span>';
+      document.getElementById('tw-change').innerHTML =
+        '<span class="' + cc + '">' + (t.change_pts >= 0 ? '▲' : '▼') + ' ' +
+        fmt(Math.abs(t.change_pts), 2) + '　' + pctStr(t.change_pct) + '</span>';
+      document.getElementById('tw-amount').textContent = fmt(t.trading_amount_yi, 0) + ' 億';
+      document.getElementById('tw-txn').textContent = fmt(t.transaction_count) + ' 筆';
+
+      // breadth card
+      function renderBreadth(barId, rowId, lblId, b, label) {
+        if (!b || !b.total) return;
+        document.getElementById(lblId).innerHTML = label + '（共 ' + fmt(b.total) + ' 支）' +
+          ' <span class="card-date-tag">' + dateTag + '</span>';
+        // color bar
+        document.getElementById(barId).innerHTML =
+          '<div class="tw-bar-up" style="flex:' + b.up + '"></div>' +
+          '<div class="tw-bar-flat" style="flex:' + b.flat + '"></div>' +
+          '<div class="tw-bar-down" style="flex:' + b.down + '"></div>';
+        // rows
+        function row(label, val, pct, colorCls, extra) {
+          return '<div class="tw-brow' + (extra || '') + '">' +
+            '<span class="tw-blabel">' + label + '</span>' +
+            '<span class="tw-bval ' + colorCls + '">' + fmt(val) + '</span>' +
+            '<span class="tw-bpct">' + fmt(pct, 1) + '%</span>' +
+            '</div>';
+        }
+        document.getElementById(rowId).innerHTML =
+          row('上漲', b.up,         b.up_pct,         'pos') +
+          row('下跌', b.down,       b.down_pct,       'neg') +
+          row('持平', b.flat,       b.flat_pct,       'flat') +
+          row('漲停', b.limit_up,   b.limit_up_pct,   'pos', ' divider') +
+          row('跌停', b.limit_down, b.limit_down_pct, 'neg');
+      }
+      renderBreadth('tw-bar-twse', 'tw-breadth-twse', 'lbl-twse', d.breadth && d.breadth.twse, '上市漲跌');
+      renderBreadth('tw-bar-tpex', 'tw-breadth-tpex', 'lbl-tpex', d.breadth && d.breadth.tpex, '上櫃漲跌');
+
+      document.getElementById('today-widget').style.display = 'block';
+    });
+})();
+</script>
+
+</body>
+</html>

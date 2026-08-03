@@ -1,0 +1,114 @@
+{
+  "date": "2026-08-03",
+  "generated_at": "2026-08-03 19:52:42",
+  "complete": true,
+  "taiex": {
+    "close": 43386.41,
+    "change_pts": 266.66,
+    "change_pct": 0.62,
+    "trading_amount_yi": 8855.06043091,
+    "transaction_count": 4191882
+  },
+  "breadth": {
+    "twse": {
+      "up": 798,
+      "down": 474,
+      "flat": 95,
+      "limit_up": 64,
+      "limit_down": 0,
+      "total": 1367,
+      "up_pct": 58.4,
+      "down_pct": 34.7,
+      "flat_pct": 6.9,
+      "limit_up_pct": 4.7,
+      "limit_down_pct": 0.0
+    },
+    "tpex": {
+      "up": 561,
+      "down": 233,
+      "flat": 65,
+      "limit_up": 44,
+      "limit_down": 1,
+      "total": 890,
+      "up_pct": 63.0,
+      "down_pct": 26.2,
+      "flat_pct": 7.3,
+      "limit_up_pct": 4.9,
+      "limit_down_pct": 0.1
+    }
+  },
+  "top_gainers": [
+    {
+      "code": "2059",
+      "name": "川湖",
+      "close": 8635.0,
+      "change_pct": 10.0,
+      "market": "上市"
+    },
+    {
+      "code": "2344",
+      "name": "華邦電",
+      "close": 143.0,
+      "change_pct": 10.0,
+      "market": "上市"
+    },
+    {
+      "code": "3006",
+      "name": "晶豪科",
+      "close": 198.0,
+      "change_pct": 10.0,
+      "market": "上市"
+    },
+    {
+      "code": "3090",
+      "name": "日電貿",
+      "close": 137.5,
+      "change_pct": 10.0,
+      "market": "上市"
+    },
+    {
+      "code": "3338",
+      "name": "泰碩",
+      "close": 63.8,
+      "change_pct": 10.0,
+      "market": "上市"
+    }
+  ],
+  "top_losers": [
+    {
+      "code": "4442",
+      "name": "竣邦-KY",
+      "close": 65.4,
+      "change_pct": -9.917355371900825,
+      "market": "上櫃"
+    },
+    {
+      "code": "2480",
+      "name": "敦陽科",
+      "close": 152.5,
+      "change_pct": -8.132530120481928,
+      "market": "上市"
+    },
+    {
+      "code": "3004",
+      "name": "豐達科",
+      "close": 124.5,
+      "change_pct": -7.777777777777778,
+      "market": "上市"
+    },
+    {
+      "code": "4609",
+      "name": "唐鋒",
+      "close": 4.91,
+      "change_pct": -7.532956685499058,
+      "market": "上櫃"
+    },
+    {
+      "code": "6432",
+      "name": "今展科",
+      "close": 71.5,
+      "change_pct": -7.503234152652006,
+      "market": "上櫃"
+    }
+  ]
+}
