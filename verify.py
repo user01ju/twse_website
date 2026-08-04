@@ -85,6 +85,14 @@ BREADTH_TOL_WARN_PCT = 2.0   # 佔 total 的百分比
 # 欄位語意變了，或抓到別天的整包。
 BREADTH_UNCLASSIFIED_WARN_PCT = 5.0
 
+# partial today.json 裡「某市場 breadth 整個是 0」的寬限截止（台北時，含當日重建）。
+# TPEX openapi 的當日資料常要 15:30~16:00 才落地，但本 workflow 15:00 就開跑 →
+# 每個交易日的第一輪都會看到上櫃 total=0。那是還沒發布，不是 parse 壞掉。
+# 2026-08-03 / 08-04 兩天的 15:00 班次都因此紅燈，還吃掉了「一天一封信」的告警
+# 配額（真的壞掉時只剩 warning）—— 假警報比沒警報更貴，就在這裡。
+# 過了這個鐘點還是 0 才算真的壞：TPEX 全天不發資料，本站就整天出不了完整報告。
+PENDING_BREADTH_CUTOFF_HOUR = 17
+
 # 加權指數收盤：兩邊都是官方數字，應完全相同。留 0.01 點吸收浮點。
 TAIEX_TOL_PASS = 0.01
 TAIEX_TOL_WARN_PCT = 0.5
@@ -327,21 +335,27 @@ def check_today_json_structure(ctx: Ctx):
     上櫃 total 來自 TPEX 官方 highlight 的 ListedCompanyNumbers，那個**包含未成交
     與無比價**，所以 up+down+flat < total 是正常的（2026-07-31 實測差 13 家 =
     1.5%）；只有反過來（sum > total）或缺口大到不合理才有問題。
+
+    當天的 partial today.json 在 PENDING_BREADTH_CUTOFF_HOUR 之前，某市場整個空
+    白算「尚未發布」而非資料錯（見該常數）。
     """
     if not TODAY_JSON.exists():
         return _missing(str(TODAY_JSON))
     tj = ctx.today_json
-    problems, notes = [], []
+    problems, notes, pending = [], [], []
+    # 寬限只給「今天的、還沒補完的」報告；重建舊日期或已標 complete 還缺，就是真的錯。
+    grace = (not tj.get("complete")
+             and ctx.report_date == ctx.today
+             and datetime.now(_TZ).hour < PENDING_BREADTH_CUTOFF_HOUR)
     for mkt in ("twse", "tpex"):
         b = (tj.get("breadth") or {}).get(mkt) or {}
-        if not b:
-            problems.append(f"{mkt}: breadth 缺")
-            continue
         total = b.get("total", 0)
+        if not b or total <= 0:
+            what = f"{mkt}: breadth 缺" if not b else f"{mkt}: total={total}"
+            (pending if grace else problems).append(what)
+            continue
         s = b.get("up", 0) + b.get("down", 0) + b.get("flat", 0)
-        if total <= 0:
-            problems.append(f"{mkt}: total={total}")
-        elif s > total:
+        if s > total:
             problems.append(f"{mkt}: up+down+flat={s} > total={total}")
         elif mkt == "twse" and s != total:
             problems.append(f"{mkt}: up+down+flat={s} ≠ total={total}（自算欄位應嚴格相等）")
@@ -361,10 +375,13 @@ def check_today_json_structure(ctx: Ctx):
             problems.append("complete=true 但 top_gainers/top_losers 空")
     if problems:
         return FAIL, "today.json 結構異常：" + "；".join(problems)
-    tw = tj["breadth"]["twse"]
-    base = (f"today.json {tj['date']} 結構正常（上市 {tw['total']} 檔 = "
-            f"漲 {tw['up']} + 跌 {tw['down']} + 平 {tw['flat']}，"
-            f"加權 {taiex.get('close', '—')}）")
+    tw = (tj.get("breadth") or {}).get("twse") or {}
+    counted = (f"上市 {tw['total']} 檔 = 漲 {tw['up']} + 跌 {tw['down']} + 平 {tw['flat']}，"
+               if tw.get("total") else "")
+    base = f"today.json {tj['date']} 結構正常（{counted}加權 {taiex.get('close', '—')}）"
+    if pending:
+        notes.append(f"{'、'.join(pending)} — partial 報告，資料尚未發布"
+                     f"（寬限至台北 {PENDING_BREADTH_CUTOFF_HOUR}:00，下一班補）")
     if notes:
         return PASS, base + " ｜ " + "；".join(notes)
     return PASS, base
