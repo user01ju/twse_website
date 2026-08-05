@@ -1,6 +1,6 @@
 {
   "date": "2026-08-05",
-  "generated_at": "2026-08-05 15:02:02",
+  "generated_at": "2026-08-05 16:01:16",
   "complete": false,
   "taiex": {
     "close": 44611.6,
@@ -24,17 +24,17 @@
       "limit_down_pct": 0.1
     },
     "tpex": {
-      "up": 0,
-      "down": 0,
-      "flat": 0,
-      "limit_up": 0,
-      "limit_down": 0,
-      "total": 0,
-      "up_pct": 0.0,
-      "down_pct": 0.0,
-      "flat_pct": 0.0,
-      "limit_up_pct": 0.0,
-      "limit_down_pct": 0.0
+      "up": 579,
+      "down": 212,
+      "flat": 80,
+      "limit_up": 33,
+      "limit_down": 1,
+      "total": 890,
+      "up_pct": 65.1,
+      "down_pct": 23.8,
+      "flat_pct": 9.0,
+      "limit_up_pct": 3.7,
+      "limit_down_pct": 0.1
     }
   },
   "top_gainers": [
@@ -67,11 +67,11 @@
       "market": "上市"
     },
     {
-      "code": "6799",
-      "name": "來頡",
-      "close": 87.0,
-      "change_pct": 9.987357774968396,
-      "market": "上市"
+      "code": "3624",
+      "name": "光頡",
+      "close": 74.8,
+      "change_pct": 10.0,
+      "market": "上櫃"
     }
   ],
   "top_losers": [
@@ -83,32 +83,32 @@
       "market": "上市"
     },
     {
-      "code": "3229",
-      "name": "晟鈦",
-      "close": 44.25,
-      "change_pct": -7.329842931937172,
-      "market": "上市"
+      "code": "4442",
+      "name": "竣邦-KY",
+      "close": 53.1,
+      "change_pct": -9.847198641765704,
+      "market": "上櫃"
     },
     {
-      "code": "2493",
-      "name": "揚博",
-      "close": 205.5,
-      "change_pct": -6.59090909090909,
-      "market": "上市"
+      "code": "6488",
+      "name": "環球晶",
+      "close": 872.0,
+      "change_pct": -8.403361344537815,
+      "market": "上櫃"
     },
     {
-      "code": "6226",
-      "name": "光鼎",
-      "close": 20.8,
-      "change_pct": -5.454545454545454,
-      "market": "上市"
+      "code": "3632",
+      "name": "研勤",
+      "close": 7.83,
+      "change_pct": -7.773851590106007,
+      "market": "上櫃"
     },
     {
-      "code": "2006",
-      "name": "東和鋼鐵",
-      "close": 78.4,
-      "change_pct": -4.969696969696969,
-      "market": "上市"
+      "code": "4744",
+      "name": "皇將",
+      "close": 27.5,
+      "change_pct": -7.718120805369126,
+      "market": "上櫃"
     }
   ]
 }
