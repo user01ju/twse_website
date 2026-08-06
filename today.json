@@ -1,6 +1,6 @@
 {
   "date": "2026-08-06",
-  "generated_at": "2026-08-06 15:01:16",
+  "generated_at": "2026-08-06 16:01:21",
   "complete": false,
   "taiex": {
     "close": 44396.7,
@@ -24,17 +24,17 @@
       "limit_down_pct": 0.1
     },
     "tpex": {
-      "up": 0,
-      "down": 0,
-      "flat": 0,
-      "limit_up": 0,
-      "limit_down": 0,
-      "total": 0,
-      "up_pct": 0.0,
-      "down_pct": 0.0,
-      "flat_pct": 0.0,
-      "limit_up_pct": 0.0,
-      "limit_down_pct": 0.0
+      "up": 437,
+      "down": 341,
+      "flat": 88,
+      "limit_up": 27,
+      "limit_down": 1,
+      "total": 890,
+      "up_pct": 49.1,
+      "down_pct": 38.3,
+      "flat_pct": 9.9,
+      "limit_up_pct": 3.0,
+      "limit_down_pct": 0.1
     }
   },
   "top_gainers": [
@@ -53,25 +53,25 @@
       "market": "上市"
     },
     {
-      "code": "2491",
-      "name": "吉祥全",
-      "close": 31.95,
-      "change_pct": 9.982788296041308,
-      "market": "上市"
+      "code": "2070",
+      "name": "精湛",
+      "close": 58.3,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "6213",
-      "name": "聯茂",
-      "close": 375.0,
-      "change_pct": 9.970674486803519,
-      "market": "上市"
+      "code": "3219",
+      "name": "倚強科",
+      "close": 71.5,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "3652",
-      "name": "精聯",
-      "close": 34.2,
-      "change_pct": 9.967845659163988,
-      "market": "上市"
+      "code": "3114",
+      "name": "好德",
+      "close": 36.9,
+      "change_pct": 9.985096870342772,
+      "market": "上櫃"
     }
   ],
   "top_losers": [
@@ -81,6 +81,13 @@
       "close": 25.25,
       "change_pct": -9.98217468805704,
       "market": "上市"
+    },
+    {
+      "code": "3147",
+      "name": "大綜",
+      "close": 244.5,
+      "change_pct": -9.94475138121547,
+      "market": "上櫃"
     },
     {
       "code": "2305",
@@ -101,13 +108,6 @@
       "name": "迅杰",
       "close": 45.3,
       "change_pct": -8.484848484848486,
-      "market": "上市"
-    },
-    {
-      "code": "2458",
-      "name": "義隆",
-      "close": 147.5,
-      "change_pct": -8.09968847352025,
       "market": "上市"
     }
   ]
