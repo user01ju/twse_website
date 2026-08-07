@@ -1,6 +1,6 @@
 {
   "date": "2026-08-07",
-  "generated_at": "2026-08-07 15:01:38",
+  "generated_at": "2026-08-07 16:01:16",
   "complete": false,
   "taiex": {
     "close": 44225.91,
@@ -24,17 +24,17 @@
       "limit_down_pct": 0.2
     },
     "tpex": {
-      "up": 0,
-      "down": 0,
-      "flat": 0,
-      "limit_up": 0,
-      "limit_down": 0,
-      "total": 0,
-      "up_pct": 0.0,
-      "down_pct": 0.0,
-      "flat_pct": 0.0,
-      "limit_up_pct": 0.0,
-      "limit_down_pct": 0.0
+      "up": 336,
+      "down": 444,
+      "flat": 84,
+      "limit_up": 13,
+      "limit_down": 6,
+      "total": 890,
+      "up_pct": 37.8,
+      "down_pct": 49.9,
+      "flat_pct": 9.4,
+      "limit_up_pct": 1.5,
+      "limit_down_pct": 0.7
     }
   },
   "top_gainers": [
@@ -53,28 +53,35 @@
       "market": "上市"
     },
     {
-      "code": "3518",
-      "name": "柏騰",
-      "close": 28.15,
-      "change_pct": 9.9609375,
-      "market": "上市"
+      "code": "5291",
+      "name": "邑昇",
+      "close": 56.1,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "8039",
-      "name": "台虹",
-      "close": 237.5,
-      "change_pct": 9.953703703703704,
-      "market": "上市"
+      "code": "6584",
+      "name": "南俊國際",
+      "close": 550.0,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "4566",
-      "name": "時碩工業",
-      "close": 76.3,
-      "change_pct": 9.942363112391932,
-      "market": "上市"
+      "code": "6716",
+      "name": "應廣",
+      "close": 95.7,
+      "change_pct": 10.0,
+      "market": "上櫃"
     }
   ],
   "top_losers": [
+    {
+      "code": "6613",
+      "name": "朋億*",
+      "close": 276.0,
+      "change_pct": -9.9510603588907,
+      "market": "上櫃"
+    },
     {
       "code": "3135",
       "name": "凌航",
@@ -90,25 +97,18 @@
       "market": "上市"
     },
     {
-      "code": "3026",
-      "name": "禾伸堂",
-      "close": 535.0,
-      "change_pct": -9.780775716694773,
-      "market": "上市"
+      "code": "6735",
+      "name": "美達科技",
+      "close": 65.7,
+      "change_pct": -9.876543209876543,
+      "market": "上櫃"
     },
     {
-      "code": "8210",
-      "name": "勤誠",
-      "close": 1115.0,
-      "change_pct": -9.7165991902834,
-      "market": "上市"
-    },
-    {
-      "code": "3036",
-      "name": "文曄",
-      "close": 211.5,
-      "change_pct": -9.421841541755889,
-      "market": "上市"
+      "code": "4503",
+      "name": "金雨",
+      "close": 30.15,
+      "change_pct": -9.865470852017937,
+      "market": "上櫃"
     }
   ]
 }
