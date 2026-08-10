@@ -1,6 +1,6 @@
 {
   "date": "2026-08-10",
-  "generated_at": "2026-08-10 15:02:35",
+  "generated_at": "2026-08-10 16:02:11",
   "complete": false,
   "taiex": {
     "close": 44928.76,
@@ -24,17 +24,17 @@
       "limit_down_pct": 0.1
     },
     "tpex": {
-      "up": 0,
-      "down": 0,
-      "flat": 0,
-      "limit_up": 0,
-      "limit_down": 0,
-      "total": 0,
-      "up_pct": 0.0,
-      "down_pct": 0.0,
-      "flat_pct": 0.0,
-      "limit_up_pct": 0.0,
-      "limit_down_pct": 0.0
+      "up": 582,
+      "down": 219,
+      "flat": 73,
+      "limit_up": 29,
+      "limit_down": 3,
+      "total": 890,
+      "up_pct": 65.4,
+      "down_pct": 24.6,
+      "flat_pct": 8.2,
+      "limit_up_pct": 3.3,
+      "limit_down_pct": 0.3
     }
   },
   "top_gainers": [
@@ -83,31 +83,31 @@
       "market": "上市"
     },
     {
+      "code": "4503",
+      "name": "金雨",
+      "close": 27.15,
+      "change_pct": -9.950248756218906,
+      "market": "上櫃"
+    },
+    {
+      "code": "8069",
+      "name": "元太",
+      "close": 176.5,
+      "change_pct": -9.948979591836734,
+      "market": "上櫃"
+    },
+    {
+      "code": "6556",
+      "name": "勝品",
+      "close": 61.7,
+      "change_pct": -9.927007299270073,
+      "market": "上櫃"
+    },
+    {
       "code": "3532",
       "name": "台勝科",
       "close": 283.0,
       "change_pct": -9.44,
-      "market": "上市"
-    },
-    {
-      "code": "6901",
-      "name": "鑽石投資",
-      "close": 16.3,
-      "change_pct": -9.192200557103064,
-      "market": "上市"
-    },
-    {
-      "code": "2610",
-      "name": "華航",
-      "close": 20.45,
-      "change_pct": -9.11111111111111,
-      "market": "上市"
-    },
-    {
-      "code": "8926",
-      "name": "台汽電",
-      "close": 57.0,
-      "change_pct": -8.064516129032258,
       "market": "上市"
     }
   ]
