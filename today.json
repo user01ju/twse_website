@@ -1,114 +1,114 @@
 {
-  "date": "2026-08-07",
-  "generated_at": "2026-08-07 17:03:18",
-  "complete": true,
+  "date": "2026-08-10",
+  "generated_at": "2026-08-10 15:02:35",
+  "complete": false,
   "taiex": {
-    "close": 44225.91,
-    "change_pts": -170.79,
-    "change_pct": -0.38,
-    "trading_amount_yi": 8444.39695783,
-    "transaction_count": 4398016
+    "close": 44928.76,
+    "change_pts": 702.85,
+    "change_pct": 1.59,
+    "trading_amount_yi": 8762.38549437,
+    "transaction_count": 4441592
   },
   "breadth": {
     "twse": {
-      "up": 579,
-      "down": 679,
-      "flat": 102,
-      "limit_up": 14,
-      "limit_down": 3,
-      "total": 1360,
-      "up_pct": 42.6,
-      "down_pct": 49.9,
-      "flat_pct": 7.5,
-      "limit_up_pct": 1.0,
-      "limit_down_pct": 0.2
+      "up": 967,
+      "down": 292,
+      "flat": 107,
+      "limit_up": 48,
+      "limit_down": 1,
+      "total": 1366,
+      "up_pct": 70.8,
+      "down_pct": 21.4,
+      "flat_pct": 7.8,
+      "limit_up_pct": 3.5,
+      "limit_down_pct": 0.1
     },
     "tpex": {
-      "up": 336,
-      "down": 444,
-      "flat": 84,
-      "limit_up": 13,
-      "limit_down": 6,
-      "total": 890,
-      "up_pct": 37.8,
-      "down_pct": 49.9,
-      "flat_pct": 9.4,
-      "limit_up_pct": 1.5,
-      "limit_down_pct": 0.7
+      "up": 0,
+      "down": 0,
+      "flat": 0,
+      "limit_up": 0,
+      "limit_down": 0,
+      "total": 0,
+      "up_pct": 0.0,
+      "down_pct": 0.0,
+      "flat_pct": 0.0,
+      "limit_up_pct": 0.0,
+      "limit_down_pct": 0.0
     }
   },
   "top_gainers": [
     {
-      "code": "1762",
-      "name": "中化生",
-      "close": 35.75,
+      "code": "1409",
+      "name": "新纖",
+      "close": 24.75,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "2059",
-      "name": "川湖",
-      "close": 11110.0,
+      "code": "1455",
+      "name": "集盛",
+      "close": 9.9,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "5291",
-      "name": "邑昇",
-      "close": 56.1,
+      "code": "2033",
+      "name": "佳大",
+      "close": 18.7,
       "change_pct": 10.0,
-      "market": "上櫃"
+      "market": "上市"
     },
     {
-      "code": "6584",
-      "name": "南俊國際",
-      "close": 550.0,
+      "code": "2103",
+      "name": "台橡",
+      "close": 27.5,
       "change_pct": 10.0,
-      "market": "上櫃"
+      "market": "上市"
     },
     {
-      "code": "6716",
-      "name": "應廣",
-      "close": 95.7,
+      "code": "2308",
+      "name": "台達電",
+      "close": 1815.0,
       "change_pct": 10.0,
-      "market": "上櫃"
+      "market": "上市"
     }
   ],
   "top_losers": [
     {
-      "code": "6613",
-      "name": "朋億*",
-      "close": 276.0,
-      "change_pct": -9.9510603588907,
-      "market": "上櫃"
-    },
-    {
-      "code": "3135",
-      "name": "凌航",
-      "close": 168.0,
-      "change_pct": -9.919571045576408,
+      "code": "5225",
+      "name": "東科-KY",
+      "close": 66.7,
+      "change_pct": -9.986504723346828,
       "market": "上市"
     },
     {
-      "code": "4764",
-      "name": "雙鍵",
-      "close": 236.5,
-      "change_pct": -9.904761904761905,
+      "code": "3532",
+      "name": "台勝科",
+      "close": 283.0,
+      "change_pct": -9.44,
       "market": "上市"
     },
     {
-      "code": "6735",
-      "name": "美達科技",
-      "close": 65.7,
-      "change_pct": -9.876543209876543,
-      "market": "上櫃"
+      "code": "6901",
+      "name": "鑽石投資",
+      "close": 16.3,
+      "change_pct": -9.192200557103064,
+      "market": "上市"
     },
     {
-      "code": "4503",
-      "name": "金雨",
-      "close": 30.15,
-      "change_pct": -9.865470852017937,
-      "market": "上櫃"
+      "code": "2610",
+      "name": "華航",
+      "close": 20.45,
+      "change_pct": -9.11111111111111,
+      "market": "上市"
+    },
+    {
+      "code": "8926",
+      "name": "台汽電",
+      "close": 57.0,
+      "change_pct": -8.064516129032258,
+      "market": "上市"
     }
   ]
 }
