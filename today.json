@@ -1,6 +1,6 @@
 {
   "date": "2026-08-11",
-  "generated_at": "2026-08-11 15:01:14",
+  "generated_at": "2026-08-11 16:01:26",
   "complete": false,
   "taiex": {
     "close": 45120.72,
@@ -24,17 +24,17 @@
       "limit_down_pct": 0.3
     },
     "tpex": {
-      "up": 0,
-      "down": 0,
-      "flat": 0,
-      "limit_up": 0,
-      "limit_down": 0,
-      "total": 0,
-      "up_pct": 0.0,
-      "down_pct": 0.0,
-      "flat_pct": 0.0,
-      "limit_up_pct": 0.0,
-      "limit_down_pct": 0.0
+      "up": 329,
+      "down": 455,
+      "flat": 90,
+      "limit_up": 14,
+      "limit_down": 8,
+      "total": 890,
+      "up_pct": 37.0,
+      "down_pct": 51.1,
+      "flat_pct": 10.1,
+      "limit_up_pct": 1.6,
+      "limit_down_pct": 0.9
     }
   },
   "top_gainers": [
@@ -46,32 +46,32 @@
       "market": "上市"
     },
     {
-      "code": "3044",
-      "name": "健鼎",
-      "close": 441.5,
-      "change_pct": 9.9626400996264,
-      "market": "上市"
+      "code": "5426",
+      "name": "振發",
+      "close": 30.8,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "6225",
-      "name": "天瀚",
-      "close": 30.45,
-      "change_pct": 9.927797833935019,
-      "market": "上市"
+      "code": "6121",
+      "name": "新普",
+      "close": 434.5,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "1563",
-      "name": "巧新",
-      "close": 62.1,
-      "change_pct": 9.91150442477876,
-      "market": "上市"
+      "code": "8084",
+      "name": "巨虹",
+      "close": 52.8,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "2033",
-      "name": "佳大",
-      "close": 20.55,
-      "change_pct": 9.893048128342247,
-      "market": "上市"
+      "code": "5904",
+      "name": "寶雅*",
+      "close": 87.1,
+      "change_pct": 9.974747474747476,
+      "market": "上櫃"
     }
   ],
   "top_losers": [
@@ -83,32 +83,32 @@
       "market": "上市"
     },
     {
-      "code": "3704",
-      "name": "合勤控",
-      "close": 45.4,
-      "change_pct": -9.920634920634921,
-      "market": "上市"
+      "code": "5536",
+      "name": "聖暉*",
+      "close": 941.0,
+      "change_pct": -9.952153110047847,
+      "market": "上櫃"
     },
     {
-      "code": "7740",
-      "name": "熙特爾-創",
-      "close": 159.5,
-      "change_pct": -9.887005649717514,
-      "market": "上市"
+      "code": "4503",
+      "name": "金雨",
+      "close": 24.45,
+      "change_pct": -9.94475138121547,
+      "market": "上櫃"
     },
     {
-      "code": "4551",
-      "name": "智伸科",
-      "close": 157.0,
-      "change_pct": -9.770114942528735,
-      "market": "上市"
+      "code": "8050",
+      "name": "廣積",
+      "close": 61.6,
+      "change_pct": -9.941520467836257,
+      "market": "上櫃"
     },
     {
-      "code": "3450",
-      "name": "聯鈞",
-      "close": 473.5,
-      "change_pct": -9.63740458015267,
-      "market": "上市"
+      "code": "3709",
+      "name": "鑫聯大投控",
+      "close": 71.6,
+      "change_pct": -9.937106918238994,
+      "market": "上櫃"
     }
   ]
 }
