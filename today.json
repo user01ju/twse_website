@@ -1,113 +1,113 @@
 {
-  "date": "2026-08-11",
-  "generated_at": "2026-08-11 16:13:34",
-  "complete": true,
+  "date": "2026-08-12",
+  "generated_at": "2026-08-12 16:02:21",
+  "complete": false,
   "taiex": {
-    "close": 45120.72,
-    "change_pts": 191.96,
-    "change_pct": 0.43,
-    "trading_amount_yi": 8957.29602439,
-    "transaction_count": 4473265
+    "close": 45518.07,
+    "change_pts": 397.35,
+    "change_pct": 0.88,
+    "trading_amount_yi": 8888.36225282,
+    "transaction_count": 4570157
   },
   "breadth": {
     "twse": {
-      "up": 508,
-      "down": 713,
-      "flat": 142,
-      "limit_up": 13,
-      "limit_down": 4,
-      "total": 1363,
-      "up_pct": 37.3,
-      "down_pct": 52.3,
-      "flat_pct": 10.4,
-      "limit_up_pct": 1.0,
-      "limit_down_pct": 0.3
+      "up": 774,
+      "down": 464,
+      "flat": 129,
+      "limit_up": 22,
+      "limit_down": 0,
+      "total": 1367,
+      "up_pct": 56.6,
+      "down_pct": 33.9,
+      "flat_pct": 9.4,
+      "limit_up_pct": 1.6,
+      "limit_down_pct": 0.0
     },
     "tpex": {
-      "up": 329,
-      "down": 455,
-      "flat": 90,
-      "limit_up": 14,
-      "limit_down": 8,
+      "up": 487,
+      "down": 292,
+      "flat": 91,
+      "limit_up": 32,
+      "limit_down": 3,
       "total": 890,
-      "up_pct": 37.0,
-      "down_pct": 51.1,
-      "flat_pct": 10.1,
-      "limit_up_pct": 1.6,
-      "limit_down_pct": 0.9
+      "up_pct": 54.7,
+      "down_pct": 32.8,
+      "flat_pct": 10.2,
+      "limit_up_pct": 3.6,
+      "limit_down_pct": 0.3
     }
   },
   "top_gainers": [
     {
-      "code": "2438",
-      "name": "翔耀",
-      "close": 19.25,
+      "code": "2434",
+      "name": "統懋",
+      "close": 53.9,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "5426",
-      "name": "振發",
-      "close": 30.8,
+      "code": "6442",
+      "name": "光聖",
+      "close": 1595.0,
       "change_pct": 10.0,
-      "market": "上櫃"
+      "market": "上市"
     },
     {
-      "code": "6121",
-      "name": "新普",
-      "close": 434.5,
+      "code": "6770",
+      "name": "力積電",
+      "close": 73.7,
       "change_pct": 10.0,
-      "market": "上櫃"
+      "market": "上市"
     },
     {
-      "code": "8084",
-      "name": "巨虹",
-      "close": 52.8,
+      "code": "7795",
+      "name": "長廣",
+      "close": 506.0,
       "change_pct": 10.0,
-      "market": "上櫃"
+      "market": "上市"
     },
     {
-      "code": "5904",
-      "name": "寶雅*",
-      "close": 87.1,
-      "change_pct": 9.974747474747476,
-      "market": "上櫃"
+      "code": "8046",
+      "name": "南電",
+      "close": 1265.0,
+      "change_pct": 10.0,
+      "market": "上市"
     }
   ],
   "top_losers": [
     {
-      "code": "6531",
-      "name": "愛普*",
-      "close": 831.0,
-      "change_pct": -9.967497291440953,
+      "code": "4123",
+      "name": "晟德",
+      "close": 35.1,
+      "change_pct": -10.0,
+      "market": "上櫃"
+    },
+    {
+      "code": "6236",
+      "name": "中湛",
+      "close": 15.35,
+      "change_pct": -9.970674486803519,
+      "market": "上櫃"
+    },
+    {
+      "code": "6945",
+      "name": "圓祥生技",
+      "close": 103.5,
+      "change_pct": -9.606986899563319,
+      "market": "上櫃"
+    },
+    {
+      "code": "5388",
+      "name": "中磊",
+      "close": 82.4,
+      "change_pct": -9.549945115257957,
       "market": "上市"
     },
     {
-      "code": "5536",
-      "name": "聖暉*",
-      "close": 941.0,
-      "change_pct": -9.952153110047847,
-      "market": "上櫃"
-    },
-    {
-      "code": "4503",
-      "name": "金雨",
-      "close": 24.45,
-      "change_pct": -9.94475138121547,
-      "market": "上櫃"
-    },
-    {
-      "code": "8050",
-      "name": "廣積",
-      "close": 61.6,
-      "change_pct": -9.941520467836257,
-      "market": "上櫃"
-    },
-    {
-      "code": "3709",
-      "name": "鑫聯大投控",
-      "close": 71.6,
-      "change_pct": -9.937106918238994,
+      "code": "5014",
+      "name": "建錩",
+      "close": 10.25,
+      "change_pct": -8.88888888888889,
       "market": "上櫃"
     }
   ]
