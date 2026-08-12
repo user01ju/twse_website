@@ -1,7 +1,7 @@
 {
   "date": "2026-08-12",
-  "generated_at": "2026-08-12 16:02:21",
-  "complete": false,
+  "generated_at": "2026-08-12 16:25:21",
+  "complete": true,
   "taiex": {
     "close": 45518.07,
     "change_pts": 397.35,
@@ -12,29 +12,29 @@
   "breadth": {
     "twse": {
       "up": 774,
-      "down": 464,
-      "flat": 129,
+      "down": 467,
+      "flat": 126,
       "limit_up": 22,
       "limit_down": 0,
       "total": 1367,
       "up_pct": 56.6,
-      "down_pct": 33.9,
-      "flat_pct": 9.4,
+      "down_pct": 34.2,
+      "flat_pct": 9.2,
       "limit_up_pct": 1.6,
       "limit_down_pct": 0.0
     },
     "tpex": {
-      "up": 487,
-      "down": 292,
-      "flat": 91,
-      "limit_up": 32,
-      "limit_down": 3,
-      "total": 890,
-      "up_pct": 54.7,
-      "down_pct": 32.8,
-      "flat_pct": 10.2,
-      "limit_up_pct": 3.6,
-      "limit_down_pct": 0.3
+      "up": 554,
+      "down": 330,
+      "flat": 108,
+      "limit_up": 7,
+      "limit_down": 2,
+      "total": 992,
+      "up_pct": 55.8,
+      "down_pct": 33.3,
+      "flat_pct": 10.9,
+      "limit_up_pct": 0.7,
+      "limit_down_pct": 0.2
     }
   },
   "top_gainers": [
