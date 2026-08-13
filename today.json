@@ -1,25 +1,25 @@
 {
   "date": "2026-08-13",
-  "generated_at": "2026-08-13 17:02:55",
-  "complete": false,
+  "generated_at": "2026-08-13 17:44:20",
+  "complete": true,
   "taiex": {
     "close": 46021.48,
     "change_pts": 503.41,
     "change_pct": 1.11,
-    "trading_amount_yi": 10933.28309911,
-    "transaction_count": 5240347
+    "trading_amount_yi": 11040.24642159,
+    "transaction_count": 5240402
   },
   "breadth": {
     "twse": {
-      "up": 638,
-      "down": 607,
-      "flat": 124,
+      "up": 641,
+      "down": 611,
+      "flat": 117,
       "limit_up": 21,
       "limit_down": 1,
       "total": 1369,
-      "up_pct": 46.6,
-      "down_pct": 44.3,
-      "flat_pct": 9.1,
+      "up_pct": 46.8,
+      "down_pct": 44.6,
+      "flat_pct": 8.5,
       "limit_up_pct": 1.5,
       "limit_down_pct": 0.1
     },
@@ -46,35 +46,49 @@
       "market": "上市"
     },
     {
-      "code": "2357",
-      "name": "華碩",
-      "close": 937.0,
-      "change_pct": 9.976525821596244,
-      "market": "上市"
+      "code": "3490",
+      "name": "單井",
+      "close": 36.85,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "6931",
-      "name": "青松健康",
-      "close": 43.55,
-      "change_pct": 9.974747474747476,
-      "market": "上市"
+      "code": "4905",
+      "name": "台聯電",
+      "close": 77.0,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "2327",
-      "name": "國巨*",
-      "close": 662.0,
-      "change_pct": 9.966777408637874,
-      "market": "上市"
+      "code": "6130",
+      "name": "上亞科技",
+      "close": 29.7,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "3017",
-      "name": "奇鋐",
-      "close": 3200.0,
-      "change_pct": 9.965635738831615,
-      "market": "上市"
+      "code": "7819",
+      "name": "精誠金融",
+      "close": 37.95,
+      "change_pct": 10.0,
+      "market": "上櫃"
     }
   ],
   "top_losers": [
+    {
+      "code": "4556",
+      "name": "旭然",
+      "close": 90.9,
+      "change_pct": -10.0,
+      "market": "上櫃"
+    },
+    {
+      "code": "8444",
+      "name": "綠河-KY",
+      "close": 4.86,
+      "change_pct": -10.0,
+      "market": "上櫃"
+    },
     {
       "code": "3533",
       "name": "嘉澤",
@@ -83,32 +97,18 @@
       "market": "上市"
     },
     {
-      "code": "9914",
-      "name": "美利達",
-      "close": 85.5,
-      "change_pct": -8.360128617363344,
-      "market": "上市"
+      "code": "2061",
+      "name": "風青",
+      "close": 56.3,
+      "change_pct": -9.92,
+      "market": "上櫃"
     },
     {
-      "code": "2440",
-      "name": "太空梭",
-      "close": 14.35,
-      "change_pct": -8.30670926517572,
-      "market": "上市"
-    },
-    {
-      "code": "1590",
-      "name": "亞德客-KY",
-      "close": 1470.0,
-      "change_pct": -7.836990595611286,
-      "market": "上市"
-    },
-    {
-      "code": "3022",
-      "name": "威強電",
-      "close": 98.1,
-      "change_pct": -7.0142180094786735,
-      "market": "上市"
+      "code": "5516",
+      "name": "雙喜",
+      "close": 12.35,
+      "change_pct": -8.518518518518519,
+      "market": "上櫃"
     }
   ]
 }
