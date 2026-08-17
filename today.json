@@ -1,6 +1,6 @@
 {
   "date": "2026-08-17",
-  "generated_at": "2026-08-17 15:57:22",
+  "generated_at": "2026-08-17 16:01:14",
   "complete": false,
   "taiex": {
     "close": 45857.27,
@@ -24,17 +24,17 @@
       "limit_down_pct": 0.1
     },
     "tpex": {
-      "up": 0,
-      "down": 0,
-      "flat": 0,
-      "limit_up": 0,
-      "limit_down": 0,
-      "total": 0,
-      "up_pct": 0.0,
-      "down_pct": 0.0,
-      "flat_pct": 0.0,
-      "limit_up_pct": 0.0,
-      "limit_down_pct": 0.0
+      "up": 367,
+      "down": 419,
+      "flat": 86,
+      "limit_up": 16,
+      "limit_down": 3,
+      "total": 890,
+      "up_pct": 41.2,
+      "down_pct": 47.1,
+      "flat_pct": 9.7,
+      "limit_up_pct": 1.8,
+      "limit_down_pct": 0.3
     }
   },
   "top_gainers": [
@@ -53,28 +53,49 @@
       "market": "上市"
     },
     {
+      "code": "3455",
+      "name": "由田",
+      "close": 253.0,
+      "change_pct": 10.0,
+      "market": "上櫃"
+    },
+    {
+      "code": "4971",
+      "name": "IET-KY",
+      "close": 528.0,
+      "change_pct": 10.0,
+      "market": "上櫃"
+    },
+    {
       "code": "3653",
       "name": "健策",
       "close": 5340.0,
       "change_pct": 9.989701338825952,
       "market": "上市"
-    },
-    {
-      "code": "1727",
-      "name": "中華化",
-      "close": 82.6,
-      "change_pct": 9.986684420772304,
-      "market": "上市"
-    },
-    {
-      "code": "3008",
-      "name": "大立光",
-      "close": 5070.0,
-      "change_pct": 9.97830802603037,
-      "market": "上市"
     }
   ],
   "top_losers": [
+    {
+      "code": "3374",
+      "name": "精材",
+      "close": 292.5,
+      "change_pct": -10.0,
+      "market": "上櫃"
+    },
+    {
+      "code": "3529",
+      "name": "力旺",
+      "close": 2390.0,
+      "change_pct": -9.981167608286253,
+      "market": "上櫃"
+    },
+    {
+      "code": "6223",
+      "name": "旺矽",
+      "close": 5800.0,
+      "change_pct": -9.937888198757763,
+      "market": "上櫃"
+    },
     {
       "code": "2376",
       "name": "技嘉",
@@ -87,27 +108,6 @@
       "name": "凌巨",
       "close": 15.1,
       "change_pct": -9.850746268656716,
-      "market": "上市"
-    },
-    {
-      "code": "2493",
-      "name": "揚博",
-      "close": 192.0,
-      "change_pct": -9.647058823529411,
-      "market": "上市"
-    },
-    {
-      "code": "2645",
-      "name": "長榮航太",
-      "close": 182.0,
-      "change_pct": -9.0,
-      "market": "上市"
-    },
-    {
-      "code": "2425",
-      "name": "承啟",
-      "close": 38.05,
-      "change_pct": -7.420924574209247,
       "market": "上市"
     }
   ]
