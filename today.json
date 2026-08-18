@@ -1,6 +1,6 @@
 {
   "date": "2026-08-18",
-  "generated_at": "2026-08-18 15:45:14",
+  "generated_at": "2026-08-18 16:02:02",
   "complete": false,
   "taiex": {
     "close": 45308.68,
@@ -24,17 +24,17 @@
       "limit_down_pct": 0.0
     },
     "tpex": {
-      "up": 0,
-      "down": 0,
-      "flat": 0,
-      "limit_up": 0,
-      "limit_down": 0,
-      "total": 0,
-      "up_pct": 0.0,
-      "down_pct": 0.0,
-      "flat_pct": 0.0,
-      "limit_up_pct": 0.0,
-      "limit_down_pct": 0.0
+      "up": 206,
+      "down": 578,
+      "flat": 79,
+      "limit_up": 10,
+      "limit_down": 4,
+      "total": 890,
+      "up_pct": 23.1,
+      "down_pct": 64.9,
+      "flat_pct": 8.9,
+      "limit_up_pct": 1.1,
+      "limit_down_pct": 0.4
     }
   },
   "top_gainers": [
@@ -60,54 +60,54 @@
       "market": "上市"
     },
     {
+      "code": "6907",
+      "name": "雅特力-KY",
+      "close": 188.0,
+      "change_pct": 9.941520467836257,
+      "market": "上櫃"
+    },
+    {
       "code": "6869",
       "name": "雲豹能源",
       "close": 69.8,
       "change_pct": 9.921259842519685,
       "market": "上市"
-    },
-    {
-      "code": "8070",
-      "name": "長華*",
-      "close": 54.4,
-      "change_pct": 9.8989898989899,
-      "market": "上市"
     }
   ],
   "top_losers": [
+    {
+      "code": "5351",
+      "name": "鈺創",
+      "close": 122.0,
+      "change_pct": -9.96309963099631,
+      "market": "上櫃"
+    },
+    {
+      "code": "3489",
+      "name": "森寶",
+      "close": 23.65,
+      "change_pct": -9.904761904761905,
+      "market": "上櫃"
+    },
+    {
+      "code": "3625",
+      "name": "西勝",
+      "close": 13.95,
+      "change_pct": -9.70873786407767,
+      "market": "上櫃"
+    },
+    {
+      "code": "3259",
+      "name": "鑫創",
+      "close": 12.6,
+      "change_pct": -9.67741935483871,
+      "market": "上櫃"
+    },
     {
       "code": "7730",
       "name": "暉盛-創",
       "close": 157.0,
       "change_pct": -9.248554913294797,
-      "market": "上市"
-    },
-    {
-      "code": "3006",
-      "name": "晶豪科",
-      "close": 248.0,
-      "change_pct": -9.157509157509157,
-      "market": "上市"
-    },
-    {
-      "code": "3712",
-      "name": "永崴投控",
-      "close": 20.4,
-      "change_pct": -8.724832214765103,
-      "market": "上市"
-    },
-    {
-      "code": "2388",
-      "name": "威盛",
-      "close": 72.4,
-      "change_pct": -8.701134930643127,
-      "market": "上市"
-    },
-    {
-      "code": "3042",
-      "name": "晶技",
-      "close": 178.5,
-      "change_pct": -8.695652173913043,
       "market": "上市"
     }
   ]
