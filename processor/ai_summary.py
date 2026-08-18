@@ -135,10 +135,17 @@ def build(sections: dict, date_str: str) -> dict:
     prompt = _build_prompt(sections, date_str)
     client = anthropic.Anthropic(api_key=api_key)
     msg = client.messages.create(
-        model="claude-opus-4-8",
-        max_tokens=1500,
+        model="claude-opus-5",
+        # Opus 5 預設開 adaptive thinking，max_tokens 是 thinking + 正文的共用上限。
+        # 沿用舊的 1500 會讓摘要靜默截斷在區塊中間（不報錯，殘缺 HTML 直接上線）。
+        # 不改成 thinking disabled：Opus 5 關思考時有 <thinking> 標籤洩漏進可見輸出的已知問題。
+        max_tokens=5000,
+        output_config={"effort": "medium"},
         messages=[{"role": "user", "content": prompt}],
     )
+    # 安全分類器擋下時是 HTTP 200 + content: []，不是 exception → 沒 guard 會 IndexError
+    if msg.stop_reason == "refusal" or not msg.content:
+        raise RuntimeError(f"AI summary refused by model (stop_reason={msg.stop_reason})")
     text = msg.content[0].text.strip()
     # Strip any markdown heading Claude might prepend
     import re as _re
