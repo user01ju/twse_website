@@ -1,113 +1,113 @@
 {
-  "date": "2026-08-17",
-  "generated_at": "2026-08-17 16:56:06",
-  "complete": true,
+  "date": "2026-08-18",
+  "generated_at": "2026-08-18 15:45:14",
+  "complete": false,
   "taiex": {
-    "close": 45857.27,
-    "change_pts": 46.26,
-    "change_pct": 0.1,
-    "trading_amount_yi": 9794.07190588,
-    "transaction_count": 4740625
+    "close": 45308.68,
+    "change_pts": -548.59,
+    "change_pct": -1.2,
+    "trading_amount_yi": 9976.09946499,
+    "transaction_count": 5224255
   },
   "breadth": {
     "twse": {
-      "up": 666,
-      "down": 591,
-      "flat": 110,
-      "limit_up": 16,
-      "limit_down": 2,
-      "total": 1367,
-      "up_pct": 48.7,
-      "down_pct": 43.2,
-      "flat_pct": 8.0,
-      "limit_up_pct": 1.2,
-      "limit_down_pct": 0.1
+      "up": 264,
+      "down": 983,
+      "flat": 119,
+      "limit_up": 7,
+      "limit_down": 0,
+      "total": 1366,
+      "up_pct": 19.3,
+      "down_pct": 72.0,
+      "flat_pct": 8.7,
+      "limit_up_pct": 0.5,
+      "limit_down_pct": 0.0
     },
     "tpex": {
-      "up": 367,
-      "down": 419,
-      "flat": 86,
-      "limit_up": 16,
-      "limit_down": 3,
-      "total": 890,
-      "up_pct": 41.2,
-      "down_pct": 47.1,
-      "flat_pct": 9.7,
-      "limit_up_pct": 1.8,
-      "limit_down_pct": 0.3
+      "up": 0,
+      "down": 0,
+      "flat": 0,
+      "limit_up": 0,
+      "limit_down": 0,
+      "total": 0,
+      "up_pct": 0.0,
+      "down_pct": 0.0,
+      "flat_pct": 0.0,
+      "limit_up_pct": 0.0,
+      "limit_down_pct": 0.0
     }
   },
   "top_gainers": [
     {
-      "code": "2059",
-      "name": "川湖",
-      "close": 13750.0,
+      "code": "2601",
+      "name": "益航",
+      "close": 6.82,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "6141",
-      "name": "柏承",
-      "close": 38.5,
+      "code": "3167",
+      "name": "大量",
+      "close": 770.0,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "3455",
-      "name": "由田",
-      "close": 253.0,
+      "code": "5608",
+      "name": "四維航",
+      "close": 15.95,
       "change_pct": 10.0,
-      "market": "上櫃"
+      "market": "上市"
     },
     {
-      "code": "4971",
-      "name": "IET-KY",
-      "close": 528.0,
-      "change_pct": 10.0,
-      "market": "上櫃"
+      "code": "6869",
+      "name": "雲豹能源",
+      "close": 69.8,
+      "change_pct": 9.921259842519685,
+      "market": "上市"
     },
     {
-      "code": "3653",
-      "name": "健策",
-      "close": 5340.0,
-      "change_pct": 9.989701338825952,
+      "code": "8070",
+      "name": "長華*",
+      "close": 54.4,
+      "change_pct": 9.8989898989899,
       "market": "上市"
     }
   ],
   "top_losers": [
     {
-      "code": "3374",
-      "name": "精材",
-      "close": 292.5,
-      "change_pct": -10.0,
-      "market": "上櫃"
-    },
-    {
-      "code": "3529",
-      "name": "力旺",
-      "close": 2390.0,
-      "change_pct": -9.981167608286253,
-      "market": "上櫃"
-    },
-    {
-      "code": "6223",
-      "name": "旺矽",
-      "close": 5800.0,
-      "change_pct": -9.937888198757763,
-      "market": "上櫃"
-    },
-    {
-      "code": "2376",
-      "name": "技嘉",
-      "close": 358.0,
-      "change_pct": -9.937106918238994,
+      "code": "7730",
+      "name": "暉盛-創",
+      "close": 157.0,
+      "change_pct": -9.248554913294797,
       "market": "上市"
     },
     {
-      "code": "8105",
-      "name": "凌巨",
-      "close": 15.1,
-      "change_pct": -9.850746268656716,
+      "code": "3006",
+      "name": "晶豪科",
+      "close": 248.0,
+      "change_pct": -9.157509157509157,
+      "market": "上市"
+    },
+    {
+      "code": "3712",
+      "name": "永崴投控",
+      "close": 20.4,
+      "change_pct": -8.724832214765103,
+      "market": "上市"
+    },
+    {
+      "code": "2388",
+      "name": "威盛",
+      "close": 72.4,
+      "change_pct": -8.701134930643127,
+      "market": "上市"
+    },
+    {
+      "code": "3042",
+      "name": "晶技",
+      "close": 178.5,
+      "change_pct": -8.695652173913043,
       "market": "上市"
     }
   ]
