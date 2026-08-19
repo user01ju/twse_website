@@ -1,6 +1,6 @@
 {
   "date": "2026-08-19",
-  "generated_at": "2026-08-19 15:46:50",
+  "generated_at": "2026-08-19 16:02:28",
   "complete": false,
   "taiex": {
     "close": 44719.35,
@@ -11,19 +11,6 @@
   },
   "breadth": {
     "twse": {
-      "up": 439,
-      "down": 786,
-      "flat": 139,
-      "limit_up": 9,
-      "limit_down": 1,
-      "total": 1364,
-      "up_pct": 32.2,
-      "down_pct": 57.6,
-      "flat_pct": 10.2,
-      "limit_up_pct": 0.7,
-      "limit_down_pct": 0.1
-    },
-    "tpex": {
       "up": 0,
       "down": 0,
       "flat": 0,
@@ -35,80 +22,93 @@
       "flat_pct": 0.0,
       "limit_up_pct": 0.0,
       "limit_down_pct": 0.0
+    },
+    "tpex": {
+      "up": 334,
+      "down": 432,
+      "flat": 96,
+      "limit_up": 8,
+      "limit_down": 2,
+      "total": 890,
+      "up_pct": 37.5,
+      "down_pct": 48.5,
+      "flat_pct": 10.8,
+      "limit_up_pct": 0.9,
+      "limit_down_pct": 0.2
     }
   },
   "top_gainers": [
     {
-      "code": "8101",
-      "name": "華冠",
-      "close": 11.0,
-      "change_pct": 10.0,
-      "market": "上市"
+      "code": "5314",
+      "name": "世紀*",
+      "close": 21.5,
+      "change_pct": 9.974424552429667,
+      "market": "上櫃"
     },
     {
-      "code": "5292",
-      "name": "華懋",
-      "close": 210.0,
-      "change_pct": 9.947643979057592,
-      "market": "上市"
+      "code": "4735",
+      "name": "豪展",
+      "close": 39.75,
+      "change_pct": 9.95850622406639,
+      "market": "上櫃"
     },
     {
-      "code": "9914",
-      "name": "美利達",
-      "close": 88.6,
-      "change_pct": 9.925558312655088,
-      "market": "上市"
+      "code": "7792",
+      "name": "安葆",
+      "close": 288.5,
+      "change_pct": 9.904761904761905,
+      "market": "上櫃"
     },
     {
-      "code": "6573",
-      "name": "虹揚-KY",
-      "close": 17.75,
-      "change_pct": 9.907120743034058,
-      "market": "上市"
+      "code": "3508",
+      "name": "位速",
+      "close": 22.75,
+      "change_pct": 9.903381642512077,
+      "market": "上櫃"
     },
     {
-      "code": "3090",
-      "name": "日電貿",
-      "close": 177.5,
-      "change_pct": 9.907120743034056,
-      "market": "上市"
+      "code": "8937",
+      "name": "合騏*",
+      "close": 25.55,
+      "change_pct": 9.89247311827957,
+      "market": "上櫃"
     }
   ],
   "top_losers": [
     {
-      "code": "3167",
-      "name": "大量",
-      "close": 693.0,
-      "change_pct": -10.0,
-      "market": "上市"
+      "code": "3259",
+      "name": "鑫創",
+      "close": 11.35,
+      "change_pct": -9.920634920634921,
+      "market": "上櫃"
     },
     {
-      "code": "2359",
-      "name": "所羅門",
-      "close": 161.0,
+      "code": "3625",
+      "name": "西勝",
+      "close": 12.6,
+      "change_pct": -9.67741935483871,
+      "market": "上櫃"
+    },
+    {
+      "code": "3629",
+      "name": "地心引力",
+      "close": 13.85,
+      "change_pct": -9.477124183006538,
+      "market": "上櫃"
+    },
+    {
+      "code": "6640",
+      "name": "均華",
+      "close": 966.0,
       "change_pct": -9.295774647887324,
-      "market": "上市"
+      "market": "上櫃"
     },
     {
-      "code": "6831",
-      "name": "邁科",
-      "close": 599.0,
-      "change_pct": -8.549618320610687,
-      "market": "上市"
-    },
-    {
-      "code": "6805",
-      "name": "富世達",
-      "close": 1800.0,
-      "change_pct": -8.16326530612245,
-      "market": "上市"
-    },
-    {
-      "code": "2360",
-      "name": "致茂",
-      "close": 2120.0,
-      "change_pct": -8.026030368763557,
-      "market": "上市"
+      "code": "3081",
+      "name": "聯亞",
+      "close": 2680.0,
+      "change_pct": -8.376068376068375,
+      "market": "上櫃"
     }
   ]
 }
