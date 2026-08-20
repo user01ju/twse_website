@@ -1,26 +1,26 @@
 {
   "date": "2026-08-20",
-  "generated_at": "2026-08-20 16:50:21",
-  "complete": false,
+  "generated_at": "2026-08-20 21:03:45",
+  "complete": true,
   "taiex": {
     "close": 44933.74,
     "change_pts": 214.39,
     "change_pct": 0.48,
-    "trading_amount_yi": 8211.51035969,
-    "transaction_count": 4140810
+    "trading_amount_yi": 8344.12514041,
+    "transaction_count": 4140846
   },
   "breadth": {
     "twse": {
-      "up": 0,
-      "down": 0,
-      "flat": 0,
-      "limit_up": 0,
+      "up": 965,
+      "down": 308,
+      "flat": 87,
+      "limit_up": 18,
       "limit_down": 0,
-      "total": 0,
-      "up_pct": 0.0,
-      "down_pct": 0.0,
-      "flat_pct": 0.0,
-      "limit_up_pct": 0.0,
+      "total": 1360,
+      "up_pct": 71.0,
+      "down_pct": 22.6,
+      "flat_pct": 6.4,
+      "limit_up_pct": 1.3,
       "limit_down_pct": 0.0
     },
     "tpex": {
@@ -39,38 +39,38 @@
   },
   "top_gainers": [
     {
+      "code": "2426",
+      "name": "鼎元",
+      "close": 74.8,
+      "change_pct": 10.0,
+      "market": "上市"
+    },
+    {
+      "code": "6472",
+      "name": "保瑞",
+      "close": 445.5,
+      "change_pct": 10.0,
+      "market": "上市"
+    },
+    {
+      "code": "7799",
+      "name": "禾榮科",
+      "close": 379.5,
+      "change_pct": 10.0,
+      "market": "上市"
+    },
+    {
+      "code": "8101",
+      "name": "華冠",
+      "close": 12.1,
+      "change_pct": 10.0,
+      "market": "上市"
+    },
+    {
       "code": "5314",
       "name": "世紀*",
       "close": 23.65,
       "change_pct": 10.0,
-      "market": "上櫃"
-    },
-    {
-      "code": "3441",
-      "name": "聯一光",
-      "close": 97.3,
-      "change_pct": 9.943502824858758,
-      "market": "上櫃"
-    },
-    {
-      "code": "3485",
-      "name": "敘豐",
-      "close": 222.0,
-      "change_pct": 9.900990099009901,
-      "market": "上櫃"
-    },
-    {
-      "code": "3508",
-      "name": "位速",
-      "close": 25.0,
-      "change_pct": 9.89010989010989,
-      "market": "上櫃"
-    },
-    {
-      "code": "4304",
-      "name": "勝昱",
-      "close": 23.4,
-      "change_pct": 9.859154929577468,
       "market": "上櫃"
     }
   ],
@@ -90,25 +90,25 @@
       "market": "上櫃"
     },
     {
-      "code": "3664",
-      "name": "安瑞-KY",
-      "close": 5.56,
-      "change_pct": -7.333333333333333,
-      "market": "上櫃"
+      "code": "4439",
+      "name": "冠星-KY",
+      "close": 99.2,
+      "change_pct": -8.571428571428571,
+      "market": "上市"
     },
     {
-      "code": "3625",
-      "name": "西勝",
-      "close": 11.75,
-      "change_pct": -6.746031746031746,
-      "market": "上櫃"
+      "code": "2492",
+      "name": "華新科",
+      "close": 272.5,
+      "change_pct": -8.557046979865772,
+      "market": "上市"
     },
     {
-      "code": "5351",
-      "name": "鈺創",
-      "close": 118.0,
-      "change_pct": -6.719367588932807,
-      "market": "上櫃"
+      "code": "3605",
+      "name": "宏致",
+      "close": 110.0,
+      "change_pct": -7.563025210084033,
+      "market": "上市"
     }
   ]
 }
