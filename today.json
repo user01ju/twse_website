@@ -1,6 +1,6 @@
 {
   "date": "2026-08-21",
-  "generated_at": "2026-08-21 15:50:27",
+  "generated_at": "2026-08-21 16:01:20",
   "complete": false,
   "taiex": {
     "close": 45224.29,
@@ -24,16 +24,16 @@
       "limit_down_pct": 0.1
     },
     "tpex": {
-      "up": 0,
-      "down": 0,
-      "flat": 0,
-      "limit_up": 0,
+      "up": 415,
+      "down": 370,
+      "flat": 93,
+      "limit_up": 13,
       "limit_down": 0,
-      "total": 0,
-      "up_pct": 0.0,
-      "down_pct": 0.0,
-      "flat_pct": 0.0,
-      "limit_up_pct": 0.0,
+      "total": 890,
+      "up_pct": 46.6,
+      "down_pct": 41.6,
+      "flat_pct": 10.4,
+      "limit_up_pct": 1.5,
       "limit_down_pct": 0.0
     }
   },
@@ -44,6 +44,20 @@
       "close": 462.0,
       "change_pct": 10.0,
       "market": "上市"
+    },
+    {
+      "code": "4188",
+      "name": "安克",
+      "close": 11.0,
+      "change_pct": 10.0,
+      "market": "上櫃"
+    },
+    {
+      "code": "4416",
+      "name": "三圓",
+      "close": 13.75,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
       "code": "5608",
@@ -57,20 +71,6 @@
       "name": "益航",
       "close": 7.39,
       "change_pct": 9.970238095238097,
-      "market": "上市"
-    },
-    {
-      "code": "2613",
-      "name": "中櫃",
-      "close": 24.9,
-      "change_pct": 9.933774834437086,
-      "market": "上市"
-    },
-    {
-      "code": "2723",
-      "name": "美食-KY",
-      "close": 73.2,
-      "change_pct": 9.909909909909908,
       "market": "上市"
     }
   ],
@@ -90,6 +90,13 @@
       "market": "上市"
     },
     {
+      "code": "3259",
+      "name": "鑫創",
+      "close": 9.81,
+      "change_pct": -9.166666666666666,
+      "market": "上櫃"
+    },
+    {
       "code": "6715",
       "name": "嘉基",
       "close": 448.0,
@@ -97,18 +104,11 @@
       "market": "上市"
     },
     {
-      "code": "6672",
-      "name": "騰輝電子-KY",
-      "close": 267.5,
-      "change_pct": -6.956521739130435,
-      "market": "上市"
-    },
-    {
-      "code": "2368",
-      "name": "金像電",
-      "close": 965.0,
-      "change_pct": -5.853658536585367,
-      "market": "上市"
+      "code": "4139",
+      "name": "馬光-KY",
+      "close": 36.0,
+      "change_pct": -8.280254777070063,
+      "market": "上櫃"
     }
   ]
 }
