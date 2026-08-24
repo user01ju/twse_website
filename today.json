@@ -1,114 +1,114 @@
 {
-  "date": "2026-08-21",
-  "generated_at": "2026-08-21 16:51:07",
-  "complete": true,
+  "date": "2026-08-24",
+  "generated_at": "2026-08-24 15:01:39",
+  "complete": false,
   "taiex": {
-    "close": 45224.29,
-    "change_pts": 290.55,
-    "change_pct": 0.65,
-    "trading_amount_yi": 7440.43808366,
-    "transaction_count": 3751460
+    "close": 44762.32,
+    "change_pts": -461.97,
+    "change_pct": -1.02,
+    "trading_amount_yi": 6519.04457621,
+    "transaction_count": 3876297
   },
   "breadth": {
     "twse": {
-      "up": 706,
-      "down": 522,
-      "flat": 133,
-      "limit_up": 14,
-      "limit_down": 2,
-      "total": 1361,
-      "up_pct": 51.9,
-      "down_pct": 38.4,
-      "flat_pct": 9.8,
-      "limit_up_pct": 1.0,
-      "limit_down_pct": 0.1
+      "up": 403,
+      "down": 806,
+      "flat": 156,
+      "limit_up": 10,
+      "limit_down": 4,
+      "total": 1365,
+      "up_pct": 29.5,
+      "down_pct": 59.0,
+      "flat_pct": 11.4,
+      "limit_up_pct": 0.7,
+      "limit_down_pct": 0.3
     },
     "tpex": {
-      "up": 415,
-      "down": 370,
-      "flat": 93,
-      "limit_up": 13,
+      "up": 0,
+      "down": 0,
+      "flat": 0,
+      "limit_up": 0,
       "limit_down": 0,
-      "total": 890,
-      "up_pct": 46.6,
-      "down_pct": 41.6,
-      "flat_pct": 10.4,
-      "limit_up_pct": 1.5,
+      "total": 0,
+      "up_pct": 0.0,
+      "down_pct": 0.0,
+      "flat_pct": 0.0,
+      "limit_up_pct": 0.0,
       "limit_down_pct": 0.0
     }
   },
   "top_gainers": [
     {
-      "code": "6830",
-      "name": "汎銓",
-      "close": 462.0,
-      "change_pct": 10.0,
+      "code": "2434",
+      "name": "統懋",
+      "close": 53.5,
+      "change_pct": 9.969167523124357,
       "market": "上市"
     },
     {
-      "code": "4188",
-      "name": "安克",
-      "close": 11.0,
-      "change_pct": 10.0,
-      "market": "上櫃"
-    },
-    {
-      "code": "4416",
-      "name": "三圓",
-      "close": 13.75,
-      "change_pct": 10.0,
-      "market": "上櫃"
-    },
-    {
-      "code": "5608",
-      "name": "四維航",
-      "close": 18.75,
-      "change_pct": 9.970674486803519,
+      "code": "2301",
+      "name": "光寶科",
+      "close": 287.0,
+      "change_pct": 9.961685823754788,
       "market": "上市"
     },
     {
-      "code": "2601",
-      "name": "益航",
-      "close": 7.39,
-      "change_pct": 9.970238095238097,
+      "code": "3049",
+      "name": "精金",
+      "close": 12.7,
+      "change_pct": 9.956709956709958,
+      "market": "上市"
+    },
+    {
+      "code": "3006",
+      "name": "晶豪科",
+      "close": 282.0,
+      "change_pct": 9.941520467836257,
+      "market": "上市"
+    },
+    {
+      "code": "7749",
+      "name": "意騰-KY",
+      "close": 382.0,
+      "change_pct": 9.928057553956835,
       "market": "上市"
     }
   ],
   "top_losers": [
     {
-      "code": "3026",
-      "name": "禾伸堂",
-      "close": 639.0,
-      "change_pct": -10.0,
-      "market": "上市"
-    },
-    {
-      "code": "7750",
-      "name": "新代",
-      "close": 2215.0,
-      "change_pct": -9.959349593495935,
-      "market": "上市"
-    },
-    {
-      "code": "3259",
-      "name": "鑫創",
-      "close": 9.81,
-      "change_pct": -9.166666666666666,
-      "market": "上櫃"
-    },
-    {
       "code": "6715",
       "name": "嘉基",
-      "close": 448.0,
-      "change_pct": -8.94308943089431,
+      "close": 403.5,
+      "change_pct": -9.933035714285714,
       "market": "上市"
     },
     {
-      "code": "4139",
-      "name": "馬光-KY",
-      "close": 36.0,
-      "change_pct": -8.280254777070063,
-      "market": "上櫃"
+      "code": "3665",
+      "name": "貿聯-KY",
+      "close": 2050.0,
+      "change_pct": -9.89010989010989,
+      "market": "上市"
+    },
+    {
+      "code": "4807",
+      "name": "日成-KY",
+      "close": 27.8,
+      "change_pct": -9.886547811993516,
+      "market": "上市"
+    },
+    {
+      "code": "6108",
+      "name": "競國",
+      "close": 23.4,
+      "change_pct": -9.826589595375722,
+      "market": "上市"
+    },
+    {
+      "code": "2851",
+      "name": "中再保",
+      "close": 42.85,
+      "change_pct": -9.023354564755838,
+      "market": "上市"
     }
   ]
 }
