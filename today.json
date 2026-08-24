@@ -1,6 +1,6 @@
 {
   "date": "2026-08-24",
-  "generated_at": "2026-08-24 16:01:39",
+  "generated_at": "2026-08-24 16:02:38",
   "complete": false,
   "taiex": {
     "close": 44762.32,
@@ -39,6 +39,20 @@
   },
   "top_gainers": [
     {
+      "code": "4188",
+      "name": "安克",
+      "close": 12.1,
+      "change_pct": 10.0,
+      "market": "上櫃"
+    },
+    {
+      "code": "5314",
+      "name": "世紀*",
+      "close": 28.6,
+      "change_pct": 10.0,
+      "market": "上櫃"
+    },
+    {
       "code": "2434",
       "name": "統懋",
       "close": 53.5,
@@ -58,23 +72,16 @@
       "close": 12.7,
       "change_pct": 9.956709956709958,
       "market": "上市"
-    },
-    {
-      "code": "3006",
-      "name": "晶豪科",
-      "close": 282.0,
-      "change_pct": 9.941520467836257,
-      "market": "上市"
-    },
-    {
-      "code": "7749",
-      "name": "意騰-KY",
-      "close": 382.0,
-      "change_pct": 9.928057553956835,
-      "market": "上市"
     }
   ],
   "top_losers": [
+    {
+      "code": "4931",
+      "name": "新盛力",
+      "close": 252.0,
+      "change_pct": -10.0,
+      "market": "上櫃"
+    },
     {
       "code": "6715",
       "name": "嘉基",
@@ -97,18 +104,11 @@
       "market": "上市"
     },
     {
-      "code": "6108",
-      "name": "競國",
-      "close": 23.4,
-      "change_pct": -9.826589595375722,
-      "market": "上市"
-    },
-    {
-      "code": "2851",
-      "name": "中再保",
-      "close": 42.85,
-      "change_pct": -9.023354564755838,
-      "market": "上市"
+      "code": "4971",
+      "name": "IET-KY",
+      "close": 530.0,
+      "change_pct": -9.863945578231291,
+      "market": "上櫃"
     }
   ]
 }
