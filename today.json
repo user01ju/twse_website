@@ -1,7 +1,7 @@
 {
   "date": "2026-08-25",
-  "generated_at": "2026-08-25 16:01:11",
-  "complete": false,
+  "generated_at": "2026-08-25 16:52:43",
+  "complete": true,
   "taiex": {
     "close": 45169.46,
     "change_pts": 407.14,
@@ -11,15 +11,15 @@
   },
   "breadth": {
     "twse": {
-      "up": 577,
+      "up": 584,
       "down": 640,
-      "flat": 145,
+      "flat": 138,
       "limit_up": 13,
       "limit_down": 1,
       "total": 1362,
-      "up_pct": 42.4,
+      "up_pct": 42.9,
       "down_pct": 47.0,
-      "flat_pct": 10.6,
+      "flat_pct": 10.1,
       "limit_up_pct": 1.0,
       "limit_down_pct": 0.1
     },
@@ -104,10 +104,10 @@
       "market": "上櫃"
     },
     {
-      "code": "3609",
-      "name": "三一東林",
-      "close": 19.5,
-      "change_pct": -7.142857142857142,
+      "code": "6482",
+      "name": "弘煜科",
+      "close": 25.0,
+      "change_pct": -7.4074074074074066,
       "market": "上櫃"
     }
   ]
