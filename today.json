@@ -1,6 +1,6 @@
 {
   "date": "2026-08-25",
-  "generated_at": "2026-08-25 15:50:43",
+  "generated_at": "2026-08-25 16:01:11",
   "complete": false,
   "taiex": {
     "close": 45169.46,
@@ -24,16 +24,16 @@
       "limit_down_pct": 0.1
     },
     "tpex": {
-      "up": 0,
-      "down": 0,
-      "flat": 0,
-      "limit_up": 0,
+      "up": 371,
+      "down": 398,
+      "flat": 92,
+      "limit_up": 16,
       "limit_down": 0,
-      "total": 0,
-      "up_pct": 0.0,
-      "down_pct": 0.0,
-      "flat_pct": 0.0,
-      "limit_up_pct": 0.0,
+      "total": 890,
+      "up_pct": 41.7,
+      "down_pct": 44.7,
+      "flat_pct": 10.3,
+      "limit_up_pct": 1.8,
       "limit_down_pct": 0.0
     }
   },
@@ -44,6 +44,13 @@
       "close": 291.5,
       "change_pct": 10.0,
       "market": "上市"
+    },
+    {
+      "code": "8227",
+      "name": "巨有科技",
+      "close": 165.0,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
       "code": "2484",
@@ -60,18 +67,11 @@
       "market": "上市"
     },
     {
-      "code": "6830",
-      "name": "汎銓",
-      "close": 491.0,
-      "change_pct": 9.966405375139978,
-      "market": "上市"
-    },
-    {
-      "code": "2455",
-      "name": "全新",
-      "close": 419.5,
-      "change_pct": 9.960681520314548,
-      "market": "上市"
+      "code": "4939",
+      "name": "亞電",
+      "close": 71.7,
+      "change_pct": 9.969325153374232,
+      "market": "上櫃"
     }
   ],
   "top_losers": [
@@ -83,6 +83,13 @@
       "market": "上市"
     },
     {
+      "code": "6241",
+      "name": "鑫永洋",
+      "close": 17.15,
+      "change_pct": -9.73684210526316,
+      "market": "上櫃"
+    },
+    {
       "code": "8101",
       "name": "華冠",
       "close": 13.0,
@@ -90,25 +97,18 @@
       "market": "上市"
     },
     {
-      "code": "6225",
-      "name": "天瀚",
-      "close": 66.1,
-      "change_pct": -7.032348804500704,
-      "market": "上市"
+      "code": "4609",
+      "name": "唐鋒",
+      "close": 4.2,
+      "change_pct": -8.096280087527353,
+      "market": "上櫃"
     },
     {
-      "code": "2451",
-      "name": "創見",
-      "close": 299.0,
-      "change_pct": -5.379746835443038,
-      "market": "上市"
-    },
-    {
-      "code": "6550",
-      "name": "北極星藥業-KY",
-      "close": 11.0,
-      "change_pct": -5.172413793103448,
-      "market": "上市"
+      "code": "3609",
+      "name": "三一東林",
+      "close": 19.5,
+      "change_pct": -7.142857142857142,
+      "market": "上櫃"
     }
   ]
 }
