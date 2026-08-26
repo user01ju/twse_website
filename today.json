@@ -1,114 +1,114 @@
 {
-  "date": "2026-08-25",
-  "generated_at": "2026-08-25 16:52:43",
-  "complete": true,
+  "date": "2026-08-26",
+  "generated_at": "2026-08-26 15:01:03",
+  "complete": false,
   "taiex": {
-    "close": 45169.46,
-    "change_pts": 407.14,
-    "change_pct": 0.91,
-    "trading_amount_yi": 7185.70256167,
-    "transaction_count": 4106662
+    "close": 45832.62,
+    "change_pts": 663.16,
+    "change_pct": 1.47,
+    "trading_amount_yi": 8362.43796302,
+    "transaction_count": 4110959
   },
   "breadth": {
     "twse": {
-      "up": 584,
-      "down": 640,
-      "flat": 138,
-      "limit_up": 13,
-      "limit_down": 1,
-      "total": 1362,
-      "up_pct": 42.9,
-      "down_pct": 47.0,
-      "flat_pct": 10.1,
-      "limit_up_pct": 1.0,
-      "limit_down_pct": 0.1
+      "up": 1021,
+      "down": 239,
+      "flat": 109,
+      "limit_up": 30,
+      "limit_down": 0,
+      "total": 1369,
+      "up_pct": 74.6,
+      "down_pct": 17.5,
+      "flat_pct": 8.0,
+      "limit_up_pct": 2.2,
+      "limit_down_pct": 0.0
     },
     "tpex": {
-      "up": 371,
-      "down": 398,
-      "flat": 92,
-      "limit_up": 16,
+      "up": 0,
+      "down": 0,
+      "flat": 0,
+      "limit_up": 0,
       "limit_down": 0,
-      "total": 890,
-      "up_pct": 41.7,
-      "down_pct": 44.7,
-      "flat_pct": 10.3,
-      "limit_up_pct": 1.8,
+      "total": 0,
+      "up_pct": 0.0,
+      "down_pct": 0.0,
+      "flat_pct": 0.0,
+      "limit_up_pct": 0.0,
       "limit_down_pct": 0.0
     }
   },
   "top_gainers": [
     {
-      "code": "8039",
-      "name": "台虹",
-      "close": 291.5,
+      "code": "3406",
+      "name": "玉晶光",
+      "close": 759.0,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "8227",
-      "name": "巨有科技",
-      "close": 165.0,
+      "code": "3543",
+      "name": "州巧",
+      "close": 45.1,
       "change_pct": 10.0,
-      "market": "上櫃"
-    },
-    {
-      "code": "2484",
-      "name": "希華",
-      "close": 79.3,
-      "change_pct": 9.98613037447989,
       "market": "上市"
     },
     {
-      "code": "3308",
-      "name": "聯德",
-      "close": 22.05,
-      "change_pct": 9.97506234413965,
+      "code": "4977",
+      "name": "眾達-KY",
+      "close": 170.5,
+      "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "4939",
-      "name": "亞電",
-      "close": 71.7,
-      "change_pct": 9.969325153374232,
-      "market": "上櫃"
+      "code": "6213",
+      "name": "聯茂",
+      "close": 583.0,
+      "change_pct": 10.0,
+      "market": "上市"
+    },
+    {
+      "code": "6668",
+      "name": "中揚光",
+      "close": 39.05,
+      "change_pct": 10.0,
+      "market": "上市"
     }
   ],
   "top_losers": [
     {
-      "code": "6715",
-      "name": "嘉基",
-      "close": 363.5,
-      "change_pct": -9.913258983890955,
+      "code": "2609",
+      "name": "陽明",
+      "close": 57.6,
+      "change_pct": -9.433962264150942,
       "market": "上市"
     },
     {
-      "code": "6241",
-      "name": "鑫永洋",
-      "close": 17.15,
-      "change_pct": -9.73684210526316,
-      "market": "上櫃"
-    },
-    {
-      "code": "8101",
-      "name": "華冠",
-      "close": 13.0,
-      "change_pct": -8.450704225352112,
+      "code": "2615",
+      "name": "萬海",
+      "close": 115.0,
+      "change_pct": -9.090909090909092,
       "market": "上市"
     },
     {
-      "code": "4609",
-      "name": "唐鋒",
-      "close": 4.2,
-      "change_pct": -8.096280087527353,
-      "market": "上櫃"
+      "code": "2606",
+      "name": "裕民",
+      "close": 72.0,
+      "change_pct": -7.6923076923076925,
+      "market": "上市"
     },
     {
-      "code": "6482",
-      "name": "弘煜科",
-      "close": 25.0,
-      "change_pct": -7.4074074074074066,
-      "market": "上櫃"
+      "code": "4560",
+      "name": "強信-KY",
+      "close": 31.05,
+      "change_pct": -7.17488789237668,
+      "market": "上市"
+    },
+    {
+      "code": "2611",
+      "name": "志信",
+      "close": 15.2,
+      "change_pct": -6.17283950617284,
+      "market": "上市"
     }
   ]
 }
