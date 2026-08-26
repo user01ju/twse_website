@@ -1,6 +1,6 @@
 {
   "date": "2026-08-26",
-  "generated_at": "2026-08-26 15:52:41",
+  "generated_at": "2026-08-26 16:02:06",
   "complete": false,
   "taiex": {
     "close": 45832.62,
@@ -24,17 +24,17 @@
       "limit_down_pct": 0.0
     },
     "tpex": {
-      "up": 0,
-      "down": 0,
-      "flat": 0,
-      "limit_up": 0,
-      "limit_down": 0,
-      "total": 0,
-      "up_pct": 0.0,
-      "down_pct": 0.0,
-      "flat_pct": 0.0,
-      "limit_up_pct": 0.0,
-      "limit_down_pct": 0.0
+      "up": 583,
+      "down": 203,
+      "flat": 86,
+      "limit_up": 37,
+      "limit_down": 1,
+      "total": 890,
+      "up_pct": 65.5,
+      "down_pct": 22.8,
+      "flat_pct": 9.7,
+      "limit_up_pct": 4.2,
+      "limit_down_pct": 0.1
     }
   },
   "top_gainers": [
@@ -76,6 +76,13 @@
   ],
   "top_losers": [
     {
+      "code": "6223",
+      "name": "旺矽",
+      "close": 5040.0,
+      "change_pct": -10.0,
+      "market": "上櫃"
+    },
+    {
       "code": "2609",
       "name": "陽明",
       "close": 57.6,
@@ -101,13 +108,6 @@
       "name": "強信-KY",
       "close": 31.05,
       "change_pct": -7.17488789237668,
-      "market": "上市"
-    },
-    {
-      "code": "2611",
-      "name": "志信",
-      "close": 15.2,
-      "change_pct": -6.17283950617284,
       "market": "上市"
     }
   ]
