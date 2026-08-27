@@ -686,9 +686,17 @@ def check_exdiv_not_fake_flat(ctx: Ctx):
     """2026-07-30『除息 X → 假平盤』的迴歸測試。
 
     重算兩次上市持平家數：naive（完全照交易所漲跌欄，除息股一律 flat）與
-    ref-aware（有參考價就用 close vs ref）。today.json 必須等於 ref-aware；
-    等於 naive 而不等於 ref-aware，就代表 ex_refs 沒有傳進 market_breadth，
-    bug 復發。這是對**產出**的檢查，不是對函數的檢查。
+    ref-aware（有參考價就用 close vs ref）。today.json 要貼在 ref-aware 這側；
+    貼到 naive 那側就代表 ex_refs 沒有傳進 market_breadth，bug 復發。
+    這是對**產出**的檢查，不是對函數的檢查。
+
+    「貼近」不是「相等」：today.json 的來源是 STOCK_DAY_ALL，這裡重算走
+    MI_INDEX，兩個端點對同一天差個一兩家是常態（落地時間差、universe 邊界），
+    breadth-vs-official 正是為此留了 BREADTH_ABS_TOL_PASS 家的絕對容差。原本這
+    條卻要求嚴格相等 —— 同一份數字、同一個來源差異，在兩條檢查裡兩套標準。
+    2026-08-27 就這樣紅了：today.json 123 / ref-aware 124 / naive 141，差 1 家，
+    離 naive 還有 18 家，除權息基準明明有生效（同一輪的 breadth-vs-official
+    也只差 1 家、PASS）。判定改成「離哪一側近」＋沿用 breadth 的同款容差。
     """
     ours = (ctx.today_json.get("breadth") or {}).get("twse") or {}
     if not ours.get("total"):
@@ -699,13 +707,19 @@ def check_exdiv_not_fake_flat(ctx: Ctx):
     if naive == aware:
         return SKIP, (f"{ctx.report_date} 當日沒有『有參考價且收盤 ≠ 參考價』的個股"
                       f"（naive flat = ref-aware flat = {aware}），這條區分不出差異")
+    d_naive, d_aware = abs(mine - naive), abs(mine - aware)
+    tol_warn = max(BREADTH_ABS_TOL_PASS, ours["total"] * BREADTH_TOL_WARN_PCT / 100)
     msg = (f"{ctx.report_date} 上市持平家數 today.json {mine}，"
-           f"ref-aware 重算 {aware}，naive（吃交易所漲跌欄）{naive}")
-    if mine == aware:
+           f"ref-aware 重算 {aware}（差 {d_aware}），"
+           f"naive（吃交易所漲跌欄）{naive}（差 {d_naive}）"
+           f"；PASS 門檻 {BREADTH_ABS_TOL_PASS} 家，WARN 門檻 {tol_warn:.0f}")
+    if d_naive <= d_aware:
+        return FAIL, msg + " — 離 naive 不比離 ref-aware 遠，除息股被算成假平盤（7/30 bug 復發）"
+    if d_aware <= BREADTH_ABS_TOL_PASS:
         return PASS, msg + " — 除權息基準有生效"
-    if mine == naive:
-        return FAIL, msg + " — 等於 naive，除息股被算成假平盤（7/30 bug 復發）"
-    return FAIL, msg + " — 三者都不同，漲跌基準邏輯與兩種算法都對不上"
+    if d_aware <= tol_warn:
+        return WARN, msg + " — 基準有生效（明顯偏向 ref-aware），但差距超出 PASS 門檻"
+    return FAIL, msg + " — 與兩種算法都對不上"
 
 
 # ══════════════════════════════════════════════════════════════════════════

@@ -98,7 +98,7 @@ gh workflow run --repo user01ju/twse_website daily_update.yml -f skip_verify=tru
 
 **`t86-vs-bfi82u` 是四個 repo 裡最有價值的一條**：兩個獨立端點互驗，單位錯、漏股、parse 壞都會現形。門檻 gross ±3% / net ±1%（T86 是個股明細加總、BFI82U 是官方彙總，兩者本來就有零股與盤後定價的細微差異）。實測 2026-07-31：買進 5,003億 vs 4,988億（+0.31%）。
 
-`exdiv-not-fake-flat` 是 2026-07-30「除息 X → 假平盤」bug 的迴歸測試（見 llm_wiki: twse-exdiv-change-x-zero-pct）。做法是比對 ref-aware 重算的持平家數與 naive（直接吃交易所漲跌欄）的差異，確認除權息基準有生效。
+`exdiv-not-fake-flat` 是 2026-07-30「除息 X → 假平盤」bug 的迴歸測試（見 llm_wiki: twse-exdiv-change-x-zero-pct）。做法是重算兩次持平家數 —— naive（直接吃交易所漲跌欄）與 ref-aware（有參考價就用 close vs ref）—— 再看 `today.json` 貼在哪一側：貼 ref-aware 且差距在 3 家內 → PASS，離 naive 不比離 ref-aware 遠 → FAIL（bug 復發）。**判定是「離哪一側近」，不是「與 ref-aware 相等」**：`today.json` 走 STOCK_DAY_ALL、重算走 MI_INDEX，兩個端點差個一兩家是常態，容差沿用 `breadth-vs-official` 的 `BREADTH_ABS_TOL_PASS`（3 家）與 WARN 門檻（total 的 2%）。2026-08-27 曾因嚴格相等而誤報：123 / ref-aware 124 / naive 141，只差 1 家、離 naive 還有 18 家，同一輪的 `breadth-vs-official` 用同一份數字是 PASS。
 
 外部源掛掉／超時／非 200 一律 SKIP。呼叫上限 3 次、間隔 ≥1 秒。
 
