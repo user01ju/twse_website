@@ -38,7 +38,9 @@
     窗口 <strong>{{ d.start }} ~ {{ d.end }}</strong>（{{ d.days }} 個交易日）　
     共 <strong>{{ rows | length }}</strong> 個子類股　
     <span class="sf-note">加速 = 近 {{ d.short }} 日均量 ÷ {{ d.days }} 日均量（≥1.5 加速、≤0.67 減速、換邊為翻轉）；
-      市值為該子類股**全部成分股**加總（不是只算有流向的那幾檔）</span>
+      市值為該子類股**全部成分股**加總（不是只算有流向的那幾檔）；
+      買/賣是 {{ d.short }} 日淨額同向的家數、龍頭佔比 = 最大一檔佔該類總進出量 ——
+      兩者一起看就知道這波是全族群還是單一檔撐起來的</span>
     <div class="sf-note">點子類股列展開成分股（依 {{ d.short }} 日淨額排序，門檻 |淨額| ≥ {{ d.stock_min }} 億、
       每類最多 {{ d.stock_cap }} 檔，小型子類股保底列前幾名）。此處<strong>不套</strong>第 5/6 區塊的
       前 100 名截斷，所以出現的個股可能與那兩區不同。</div>
@@ -49,14 +51,15 @@
       <tr>
         <th class="si-th-rank">#</th>
         <th class="si-th-sector">子類股</th>
-        <th class="si-th-num">個股數</th>
-        <th class="sf-th-yi si-sort" data-col="3">{{ d.short }}日(億)<span class="si-sort-ind"></span></th>
-        <th class="sf-th-yi si-sort" data-col="4">{{ d.long }}日(億)<span class="si-sort-ind"></span></th>
-        <th class="sf-th-yi si-sort" data-col="5">市值(億)<span class="si-sort-ind"></span></th>
-        <th class="sf-th-yi si-sort" data-col="6">{{ d.short }}日/市值<span class="si-sort-ind"></span></th>
-        <th class="sf-th-yi si-sort" data-col="7">連續<span class="si-sort-ind"></span></th>
-        <th class="si-th-yi si-sort" data-col="8">加速度<span class="si-sort-ind"></span></th>
-        <th class="sf-th-yi si-sort" data-col="9">近{{ d.ret_days }}日<span class="si-sort-ind"></span></th>
+        <th class="sf-th-yi si-sort" data-col="2" title="窗口內 5 日淨額同向的成分股家數">買/賣<span class="si-sort-ind"></span></th>
+        <th class="sf-th-yi si-sort" data-col="3" title="最大一檔佔該類股 5 日總進出量的比例">龍頭佔比<span class="si-sort-ind"></span></th>
+        <th class="sf-th-yi si-sort" data-col="4">{{ d.short }}日(億)<span class="si-sort-ind"></span></th>
+        <th class="sf-th-yi si-sort" data-col="5">{{ d.long }}日(億)<span class="si-sort-ind"></span></th>
+        <th class="sf-th-yi si-sort" data-col="6">市值(億)<span class="si-sort-ind"></span></th>
+        <th class="sf-th-yi si-sort" data-col="7">{{ d.short }}日/市值<span class="si-sort-ind"></span></th>
+        <th class="sf-th-yi si-sort" data-col="8">連續<span class="si-sort-ind"></span></th>
+        <th class="si-th-yi si-sort" data-col="9">加速度<span class="si-sort-ind"></span></th>
+        <th class="sf-th-yi si-sort" data-col="10">近{{ d.ret_days }}日<span class="si-sort-ind"></span></th>
       </tr>
     </thead>
     <tbody>
@@ -71,7 +74,13 @@
           <span class="si-sector-name">{% if g.stocks %}<span class="sf-caret">▸</span>{% endif %}{{ g.sector }}</span>
           {% if g.parent %}<span class="si-parent">{{ g.parent }}</span>{% endif %}
         </td>
-        <td class="si-num">{{ g.n }}</td>
+        <td class="si-yi sf-breadth" data-order="{{ g.up - g.down }}"
+            title="{{ g.moved }} 檔有進出：{{ g.up }} 買 / {{ g.down }} 賣">
+          <span class="pos">{{ g.up }}</span>/<span class="neg">{{ g.down }}</span>
+        </td>
+        <td class="si-yi sf-lead" data-order="{{ g.lead or 0 }}">
+          {%- if g.lead is not none %}{{ g.lead }}%{% else %}–{% endif -%}
+        </td>
         <td class="si-yi {{ 'pos' if g.net5 >= 0 else 'neg' }}" data-order="{{ g.net5 }}">
           {{ "{:+,.1f}".format(g.net5) }}
         </td>
@@ -105,7 +114,7 @@
       </tr>
       {% if g.stocks %}
       {# 明細列刻意壓成單行：1600+ 列 × 每列 9 行縮排 = 幾百 KB 的純空白 #}
-      <tr class="sf-detail hidden" id="{{ did }}"><td colspan="10"><table class="sf-sub"><thead><tr>
+      <tr class="sf-detail hidden" id="{{ did }}"><td colspan="11"><table class="sf-sub"><thead><tr>
         <th>代號</th><th>名稱</th><th>{{ d.short }}日</th><th>{{ d.long }}日</th><th>連續</th><th>近{{ d.ret_days }}日</th>
         </tr></thead><tbody>
         {%- for st in g.stocks -%}
@@ -140,6 +149,8 @@
 .sf-note { opacity: 0.65; font-size: 12px; }
 .sf-th-yi { width: 82px; text-align: right; }
 .sf-mcap { color: var(--text-muted); font-weight: 500; }
+.sf-breadth { font-family: var(--font-mono); font-weight: 500; }
+.sf-lead { color: var(--text-muted); font-weight: 500; }
 .sf-accel { white-space: nowrap; }
 .sf-tag { font-size: 12px; padding: 1px 6px; border-radius: 4px; background: var(--surface-2, rgba(127,127,127,.12)); }
 .sf-hot  { color: var(--pos); background: var(--pos-glow); }

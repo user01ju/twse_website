@@ -32,6 +32,10 @@ _ACCEL_COLD    = 0.67
 # 個股層的加速度門檻要低一階：1 億/日 對個股等於只有前 12% 判得到
 # （20 日日均絕對值 p90 = 1.26 億、p75 = 0.19 億）。
 _ACCEL_MIN_AVG_STOCK = 0.3
+_WEEK52 = 252          # 52 週位階的窗口（交易日）
+_COST_MIN_NET = 0.2    # 淨額須佔總進出量的比例，低於此不給法人成本（買賣互抵）
+_CONSENSUS_MIN = 0.1   # 外資/投信 5 日淨額低於此（億）不判一致性
+_DISPERSE_MIN = 0.05   # 成分股 5 日淨額低於此（億）不計入擴散度家數
 # 個股表每個法人別取買超前 N + 賣超前 N（全列 1162 檔 × 4 頁簽會讓 HTML 再翻倍）
 _STOCK_TABLE_TOP = 50
 
@@ -80,15 +84,26 @@ def _accel(series: list[float], min_avg: float = _ACCEL_MIN_AVG) -> tuple[float 
     return round(ratio, 2), "持平"
 
 
-def _sector_returns(today: date, sector_of: dict[str, str]
-                   ) -> tuple[dict[str, float], dict[str, float], int]:
-    """近 N 日還原報酬（%）。回傳 (子類股等權平均, 個股, 實際天數)。"""
-    window = price_cache.load_window(today, _SHORT + 1)
+def _price_metrics(today: date, sector_of: dict[str, str]
+                  ) -> tuple[dict, dict, dict, dict, int]:
+    """一次載入 52 週價格窗口，算完所有價格衍生指標。
+
+    回傳 (子類股近 N 日等權報酬, 個股近 N 日報酬, 個股 52 週位階,
+          {date: 當日快照}, 實際報酬天數)
+
+    52 週高低走還原權息 cum 序列（跟 market_trend 同一套鏈與 ±12% 護欄），
+    不然高股息股會因為除息缺口被算成「離高點很遠」。位階 0% = 就在 52 週高點。
+    """
+    window = price_cache.load_window(today, _WEEK52)
     if len(window) < 2:
-        return {}, {}, 0
+        return {}, {}, {}, {}, 0
 
     refs = exrights.load_refs()
     chains: dict[str, _Chain] = {}
+    peak: dict[str, float] = {}
+    ret_start = max(0, len(window) - _SHORT - 1)
+    cum_at_start: dict[str, float] = {}
+
     for i, (d, snap) in enumerate(window):
         day_refs = refs.get(d.isoformat(), {})
         for code, px in snap.items():
@@ -106,19 +121,71 @@ def _sector_returns(today: date, sector_of: dict[str, str]
                 ret = 1.0          # 未知資本事件 → 視為價值中性
             ch.cum *= ret
             ch.pc, ch.last_idx = c, i
+            if ch.cum > peak.get(code, 0):
+                peak[code] = ch.cum
+        if i == ret_start:
+            cum_at_start = {code: ch.cum for code, ch in chains.items()}
 
-    first_snap = window[0][1]
     buckets: dict[str, list[float]] = defaultdict(list)
-    per_code: dict[str, float] = {}
+    rets: dict[str, float] = {}
+    pos52: dict[str, float] = {}
     for code, ch in chains.items():
-        if code not in first_snap:
-            continue               # 期初沒報價 → 算不出區間報酬（新股/停牌）
-        ret = (ch.cum - 1) * 100
-        per_code[code] = round(ret, 2)
-        buckets[sector_of.get(code) or "其他"].append(ret)
+        base = cum_at_start.get(code)
+        if base:
+            r = (ch.cum / base - 1) * 100
+            rets[code] = round(r, 2)
+            buckets[sector_of.get(code) or "其他"].append(r)
+        pk = peak.get(code)
+        if pk:
+            pos52[code] = round((ch.cum / pk - 1) * 100, 1)
 
+    snap_by_date = {d: snap for d, snap in window}
     return ({s: round(sum(v) / len(v), 2) for s, v in buckets.items()},
-            per_code, len(window) - 1)
+            rets, pos52, snap_by_date, len(window) - 1 - ret_start)
+
+
+def _inst_cost(series: list[float], dates: list, snap_by_date: dict,
+               code: str, close_now: float) -> tuple[float | None, float | None]:
+    """法人平均成本與現價相對它的位置。
+
+    每日淨額是億元，先用當日收盤還原成張，再用當日 typical price (H+L+C)/3
+    當成交均價近似（沒有官方 VWAP）。加權平均後：
+        成本 = Σ(張 × tp) / Σ(張)
+    買賣互抵到分母趨近 0 時倍數會爆掉，所以要求淨額佔總進出量 ≥ 20% 才給值。
+    """
+    num = den = gross = 0.0
+    for i, d in enumerate(dates):
+        yi = series[i]
+        if yi == 0:
+            continue
+        px = (snap_by_date.get(d) or {}).get(code)
+        if not px:
+            continue
+        c = px.get("c", 0)
+        if c <= 0:
+            continue
+        zhang = yi * 1e8 / (1000 * c)
+        tp = (px.get("h", c) + px.get("l", c) + c) / 3 or c
+        num   += zhang * tp
+        den   += zhang
+        gross += abs(zhang)
+    if not gross or abs(den) < gross * _COST_MIN_NET or not close_now:
+        return None, None
+    cost = num / den
+    if cost <= 0:
+        return None, None
+    return round(cost, 2), round((close_now / cost - 1) * 100, 1)
+
+
+def _consensus(f5: float, t5: float) -> tuple[int, str]:
+    """外資 vs 投信 5 日方向。自營商多為避險部位，不納入判斷。"""
+    if abs(f5) < _CONSENSUS_MIN or abs(t5) < _CONSENSUS_MIN:
+        return 0, ""
+    if f5 > 0 and t5 > 0:
+        return 2, "同買"
+    if f5 < 0 and t5 < 0:
+        return -2, "同賣"
+    return 0, "分歧"
 
 
 def build(today: date) -> dict:
@@ -144,7 +211,7 @@ def build(today: date) -> dict:
     for code, sec in code_to_sector.items():
         sector_parent.setdefault(sec, code_to_parent.get(code, ""))
 
-    rets, code_rets, ret_days = _sector_returns(today, code_to_sector)
+    rets, code_rets, pos52, snap_by_date, ret_days = _price_metrics(today, code_to_sector)
 
     # 個股層（展開列用）。日期序列跟母表同一組，缺檔的日子給 {}。
     stock_window = inst_flow_cache.load_window(today, _DAYS, stocks=True)
@@ -215,8 +282,21 @@ def build(today: date) -> dict:
             stocks = (picks if len(picks) <= _STOCK_CAP
                       else picks[:_STOCK_CAP // 2] + picks[-(_STOCK_CAP - _STOCK_CAP // 2):])
 
+            # 擴散度：這波錢是全族群還是單一檔撐的
+            members = [(c, sum(day[ki] for day in series_by_code[c][-_SHORT:]))
+                       for c in codes_by_sector.get(sec, ())]
+            moved = [(c, v) for c, v in members if abs(v) >= _DISPERSE_MIN]
+            up   = sum(1 for _, v in moved if v > 0)
+            down = sum(1 for _, v in moved if v < 0)
+            gross = sum(abs(v) for _, v in moved)
+            lead = round(max((abs(v) for _, v in moved), default=0) / gross * 100) if gross else None
+
             smc = sector_mcap.get(sec)
             rows.append({
+                "up":    up,
+                "down":  down,
+                "moved": len(moved),
+                "lead":  lead,
                 "sector": sec,
                 "parent": sector_parent.get(sec, ""),
                 "mcap":   round(smc) if smc else None,
@@ -236,6 +316,7 @@ def build(today: date) -> dict:
 
     # 個股表：跟母表同一份 series，只是不分子類股。子類股內成分差異大時，
     # 分組本身就是雜訊 —— 這裡讓個股自己排隊。
+    flow_dates = [d for d, _ in window]
     stock_tabs = {}
     for key, _label in _TABS:
         ki = _SER_IDX[key]
@@ -247,7 +328,17 @@ def build(today: date) -> dict:
                 continue
             ratio, tag = _accel(ss, _ACCEL_MIN_AVG_STOCK)
             mcap = mcaps.get(code)
+            close_now = last_px.get(code, 0)
+            cost, vs_cost = _inst_cost(ss, flow_dates, snap_by_date, code, close_now)
+            cons_order, cons_tag = _consensus(
+                sum(day[_SER_IDX["f"]] for day in ser[-_SHORT:]),
+                sum(day[_SER_IDX["t"]] for day in ser[-_SHORT:]))
             srows.append({
+                "pos52":      pos52.get(code),
+                "cost":       cost,
+                "vs_cost":    vs_cost,
+                "cons_order": cons_order,
+                "cons_tag":   cons_tag,
                 "code":   code,
                 "name":   names.get(code, ""),
                 "sector": code_to_sector.get(code) or "其他",

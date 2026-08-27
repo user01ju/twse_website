@@ -28,9 +28,12 @@
     窗口 <strong>{{ d.start }} ~ {{ d.end }}</strong>（{{ d.days }} 個交易日）　
     {{ d.stock_universe }} 檔有進出，列出買超前 {{ d.stock_top }} + 賣超前 {{ d.stock_top }}
     <span class="sf-note">　子類股欄只是標籤，不做分組。市值 = 報告日收盤 × 發行股數（股數只有最新快照，
-      整個窗口共用今天的值，所以市值比是近似值）</span>
+      整個窗口共用今天的值，所以市值比是近似值）。位階 = 現價相對 52 週高點（還原權息）；
+      vs成本 = 現價相對法人 {{ d.long }} 日加權平均成本（用 (H+L+C)/3 近似成交均價，
+      淨額佔總進出量低於 20% 的視為買賣互抵、不給值）；一致 = 外資與投信 {{ d.short }} 日方向</span>
   </div>
 
+  <div class="stf-wrap">
   <table class="si-table stf-table">
     <thead>
       <tr>
@@ -42,9 +45,12 @@
         <th class="stf-th-yi si-sort" data-col="5">{{ d.long }}日(億)<span class="si-sort-ind"></span></th>
         <th class="stf-th-yi si-sort" data-col="6">市值(億)<span class="si-sort-ind"></span></th>
         <th class="stf-th-yi si-sort" data-col="7">{{ d.short }}日/市值<span class="si-sort-ind"></span></th>
-        <th class="stf-th-yi si-sort" data-col="8">連續<span class="si-sort-ind"></span></th>
-        <th class="si-th-yi si-sort" data-col="9">加速度<span class="si-sort-ind"></span></th>
-        <th class="stf-th-yi si-sort" data-col="10">近{{ d.ret_days }}日<span class="si-sort-ind"></span></th>
+        <th class="stf-th-yi si-sort" data-col="8" title="現價相對 52 週高點（還原權息），0% = 就在高點">位階<span class="si-sort-ind"></span></th>
+        <th class="stf-th-yi si-sort" data-col="9" title="現價相對法人 {{ d.long }} 日加權平均成本">vs成本<span class="si-sort-ind"></span></th>
+        <th class="stf-th-cons si-sort" data-col="10" title="外資與投信 {{ d.short }} 日方向是否一致">一致<span class="si-sort-ind"></span></th>
+        <th class="stf-th-yi si-sort" data-col="11">連續<span class="si-sort-ind"></span></th>
+        <th class="si-th-yi si-sort" data-col="12">加速度<span class="si-sort-ind"></span></th>
+        <th class="stf-th-yi si-sort" data-col="13">近{{ d.ret_days }}日<span class="si-sort-ind"></span></th>
       </tr>
     </thead>
     <tbody>
@@ -61,6 +67,20 @@
         </td>
         <td class="si-yi {{ 'pos' if (r.net5_pct or 0) >= 0 else 'neg' }}" data-order="{{ r.net5_pct if r.net5_pct is not none else 0 }}">
           {%- if r.net5_pct is not none %}{{ "{:+.2f}".format(r.net5_pct) }}%{% else %}–{% endif -%}
+        </td>
+        <td class="si-yi stf-pos52" data-order="{{ r.pos52 if r.pos52 is not none else -999 }}">
+          {%- if r.pos52 is not none %}{{ "{:.0f}".format(r.pos52) }}%{% else %}–{% endif -%}
+        </td>
+        <td class="si-yi {{ 'pos' if (r.vs_cost or 0) >= 0 else 'neg' }}"
+            data-order="{{ r.vs_cost if r.vs_cost is not none else 0 }}"
+            {% if r.cost %}title="法人 {{ d.long }} 日加權平均成本 {{ r.cost }}"{% endif %}>
+          {%- if r.vs_cost is not none %}{{ "{:+.1f}".format(r.vs_cost) }}%{% else %}–{% endif -%}
+        </td>
+        <td class="si-yi stf-cons" data-order="{{ r.cons_order }}">
+          {%- if r.cons_tag == '同買' %}<span class="sf-tag sf-hot">🤝 同買</span>
+          {%- elif r.cons_tag == '同賣' %}<span class="sf-tag sf-cold">🤝 同賣</span>
+          {%- elif r.cons_tag == '分歧' %}<span class="sf-tag">⚔️ 分歧</span>
+          {%- else %}–{% endif -%}
         </td>
         <td class="si-yi {{ 'pos' if r.streak > 0 else ('neg' if r.streak < 0 else '') }}" data-order="{{ r.streak }}">
           {%- if r.streak %}{{ '買' if r.streak > 0 else '賣' }} {{ r.streak | abs }} 天{% else %}–{% endif -%}
@@ -81,6 +101,7 @@
       {% endfor %}
     </tbody>
   </table>
+  </div>
   {% endif %}
 </div>
 {% endfor %}
@@ -98,6 +119,10 @@
 .stf-th-sector { width: 104px; }
 .stf-th-yi { width: 76px; text-align: right; }
 .stf-mcap { color: var(--text-muted); font-weight: 500; }
+.stf-pos52 { color: var(--text-muted); font-weight: 500; }
+.stf-th-cons { width: 84px; text-align: right; }
+.stf-cons { white-space: nowrap; }
+.stf-wrap { overflow-x: auto; }
 .stf-code { font-family: var(--font-mono); color: var(--text-muted); }
 .stf-name { font-weight: 700; color: var(--text-primary); }
 .stf-sector { font-size: 11px; color: var(--text-muted); }
