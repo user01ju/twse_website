@@ -33,7 +33,7 @@ twse_website/
 │   ├── tpex_client.py      # TPEX OpenAPI
 │   ├── exrights.py         # 除權息/減資/面額變更參考價（還原權息）
 │   ├── price_cache.py      # 每日收盤 OHLC 快取（output/data/prices/）
-│   ├── inst_flow_cache.py  # 每日法人×子類股淨買賣超快取（output/data/inst_flow/）
+│   ├── inst_flow_cache.py  # 每日法人淨買賣超快取（子類股層 data/inst_flow/ + 個股層 data/inst_stock/）
 │   └── market_calendar.py  # 交易日判斷、ROC 日期轉換
 ├── processor/
 │   ├── index_stats.py      # 加權指數
@@ -124,6 +124,6 @@ FORCE_REBUILD=false             # true 強制重建已存在的報告
 - **還原權息**：除息／減資／面額變更當日交易所 `Change` 欄不可用（TWSE 給 `'X'`），漲跌幅、breadth、分布圖一律改以除權息參考價為基準；`market_trend` 的 20MA 與 52 週新高低則跑在還原權息累積序列上
 - **標的範圍**：全站只收 4 碼普通股（排除 ETF、權證、興櫃代碼）
 - **子類股彙總**：以三大法人個股為基準，外資 / 投信 / 自營商從相同個股換算（保證加總 = 三大法人）
-- **資金流向（第 7 區塊）**：吃 `output/data/inst_flow/` 的每日快取，與第 5/6 區塊同一組解析器但**不套 top-100 截斷**（整個子類股的進出才是流向）；近 5 日漲跌用還原權息序列等權平均；窗口不足會標 degraded
+- **資金流向（第 7 區塊）**：吃 `output/data/inst_flow/` 的每日快取，與第 5/6 區塊同一組解析器但**不套 top-100 截斷**（整個子類股的進出才是流向）；近 5 日漲跌用還原權息序列等權平均；窗口不足會標 degraded；點子類股列可展開成分股（個股層快取只留任一法人別 |淨額| ≥ 0.05 億的，砍掉六成檔數但只丟 0.6% 金額）
 - **錯誤隔離**：每個 section 獨立 try/except，單一 API 失敗不影響其他區塊
 - **並行抓取**：`ThreadPoolExecutor(max_workers=5)` 同時發出所有 API 請求

@@ -38,6 +38,9 @@
     窗口 <strong>{{ d.start }} ~ {{ d.end }}</strong>（{{ d.days }} 個交易日）　
     共 <strong>{{ rows | length }}</strong> 個子類股　
     <span class="sf-note">加速 = 近 {{ d.short }} 日均量 ÷ {{ d.days }} 日均量（≥1.5 加速、≤0.67 減速、換邊為翻轉）</span>
+    <div class="sf-note">點子類股列展開成分股（依 {{ d.short }} 日淨額排序，門檻 |淨額| ≥ {{ d.stock_min }} 億、
+      每類最多 {{ d.stock_cap }} 檔，小型子類股保底列前幾名）。此處<strong>不套</strong>第 5/6 區塊的
+      前 100 名截斷，所以出現的個股可能與那兩區不同。</div>
   </div>
 
   <table class="si-table sf-table">
@@ -55,9 +58,12 @@
     </thead>
     <tbody>
       {% for g in rows %}
-      <tr class="si-row {% if loop.index % 2 == 0 %}si-alt{% endif %}">
+      {% set did = 'sf-d-' ~ key ~ '-' ~ loop.index %}
+      <tr class="si-row sf-row {% if loop.index % 2 == 0 %}si-alt{% endif %}"
+          data-target="{{ did }}"{% if g.stocks %} title="點列展開成分股"{% endif %}>
         <td class="si-rank">{{ loop.index }}</td>
         <td class="si-sector">
+          {% if g.stocks %}<span class="sf-caret">▸</span>{% endif %}
           <span class="si-sector-name">{{ g.sector }}</span>
           {% if g.parent %}<span class="si-parent">{{ g.parent }}</span>{% endif %}
         </td>
@@ -86,6 +92,25 @@
           {% if g.ret5 is not none %}{{ "{:+.2f}".format(g.ret5) }}%{% else %}–{% endif %}
         </td>
       </tr>
+      {% if g.stocks %}
+      {# 明細列刻意壓成單行：1600+ 列 × 每列 9 行縮排 = 幾百 KB 的純空白 #}
+      <tr class="sf-detail hidden" id="{{ did }}"><td colspan="8"><table class="sf-sub"><thead><tr>
+        <th>代號</th><th>名稱</th><th>{{ d.short }}日</th><th>{{ d.long }}日</th><th>連續</th><th>近{{ d.ret_days }}日</th>
+        </tr></thead><tbody>
+        {%- for st in g.stocks -%}
+        <tr><td class="sf-sub-code">{{ st.code }}</td><td>{{ st.name }}</td>
+        <td class="{{ 'pos' if st.net5 >= 0 else 'neg' }}">{{ "{:+,.1f}".format(st.net5) }}</td>
+        <td class="{{ 'pos' if st.net20 >= 0 else 'neg' }}">{{ "{:+,.1f}".format(st.net20) }}</td>
+        <td class="{{ 'pos' if st.streak > 0 else ('neg' if st.streak < 0 else '') }}">
+        {%- if st.streak %}{{ '買' if st.streak > 0 else '賣' }}{{ st.streak | abs }}{% else %}–{% endif -%}
+        </td><td class="{{ 'pos' if (st.ret5 or 0) >= 0 else 'neg' }}">
+        {%- if st.ret5 is not none %}{{ "{:+.2f}".format(st.ret5) }}%{% else %}–{% endif -%}
+        </td></tr>
+        {%- endfor -%}
+        </tbody></table>
+        {%- if g.hidden %}<div class="sf-sub-note">中間 {{ g.hidden }} 檔略過（只留買賣超兩端）</div>{% endif -%}
+      </td></tr>
+      {% endif %}
       {% endfor %}
     </tbody>
   </table>
@@ -107,6 +132,17 @@
 .sf-hot  { color: var(--pos); background: var(--pos-glow); }
 .sf-cold { color: var(--neg); background: var(--neg-glow); }
 .sf-flip { opacity: 0.85; }
+.sf-row { cursor: pointer; }
+.sf-caret { display: inline-block; width: 12px; opacity: 0.5; font-size: 10px; transition: transform .12s; }
+.sf-row.open .sf-caret { transform: rotate(90deg); opacity: 1; }
+.sf-detail > td { padding: 0 0 10px 34px; background: rgba(127,127,127,.04); }
+.sf-sub { width: auto; min-width: 380px; border-collapse: collapse; font-size: 12px; }
+.sf-sub th { text-align: right; padding: 4px 10px; opacity: .6; font-weight: 500; white-space: nowrap; }
+.sf-sub th:nth-child(1), .sf-sub th:nth-child(2) { text-align: left; }
+.sf-sub td { text-align: right; padding: 3px 10px; white-space: nowrap; }
+.sf-sub td:nth-child(1), .sf-sub td:nth-child(2) { text-align: left; }
+.sf-sub-code { font-family: var(--mono, monospace); opacity: .75; }
+.sf-sub-note { padding: 6px 10px 0; font-size: 11px; opacity: .55; max-width: 720px; }
 </style>
 <script>
 if (typeof window.siSwitch !== 'function') {
@@ -127,7 +163,8 @@ if (typeof window.siSwitch !== 'function') {
         var asc = th.classList.contains('desc');
         table.querySelectorAll('th.si-sort').forEach(function (o) { o.classList.remove('asc', 'desc'); });
         th.classList.add(asc ? 'asc' : 'desc');
-        var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr'));
+        // 只排母列；明細列緊跟著自己的母列一起搬，不然排序會把兩者拆散
+        var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr.sf-row'));
         rows.sort(function (a, b) {
           var va = parseFloat(a.children[col].dataset.order) || 0;
           var vb = parseFloat(b.children[col].dataset.order) || 0;
@@ -135,11 +172,22 @@ if (typeof window.siSwitch !== 'function') {
         });
         rows.forEach(function (r, i) {
           tbody.appendChild(r);
+          var det = r.dataset.target && document.getElementById(r.dataset.target);
+          if (det) tbody.appendChild(det);
           var rk = r.querySelector('.si-rank');
           if (rk) rk.textContent = i + 1;
           r.classList.toggle('si-alt', (i + 1) % 2 === 0);
         });
       });
+    });
+
+    tbody.addEventListener('click', function (e) {
+      var row = e.target.closest('tr.sf-row');
+      if (!row) return;
+      var det = row.dataset.target && document.getElementById(row.dataset.target);
+      if (!det) return;
+      det.classList.toggle('hidden');
+      row.classList.toggle('open', !det.classList.contains('hidden'));
     });
   });
 })();

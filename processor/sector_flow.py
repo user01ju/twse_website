@@ -31,6 +31,16 @@ _ACCEL_HOT     = 1.5
 _ACCEL_COLD    = 0.67
 
 _TABS = (("c", "三大法人"), ("f", "外資"), ("t", "投信"), ("d", "自營商"))
+# 個股層快取一列是 [名稱, c, f, t, d]；載入時名稱另外收，序列只留四個數字，
+# 所以這裡的位置是 0-3（不是快取的 1-4）。
+_SER_IDX = {"c": 0, "f": 1, "t": 2, "d": 3}
+
+# 展開列：只列近 5 日淨額夠大的，且每個子類股最多這麼多檔。純粹是版面與 HTML
+# 體積的取捨 —— 門檻 0.1 億會排出 1634 列、0.5 億剩 1044 列而金額只掉 1.7%。
+# 但小型子類股整段都在門檻以下時會變成「不能展開」，所以保底給前 _STOCK_MIN_SHOW 名。
+_STOCK_SHOW_YI  = 0.5
+_STOCK_MIN_SHOW = 3
+_STOCK_CAP      = 15
 
 
 def _streak(series: list[float]) -> int:
@@ -65,11 +75,12 @@ def _accel(series: list[float]) -> tuple[float | None, str]:
     return round(ratio, 2), "持平"
 
 
-def _sector_returns(today: date, sector_of: dict[str, str]) -> tuple[dict[str, float], int]:
-    """子類股近 N 日還原報酬（成分股等權平均，%）。回傳 (map, 實際天數)。"""
+def _sector_returns(today: date, sector_of: dict[str, str]
+                   ) -> tuple[dict[str, float], dict[str, float], int]:
+    """近 N 日還原報酬（%）。回傳 (子類股等權平均, 個股, 實際天數)。"""
     window = price_cache.load_window(today, _SHORT + 1)
     if len(window) < 2:
-        return {}, 0
+        return {}, {}, 0
 
     refs = exrights.load_refs()
     chains: dict[str, _Chain] = {}
@@ -93,13 +104,16 @@ def _sector_returns(today: date, sector_of: dict[str, str]) -> tuple[dict[str, f
 
     first_snap = window[0][1]
     buckets: dict[str, list[float]] = defaultdict(list)
+    per_code: dict[str, float] = {}
     for code, ch in chains.items():
         if code not in first_snap:
             continue               # 期初沒報價 → 算不出區間報酬（新股/停牌）
-        buckets[sector_of.get(code) or "其他"].append((ch.cum - 1) * 100)
+        ret = (ch.cum - 1) * 100
+        per_code[code] = round(ret, 2)
+        buckets[sector_of.get(code) or "其他"].append(ret)
 
     return ({s: round(sum(v) / len(v), 2) for s, v in buckets.items()},
-            len(window) - 1)
+            per_code, len(window) - 1)
 
 
 def build(today: date) -> dict:
@@ -125,7 +139,24 @@ def build(today: date) -> dict:
     for code, sec in code_to_sector.items():
         sector_parent.setdefault(sec, code_to_parent.get(code, ""))
 
-    rets, ret_days = _sector_returns(today, code_to_sector)
+    rets, code_rets, ret_days = _sector_returns(today, code_to_sector)
+
+    # 個股層（展開列用）。日期序列跟母表同一組，缺檔的日子給 {}。
+    stock_window = inst_flow_cache.load_window(today, _DAYS, stocks=True)
+    names: dict[str, str] = {}
+    series_by_code: dict[str, list[list[float]]] = {}
+    n_days = len(stock_window)
+    for i, (_d, snap) in enumerate(stock_window):
+        for code, row in snap.items():
+            names.setdefault(code, row[0])
+            ser = series_by_code.get(code)
+            if ser is None:
+                ser = series_by_code[code] = [[0.0] * 4 for _ in range(n_days)]
+            ser[i] = [row[1], row[2], row[3], row[4]]
+
+    codes_by_sector: dict[str, list[str]] = defaultdict(list)
+    for code in series_by_code:
+        codes_by_sector[code_to_sector.get(code) or "其他"].append(code)
 
     sectors = sorted({s for _, snap in window for s in snap})
     tabs = {}
@@ -138,6 +169,31 @@ def build(today: date) -> dict:
             if abs(net5) < 0.1 and abs(net20) < 0.1:
                 continue                       # 整段幾乎沒進出，不佔版面
             ratio, tag = _accel(series)
+
+            ki = _SER_IDX[key]
+            members = []
+            for code in codes_by_sector.get(sec, ()):
+                ss = [day[ki] for day in series_by_code[code]]
+                s5 = sum(ss[-_SHORT:])
+                if s5 == 0:
+                    continue
+                members.append({
+                    "code":   code,
+                    "name":   names.get(code, ""),
+                    "net5":   round(s5, 2),
+                    "net20":  round(sum(ss), 2),
+                    "streak": _streak(ss),
+                    "ret5":   code_rets.get(code),
+                })
+            picks = [m for m in members if abs(m["net5"]) >= _STOCK_SHOW_YI]
+            if len(picks) < _STOCK_MIN_SHOW:      # 小類股保底：至少看得到前幾名
+                picks = sorted(members, key=lambda x: abs(x["net5"]),
+                               reverse=True)[:_STOCK_MIN_SHOW]
+            picks.sort(key=lambda x: x["net5"], reverse=True)
+            # 買超側取頭、賣超側取尾（中間那些本來就不是重點）
+            stocks = (picks if len(picks) <= _STOCK_CAP
+                      else picks[:_STOCK_CAP // 2] + picks[-(_STOCK_CAP - _STOCK_CAP // 2):])
+
             rows.append({
                 "sector": sec,
                 "parent": sector_parent.get(sec, ""),
@@ -148,6 +204,8 @@ def build(today: date) -> dict:
                 "accel_tag": tag,
                 "ret5":   rets.get(sec),
                 "n":      window[-1][1].get(sec, {}).get("n", 0),
+                "stocks": stocks,
+                "hidden": max(0, len(picks) - len(stocks)),
             })
         rows.sort(key=lambda r: r["net5"], reverse=True)
         tabs[key] = rows
@@ -159,6 +217,8 @@ def build(today: date) -> dict:
         "degraded": degraded,
         "short":    _SHORT,
         "long":     _DAYS,
+        "stock_min": _STOCK_SHOW_YI,
+        "stock_cap": _STOCK_CAP,
         "tabs":     tabs,
         "start":    window[0][0].isoformat(),
         "end":      window[-1][0].isoformat(),

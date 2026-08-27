@@ -147,7 +147,10 @@ def main():
         d -= timedelta(days=1)
     trading_days.reverse()
 
-    todo = [d for d in trading_days if args.force or not inst_flow_cache.load(d)]
+    # 兩層快取都要有才算補過（個股層是後加的，舊資料只有子類股層）
+    todo = [d for d in trading_days
+            if args.force or not inst_flow_cache.load(d)
+            or not inst_flow_cache.load_stocks(d)]
     logger.info(f"範圍 {trading_days[0]} → {trading_days[-1]}，交易日 {len(trading_days)}，"
                 f"待抓 {len(todo)}，預估 ~{len(todo) * (args.sleep * 2 + 2) / 60:.0f} 分鐘")
 
