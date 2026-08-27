@@ -29,6 +29,11 @@ _ACCEL_MIN_AVG = 1.0    # 20 日日均低於 1 億不判加速：淨額是正負
                         # 分母一小，倍數就會噴出 20x 這種純噪音（實測 電機 -10 億/20 日 → 22.21x）
 _ACCEL_HOT     = 1.5
 _ACCEL_COLD    = 0.67
+# 個股層的加速度門檻要低一階：1 億/日 對個股等於只有前 12% 判得到
+# （20 日日均絕對值 p90 = 1.26 億、p75 = 0.19 億）。
+_ACCEL_MIN_AVG_STOCK = 0.3
+# 個股表每個法人別取買超前 N + 賣超前 N（全列 1162 檔 × 4 頁簽會讓 HTML 再翻倍）
+_STOCK_TABLE_TOP = 50
 
 _TABS = (("c", "三大法人"), ("f", "外資"), ("t", "投信"), ("d", "自營商"))
 # 個股層快取一列是 [名稱, c, f, t, d]；載入時名稱另外收，序列只留四個數字，
@@ -56,14 +61,14 @@ def _streak(series: list[float]) -> int:
     return n * sign
 
 
-def _accel(series: list[float]) -> tuple[float | None, str]:
+def _accel(series: list[float], min_avg: float = _ACCEL_MIN_AVG) -> tuple[float | None, str]:
     """短窗日均 / 長窗日均 → (倍數, 標籤)。分母太小或樣本不足回 (None, '')。"""
     if len(series) < _MIN_DAYS:
         return None, ""
     short = series[-_SHORT:]
     avg_s = sum(short) / len(short)
     avg_l = sum(series) / len(series)
-    if abs(avg_l) < _ACCEL_MIN_AVG:
+    if abs(avg_l) < min_avg:
         return None, ""
     if avg_s * avg_l < 0:
         return None, "翻轉"
@@ -123,8 +128,8 @@ def build(today: date) -> dict:
 
     if days < 2:
         logger.warning("sector_flow: inst_flow 快取不足（%d 天）— 先跑 backfill_inst.py", days)
-        return {"days": days, "ret_days": 0, "coverage": coverage,
-                "degraded": True, "tabs": {}, "start": None, "end": None}
+        return {"days": days, "ret_days": 0, "coverage": coverage, "degraded": True,
+                "tabs": {}, "stock_tabs": {}, "start": None, "end": None}
 
     degraded = coverage["pct"] < _MIN_COVERAGE or days < _MIN_DAYS
     if degraded:
@@ -210,9 +215,39 @@ def build(today: date) -> dict:
         rows.sort(key=lambda r: r["net5"], reverse=True)
         tabs[key] = rows
 
+    # 個股表：跟母表同一份 series，只是不分子類股。子類股內成分差異大時，
+    # 分組本身就是雜訊 —— 這裡讓個股自己排隊。
+    stock_tabs = {}
+    for key, _label in _TABS:
+        ki = _SER_IDX[key]
+        srows = []
+        for code, ser in series_by_code.items():
+            ss = [day[ki] for day in ser]
+            s5 = sum(ss[-_SHORT:])
+            if s5 == 0:
+                continue
+            ratio, tag = _accel(ss, _ACCEL_MIN_AVG_STOCK)
+            srows.append({
+                "code":   code,
+                "name":   names.get(code, ""),
+                "sector": code_to_sector.get(code) or "其他",
+                "net5":   round(s5, 2),
+                "net20":  round(sum(ss), 2),
+                "streak": _streak(ss),
+                "accel":  ratio,
+                "accel_tag": tag,
+                "ret5":   code_rets.get(code),
+            })
+        srows.sort(key=lambda r: r["net5"], reverse=True)
+        stock_tabs[key] = (srows if len(srows) <= _STOCK_TABLE_TOP * 2
+                           else srows[:_STOCK_TABLE_TOP] + srows[-_STOCK_TABLE_TOP:])
+
     return {
         "days":     days,
         "ret_days": ret_days,
+        "stock_tabs": stock_tabs,
+        "stock_top":  _STOCK_TABLE_TOP,
+        "stock_universe": len(series_by_code),
         "coverage": coverage,
         "degraded": degraded,
         "short":    _SHORT,

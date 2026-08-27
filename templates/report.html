@@ -115,11 +115,24 @@
   <div class="section-body">{% include "partials/sector_flow.html" %}</div>
 </div>
 
+{# 個股資金流向（與第 7 區塊同源，不分子類股） #}
+<div class="section accent-teal collapsed">
+  <div class="section-header">
+    <span class="section-accent"></span>
+    <span class="section-title">8. 法人資金流向（個股）</span>
+    {% if sections.sector_flow and sections.sector_flow.ok and sections.sector_flow.data.stock_tabs %}
+    <span class="section-subtitle">{{ sections.sector_flow.data.stock_universe }} 檔有進出</span>
+    {% endif %}
+    <span class="section-toggle-icon">▼</span>
+  </div>
+  <div class="section-body">{% include "partials/stock_flow.html" %}</div>
+</div>
+
 {# Sections 5+6: 漲跌幅前100 #}
 <div class="section accent-amber collapsed">
   <div class="section-header">
     <span class="section-accent"></span>
-    <span class="section-title">8. 漲幅 / 跌幅前 100 個股</span>
+    <span class="section-title">9. 漲幅 / 跌幅前 100 個股</span>
     <span class="section-toggle-icon">▼</span>
   </div>
   <div class="section-body">
@@ -131,7 +144,7 @@
 <div class="section accent-amber collapsed">
   <div class="section-header">
     <span class="section-accent"></span>
-    <span class="section-title">9. 漲幅 / 跌幅前 100 子類股分析</span>
+    <span class="section-title">10. 漲幅 / 跌幅前 100 子類股分析</span>
     <span class="section-toggle-icon">▼</span>
   </div>
   <div class="section-body">

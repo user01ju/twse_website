@@ -1,0 +1,135 @@
+{# 個股資金流向 — 與第 7 區塊同一份 20 日窗口，只是不分子類股 #}
+{% set s = sections.sector_flow %}
+{% if not s.ok %}
+<div class="error-box">資金流向資料錯誤：{{ s.error }}</div>
+{% else %}
+{% set d = s.data %}
+{% if not d.stock_tabs %}
+<div class="error-box">暫無資料</div>
+{% else %}
+{% set tabs = [
+  ('c', '📊 三大法人'), ('f', '🌐 外資'), ('t', '🏦 投信'), ('d', '🏛️ 自營商'),
+] %}
+
+<div class="si-tabs">
+  {% for key, label in tabs %}
+  <button class="si-tab {% if loop.first %}active{% endif %}"
+          onclick="siSwitch(this,'stf-panel-{{ key }}')">{{ label }}</button>
+  {% endfor %}
+</div>
+
+{% for key, label in tabs %}
+<div id="stf-panel-{{ key }}" class="si-panel {% if not loop.first %}hidden{% endif %}">
+  {% set rows = d.stock_tabs[key] %}
+  {% if not rows %}
+  <div class="error-box">暫無資料</div>
+  {% else %}
+  <div class="si-meta">
+    窗口 <strong>{{ d.start }} ~ {{ d.end }}</strong>（{{ d.days }} 個交易日）　
+    {{ d.stock_universe }} 檔有進出，列出買超前 {{ d.stock_top }} + 賣超前 {{ d.stock_top }}
+    <span class="sf-note">　子類股欄只是標籤，不做分組 —— 同一類股內個股差異大時，分組本身就是雜訊</span>
+  </div>
+
+  <table class="si-table stf-table">
+    <thead>
+      <tr>
+        <th class="si-th-rank">#</th>
+        <th class="stf-th-code">代號</th>
+        <th class="stf-th-name">名稱</th>
+        <th class="stf-th-sector">子類股</th>
+        <th class="si-th-yi si-sort" data-col="4">{{ d.short }}日淨買賣超(億)<span class="si-sort-ind"></span></th>
+        <th class="si-th-yi si-sort" data-col="5">{{ d.long }}日淨買賣超(億)<span class="si-sort-ind"></span></th>
+        <th class="si-th-yi si-sort" data-col="6">連續天數<span class="si-sort-ind"></span></th>
+        <th class="si-th-yi si-sort" data-col="7">加速度<span class="si-sort-ind"></span></th>
+        <th class="si-th-yi si-sort" data-col="8">近{{ d.ret_days }}日漲跌<span class="si-sort-ind"></span></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in rows %}
+      <tr class="si-row {% if loop.index % 2 == 0 %}si-alt{% endif %}">
+        <td class="si-rank">{{ loop.index }}</td>
+        <td class="stf-code">{{ r.code }}</td>
+        <td class="stf-name">{{ r.name }}</td>
+        <td class="stf-sector">{{ r.sector }}</td>
+        <td class="si-yi {{ 'pos' if r.net5 >= 0 else 'neg' }}" data-order="{{ r.net5 }}">{{ "{:+,.1f}".format(r.net5) }}</td>
+        <td class="si-yi {{ 'pos' if r.net20 >= 0 else 'neg' }}" data-order="{{ r.net20 }}">{{ "{:+,.1f}".format(r.net20) }}</td>
+        <td class="si-yi {{ 'pos' if r.streak > 0 else ('neg' if r.streak < 0 else '') }}" data-order="{{ r.streak }}">
+          {%- if r.streak %}{{ '買' if r.streak > 0 else '賣' }} {{ r.streak | abs }} 天{% else %}–{% endif -%}
+        </td>
+        <td class="si-yi sf-accel" data-order="{{ r.accel if r.accel is not none else 0 }}">
+          {%- if r.accel_tag == '翻轉' %}<span class="sf-tag sf-flip">↺ 翻轉</span>
+          {%- elif r.accel_tag in ('加速', '減速') -%}
+            {% set dir = '流入' if r.net20 >= 0 else '流出' %}
+            <span class="sf-tag {{ 'sf-hot' if r.accel_tag == '加速' else 'sf-cold' }}">
+            {{- '🔥' if r.accel_tag == '加速' else '❄️' }} {{ r.accel_tag }}{{ dir }} {{ "{:.1f}".format(r.accel) }}x</span>
+          {%- elif r.accel_tag == '持平' %}<span class="sf-tag">持平 {{ "{:.1f}".format(r.accel) }}x</span>
+          {%- else %}–{% endif -%}
+        </td>
+        <td class="si-yi {{ 'pos' if (r.ret5 or 0) >= 0 else 'neg' }}" data-order="{{ r.ret5 if r.ret5 is not none else 0 }}">
+          {%- if r.ret5 is not none %}{{ "{:+.2f}".format(r.ret5) }}%{% else %}–{% endif -%}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</div>
+{% endfor %}
+
+<style>
+.stf-table th.si-sort { cursor: pointer; user-select: none; white-space: nowrap; }
+.stf-table th.si-sort:hover { color: var(--text); }
+.stf-table .si-sort-ind { display: inline-block; width: 0; opacity: 0.4; font-size: 10px; margin-left: 3px; }
+.stf-table th.si-sort.asc  .si-sort-ind::after { content: "▲"; }
+.stf-table th.si-sort.desc .si-sort-ind::after { content: "▼"; }
+.stf-table th.si-sort.asc  .si-sort-ind,
+.stf-table th.si-sort.desc .si-sort-ind { opacity: 1; }
+.stf-th-code { width: 60px; }
+.stf-th-name { width: 96px; }
+.stf-th-sector { width: 110px; }
+.stf-code { font-family: var(--font-mono); color: var(--text-muted); }
+.stf-name { font-weight: 700; color: var(--text-primary); }
+.stf-sector { font-size: 11px; color: var(--text-muted); }
+</style>
+<script>
+if (typeof window.siSwitch !== 'function') {
+  window.siSwitch = function (btn, panelId) {
+    var body = btn.closest('.section-body');
+    body.querySelectorAll('.si-tab').forEach(function (b) { b.classList.remove('active'); });
+    body.querySelectorAll('.si-panel').forEach(function (p) { p.classList.add('hidden'); });
+    btn.classList.add('active');
+    document.getElementById(panelId).classList.remove('hidden');
+  };
+}
+// 排序器與第 7 區塊共用；誰先渲染誰定義（同 siSwitch 的 guard 寫法）
+if (typeof window.sfSortable !== 'function') {
+  window.sfSortable = function (table) {
+    var tbody = table.querySelector('tbody');
+    table.querySelectorAll('th.si-sort').forEach(function (th) {
+      th.addEventListener('click', function () {
+        var col = parseInt(th.dataset.col, 10);
+        var asc = th.classList.contains('desc');
+        table.querySelectorAll('th.si-sort').forEach(function (o) { o.classList.remove('asc', 'desc'); });
+        th.classList.add(asc ? 'asc' : 'desc');
+        var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr:not(.sf-detail)'));
+        rows.sort(function (a, b) {
+          var va = parseFloat(a.children[col].dataset.order) || 0;
+          var vb = parseFloat(b.children[col].dataset.order) || 0;
+          return asc ? va - vb : vb - va;
+        });
+        rows.forEach(function (r, i) {
+          tbody.appendChild(r);
+          var det = r.dataset.target && document.getElementById(r.dataset.target);
+          if (det) tbody.appendChild(det);
+          var rk = r.querySelector('.si-rank');
+          if (rk) rk.textContent = i + 1;
+          r.classList.toggle('si-alt', (i + 1) % 2 === 0);
+        });
+      });
+    });
+  };
+}
+document.querySelectorAll('.stf-table').forEach(function (t) { window.sfSortable(t); });
+</script>
+{% endif %}
+{% endif %}

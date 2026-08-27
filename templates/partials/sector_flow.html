@@ -162,8 +162,10 @@ if (typeof window.siSwitch !== 'function') {
     document.getElementById(panelId).classList.remove('hidden');
   };
 }
-(function () {
-  document.querySelectorAll('.sf-table').forEach(function (table) {
+// 第 8 區塊（個股表）用同一支排序器；誰先渲染誰定義，兩個 partial 各自自足
+// （沿用本檔 siSwitch 的 guard 寫法）。有明細列的表才會用到 dataset.target。
+if (typeof window.sfSortable !== 'function') {
+  window.sfSortable = function (table) {
     var tbody = table.querySelector('tbody');
     table.querySelectorAll('th.si-sort').forEach(function (th) {
       th.addEventListener('click', function () {
@@ -172,7 +174,7 @@ if (typeof window.siSwitch !== 'function') {
         table.querySelectorAll('th.si-sort').forEach(function (o) { o.classList.remove('asc', 'desc'); });
         th.classList.add(asc ? 'asc' : 'desc');
         // 只排母列；明細列緊跟著自己的母列一起搬，不然排序會把兩者拆散
-        var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr.sf-row'));
+        var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr:not(.sf-detail)'));
         rows.sort(function (a, b) {
           var va = parseFloat(a.children[col].dataset.order) || 0;
           var vb = parseFloat(b.children[col].dataset.order) || 0;
@@ -188,7 +190,12 @@ if (typeof window.siSwitch !== 'function') {
         });
       });
     });
-
+  };
+}
+(function () {
+  document.querySelectorAll('.sf-table').forEach(function (table) {
+    window.sfSortable(table);
+    var tbody = table.querySelector('tbody');
     tbody.addEventListener('click', function (e) {
       var row = e.target.closest('tr.sf-row');
       if (!row) return;
