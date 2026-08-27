@@ -63,8 +63,9 @@
           data-target="{{ did }}"{% if g.stocks %} title="點列展開成分股"{% endif %}>
         <td class="si-rank">{{ loop.index }}</td>
         <td class="si-sector">
-          {% if g.stocks %}<span class="sf-caret">▸</span>{% endif %}
-          <span class="si-sector-name">{{ g.sector }}</span>
+          {# caret 放進 .si-sector-name 裡面：那個 class 是 display:block，
+             擺在它前面會自己佔掉一整行，整張表就高一截 #}
+          <span class="si-sector-name">{% if g.stocks %}<span class="sf-caret">▸</span>{% endif %}{{ g.sector }}</span>
           {% if g.parent %}<span class="si-parent">{{ g.parent }}</span>{% endif %}
         </td>
         <td class="si-num">{{ g.n }}</td>
@@ -136,7 +137,11 @@
 /* 全站只有 .si-panel.hidden 這條複合選擇器，單獨的 .hidden 沒有任何規則 —
    明細列得自己宣告，不然 class 加了也照樣顯示（收不起來）。 */
 .sf-detail.hidden { display: none; }
-.sf-caret { display: inline-block; width: 12px; opacity: 0.5; font-size: 10px; transition: transform .12s; }
+/* caret 絕對定位：inline 的話它自己的行框會把列高從 52px 撐到 64px（inline-block
+   的 line box），擺在 .si-sector-name 前面更慘（那個 class 是 display:block，
+   caret 會獨佔一整行 → 82px）。脫離文件流就完全不影響列高與名稱切齊。 */
+.sf-table .si-sector { position: relative; padding-left: 21px; }
+.sf-caret { position: absolute; left: 9px; top: 11px; width: 11px; opacity: 0.5; font-size: 10px; transition: transform .12s; }
 .sf-row.open .sf-caret { transform: rotate(90deg); opacity: 1; }
 .sf-detail > td { padding: 0 0 10px 34px; background: rgba(127,127,127,.04); }
 .sf-sub { width: auto; min-width: 380px; border-collapse: collapse; font-size: 12px; }
