@@ -1,113 +1,113 @@
 {
-  "date": "2026-08-26",
-  "generated_at": "2026-08-26 16:54:04",
-  "complete": true,
+  "date": "2026-08-27",
+  "generated_at": "2026-08-27 14:06:05",
+  "complete": false,
   "taiex": {
-    "close": 45832.62,
-    "change_pts": 663.16,
-    "change_pct": 1.47,
-    "trading_amount_yi": 8362.43796302,
-    "transaction_count": 4110959
+    "close": 45975.22,
+    "change_pts": 142.6,
+    "change_pct": 0.31,
+    "trading_amount_yi": 9207.04832462,
+    "transaction_count": 2681365
   },
   "breadth": {
     "twse": {
-      "up": 1029,
-      "down": 241,
-      "flat": 99,
-      "limit_up": 30,
+      "up": 653,
+      "down": 572,
+      "flat": 140,
+      "limit_up": 24,
       "limit_down": 0,
-      "total": 1369,
-      "up_pct": 75.2,
-      "down_pct": 17.6,
-      "flat_pct": 7.2,
-      "limit_up_pct": 2.2,
+      "total": 1365,
+      "up_pct": 47.8,
+      "down_pct": 41.9,
+      "flat_pct": 10.3,
+      "limit_up_pct": 1.8,
       "limit_down_pct": 0.0
     },
     "tpex": {
-      "up": 583,
-      "down": 203,
-      "flat": 86,
-      "limit_up": 37,
-      "limit_down": 1,
-      "total": 890,
-      "up_pct": 65.5,
-      "down_pct": 22.8,
-      "flat_pct": 9.7,
-      "limit_up_pct": 4.2,
-      "limit_down_pct": 0.1
+      "up": 0,
+      "down": 0,
+      "flat": 0,
+      "limit_up": 0,
+      "limit_down": 0,
+      "total": 0,
+      "up_pct": 0.0,
+      "down_pct": 0.0,
+      "flat_pct": 0.0,
+      "limit_up_pct": 0.0,
+      "limit_down_pct": 0.0
     }
   },
   "top_gainers": [
     {
-      "code": "3406",
-      "name": "玉晶光",
-      "close": 759.0,
+      "code": "1312",
+      "name": "國喬",
+      "close": 14.3,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "3543",
-      "name": "州巧",
-      "close": 45.1,
+      "code": "6933",
+      "name": "AMAX-KY",
+      "close": 236.5,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "4977",
-      "name": "眾達-KY",
-      "close": 170.5,
-      "change_pct": 10.0,
-      "market": "上市"
-    },
-    {
-      "code": "6213",
-      "name": "聯茂",
-      "close": 583.0,
+      "code": "7835",
+      "name": "永悅健康-創",
+      "close": 23.1,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
       "code": "6668",
       "name": "中揚光",
-      "close": 39.05,
-      "change_pct": 10.0,
+      "close": 42.95,
+      "change_pct": 9.987195902688859,
+      "market": "上市"
+    },
+    {
+      "code": "8039",
+      "name": "台虹",
+      "close": 352.5,
+      "change_pct": 9.98439937597504,
       "market": "上市"
     }
   ],
   "top_losers": [
     {
-      "code": "6223",
-      "name": "旺矽",
-      "close": 5040.0,
-      "change_pct": -10.0,
-      "market": "上櫃"
-    },
-    {
-      "code": "2609",
-      "name": "陽明",
-      "close": 57.6,
-      "change_pct": -9.433962264150942,
+      "code": "1709",
+      "name": "和益",
+      "close": 34.15,
+      "change_pct": -7.951482479784366,
       "market": "上市"
     },
     {
-      "code": "2615",
-      "name": "萬海",
-      "close": 115.0,
-      "change_pct": -9.090909090909092,
+      "code": "3018",
+      "name": "隆銘綠能",
+      "close": 12.0,
+      "change_pct": -6.976744186046512,
       "market": "上市"
     },
     {
-      "code": "2606",
-      "name": "裕民",
-      "close": 72.0,
-      "change_pct": -7.6923076923076925,
+      "code": "2383",
+      "name": "台光電",
+      "close": 5500.0,
+      "change_pct": -6.700593723494487,
       "market": "上市"
     },
     {
-      "code": "4560",
-      "name": "強信-KY",
-      "close": 31.05,
-      "change_pct": -7.17488789237668,
+      "code": "7795",
+      "name": "長廣",
+      "close": 545.0,
+      "change_pct": -6.0344827586206895,
+      "market": "上市"
+    },
+    {
+      "code": "2852",
+      "name": "第一保",
+      "close": 28.45,
+      "change_pct": -5.324459234608985,
       "market": "上市"
     }
   ]
