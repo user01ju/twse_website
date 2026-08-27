@@ -35,7 +35,7 @@ BASE_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(BASE_DIR))
 
 from config import CACHE_DIR, OUTPUT_DIR, REPORTS_DIR          # noqa: E402
-from fetcher import market_calendar, price_cache               # noqa: E402
+from fetcher import inst_flow_cache, market_calendar, price_cache  # noqa: E402
 from processor.market_trend import _MIN_COVERAGE               # noqa: E402
 from processor.utils import is_stock_code, is_warrant, parse_num  # noqa: E402
 
@@ -63,6 +63,9 @@ EXRIGHTS_STALE_DAYS = 30
 # check_price_window_coverage）。滿窗是 252+30=282 天，健康值 280 上下；
 # 52 週新高低本來就要 _HALF_YEAR≈126 天才開始計，200 以下這區塊已無意義。
 _MIN_WINDOW_DAYS = 200
+
+# 法人流向窗口（第 7 區塊）的天數下限。滿窗 20 天，少於 10 天加速度就不判了。
+_MIN_FLOW_DAYS = 10
 
 # T86 個股股數 × 收盤價 Σ vs BFI82U 金額。差異來源是「收盤價 ≠ 當日成交均價」，
 # 2026-07-31 實測買進 +0.31% / 賣出 +0.19%（那天大盤 +7.98%，波動已算大）。
@@ -459,6 +462,28 @@ def check_price_window_coverage(ctx: Ctx):
     return PASS, msg
 
 
+def check_inst_flow_window_coverage(ctx: Ctx):
+    """法人流向窗口完整度（第 7 區塊）。
+
+    只 WARN，不 FAIL：真正致命的「gh-pages 還原失敗 → 部署抹掉線上快取」已經由
+    check_price_window_coverage FAIL 擋住了（兩份快取住在同一個 output/，一起還原
+    也一起消失），這裡再 FAIL 一次只是多一條擋部署的理由。而且這份快取是後加的，
+    首次上線與回補中途本來就會薄。生產端窗口不足會自己標 degraded + 紅色橫幅。
+
+    比率之外一樣看絕對天數（分母會跟著縮的老問題），但兩者都只到 WARN。"""
+    window = inst_flow_cache.load_window(ctx.report_date, 20)
+    if not window:
+        return WARN, ("output/data/inst_flow/ 一片空白 — 第 7 區塊會顯示暫無資料；"
+                      "跑 python backfill_inst.py 回補")
+    cov = price_cache.window_coverage(window, ctx.report_date)
+    msg = f"inst_flow {cov['got']}/{cov['expected']} 個交易日（{cov['pct']}%）"
+    if cov["got"] < _MIN_FLOW_DAYS:
+        return WARN, msg + f" — 少於 {_MIN_FLOW_DAYS} 天，加速度不判、5/20 日累計偏小"
+    if cov["pct"] < _MIN_COVERAGE:
+        return WARN, msg + " — 窗口有洞，累計值偏小；CI 請確認 gh-pages 還原成功"
+    return PASS, msg
+
+
 def check_exrights_cache_fresh(ctx: Ctx):
     """exrights.csv 是還原權息鏈與除息日漲跌幅基準的唯一輸入，而且它跟
     price_cache 一樣靠 gh-pages 持久化 → 還原失敗會靜默退化成「未還原 + 假 0%」。"""
@@ -691,6 +716,7 @@ TIER_A = [
     ("report-html-present",             check_report_html_present),
     ("price-window-coverage",           check_price_window_coverage),
     ("exrights-cache-fresh",            check_exrights_cache_fresh),
+    ("inst-flow-window-coverage",       check_inst_flow_window_coverage),
 ]
 
 TIER_B = [

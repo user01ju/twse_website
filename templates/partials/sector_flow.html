@@ -1,0 +1,148 @@
+{# 近期法人資金流向 by 子類股 — 4 頁簽（三大法人/外資/投信/自營商），可排序 #}
+{% set s = sections.sector_flow %}
+{% if not s.ok %}
+<div class="error-box">資金流向資料錯誤：{{ s.error }}</div>
+{% else %}
+{% set d = s.data %}
+
+{% if d.degraded %}
+<div class="error-box">
+  ⚠️ 法人流向快取不完整：窗口內只有 {{ d.coverage.got }} / {{ d.coverage.expected }} 個交易日（{{ d.coverage.pct }}%）。
+  5 日 / 20 日累計會偏小（窗口會安靜地往更早日期湊），本區塊數字勿採用。
+  修法：<code>git archive origin/gh-pages | tar -x -C output/</code> 還原 <code>output/data/inst_flow</code>，
+  缺的天數用 <code>python backfill_inst.py</code> 回補後重建。
+</div>
+{% endif %}
+
+{% if not d.tabs %}
+<div class="error-box">暫無資料</div>
+{% else %}
+{% set tabs = [
+  ('c', '📊 三大法人'), ('f', '🌐 外資'), ('t', '🏦 投信'), ('d', '🏛️ 自營商'),
+] %}
+
+<div class="si-tabs">
+  {% for key, label in tabs %}
+  <button class="si-tab {% if loop.first %}active{% endif %}"
+          onclick="siSwitch(this,'sf-panel-{{ key }}')">{{ label }}</button>
+  {% endfor %}
+</div>
+
+{% for key, label in tabs %}
+<div id="sf-panel-{{ key }}" class="si-panel {% if not loop.first %}hidden{% endif %}">
+  {% set rows = d.tabs[key] %}
+  {% if not rows %}
+  <div class="error-box">暫無資料</div>
+  {% else %}
+  <div class="si-meta">
+    窗口 <strong>{{ d.start }} ~ {{ d.end }}</strong>（{{ d.days }} 個交易日）　
+    共 <strong>{{ rows | length }}</strong> 個子類股　
+    <span class="sf-note">加速 = 近 {{ d.short }} 日均量 ÷ {{ d.days }} 日均量（≥1.5 加速、≤0.67 減速、換邊為翻轉）</span>
+  </div>
+
+  <table class="si-table sf-table">
+    <thead>
+      <tr>
+        <th class="si-th-rank">#</th>
+        <th class="si-th-sector">子類股</th>
+        <th class="si-th-num">個股數</th>
+        <th class="si-th-yi si-sort" data-col="3">{{ d.short }}日淨買賣超(億)<span class="si-sort-ind"></span></th>
+        <th class="si-th-yi si-sort" data-col="4">{{ d.long }}日淨買賣超(億)<span class="si-sort-ind"></span></th>
+        <th class="si-th-yi si-sort" data-col="5">連續天數<span class="si-sort-ind"></span></th>
+        <th class="si-th-yi si-sort" data-col="6">加速度<span class="si-sort-ind"></span></th>
+        <th class="si-th-yi si-sort" data-col="7">近{{ d.ret_days }}日漲跌<span class="si-sort-ind"></span></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for g in rows %}
+      <tr class="si-row {% if loop.index % 2 == 0 %}si-alt{% endif %}">
+        <td class="si-rank">{{ loop.index }}</td>
+        <td class="si-sector">
+          <span class="si-sector-name">{{ g.sector }}</span>
+          {% if g.parent %}<span class="si-parent">{{ g.parent }}</span>{% endif %}
+        </td>
+        <td class="si-num">{{ g.n }}</td>
+        <td class="si-yi {{ 'pos' if g.net5 >= 0 else 'neg' }}" data-order="{{ g.net5 }}">
+          {{ "{:+,.1f}".format(g.net5) }}
+        </td>
+        <td class="si-yi {{ 'pos' if g.net20 >= 0 else 'neg' }}" data-order="{{ g.net20 }}">
+          {{ "{:+,.1f}".format(g.net20) }}
+        </td>
+        <td class="si-yi {{ 'pos' if g.streak > 0 else ('neg' if g.streak < 0 else '') }}"
+            data-order="{{ g.streak }}">
+          {% if g.streak %}{{ '買' if g.streak > 0 else '賣' }} {{ g.streak | abs }} 天{% else %}–{% endif %}
+        </td>
+        <td class="si-yi sf-accel" data-order="{{ g.accel if g.accel is not none else 0 }}">
+          {% if g.accel_tag == '翻轉' %}<span class="sf-tag sf-flip">↺ 翻轉</span>
+          {% elif g.accel_tag in ('加速', '減速') %}
+            {% set dir = '流入' if g.net20 >= 0 else '流出' %}
+            <span class="sf-tag {{ 'sf-hot' if g.accel_tag == '加速' else 'sf-cold' }}">
+              {{ '🔥' if g.accel_tag == '加速' else '❄️' }} {{ g.accel_tag }}{{ dir }} {{ "{:.1f}".format(g.accel) }}x</span>
+          {% elif g.accel_tag == '持平' %}<span class="sf-tag">持平 {{ "{:.1f}".format(g.accel) }}x</span>
+          {% else %}–{% endif %}
+        </td>
+        <td class="si-yi {{ 'pos' if (g.ret5 or 0) >= 0 else 'neg' }}"
+            data-order="{{ g.ret5 if g.ret5 is not none else 0 }}">
+          {% if g.ret5 is not none %}{{ "{:+.2f}".format(g.ret5) }}%{% else %}–{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</div>
+{% endfor %}
+
+<style>
+.sf-table th.si-sort { cursor: pointer; user-select: none; white-space: nowrap; }
+.sf-table th.si-sort:hover { color: var(--text); }
+.sf-table .si-sort-ind { display: inline-block; width: 0; opacity: 0.4; font-size: 10px; margin-left: 3px; }
+.sf-table th.si-sort.asc  .si-sort-ind::after { content: "▲"; }
+.sf-table th.si-sort.desc .si-sort-ind::after { content: "▼"; }
+.sf-table th.si-sort.asc  .si-sort-ind,
+.sf-table th.si-sort.desc .si-sort-ind { opacity: 1; }
+.sf-note { opacity: 0.65; font-size: 12px; }
+.sf-accel { white-space: nowrap; }
+.sf-tag { font-size: 12px; padding: 1px 6px; border-radius: 4px; background: var(--surface-2, rgba(127,127,127,.12)); }
+.sf-hot  { color: var(--pos); background: var(--pos-glow); }
+.sf-cold { color: var(--neg); background: var(--neg-glow); }
+.sf-flip { opacity: 0.85; }
+</style>
+<script>
+if (typeof window.siSwitch !== 'function') {
+  window.siSwitch = function (btn, panelId) {
+    var body = btn.closest('.section-body');
+    body.querySelectorAll('.si-tab').forEach(function (b) { b.classList.remove('active'); });
+    body.querySelectorAll('.si-panel').forEach(function (p) { p.classList.add('hidden'); });
+    btn.classList.add('active');
+    document.getElementById(panelId).classList.remove('hidden');
+  };
+}
+(function () {
+  document.querySelectorAll('.sf-table').forEach(function (table) {
+    var tbody = table.querySelector('tbody');
+    table.querySelectorAll('th.si-sort').forEach(function (th) {
+      th.addEventListener('click', function () {
+        var col = parseInt(th.dataset.col, 10);
+        var asc = th.classList.contains('desc');
+        table.querySelectorAll('th.si-sort').forEach(function (o) { o.classList.remove('asc', 'desc'); });
+        th.classList.add(asc ? 'asc' : 'desc');
+        var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr'));
+        rows.sort(function (a, b) {
+          var va = parseFloat(a.children[col].dataset.order) || 0;
+          var vb = parseFloat(b.children[col].dataset.order) || 0;
+          return asc ? va - vb : vb - va;
+        });
+        rows.forEach(function (r, i) {
+          tbody.appendChild(r);
+          var rk = r.querySelector('.si-rank');
+          if (rk) rk.textContent = i + 1;
+          r.classList.toggle('si-alt', (i + 1) % 2 === 0);
+        });
+      });
+    });
+  });
+})();
+</script>
+{% endif %}
+{% endif %}

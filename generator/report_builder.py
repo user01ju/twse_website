@@ -8,9 +8,9 @@ _TZ = ZoneInfo("Asia/Taipei")
 from config import REPORTS_DIR, FORCE_REBUILD
 from fetcher import twse_client, tpex_client
 from fetcher.market_calendar import roc_to_date, is_trading_day
-from processor import index_stats, market_breadth, movers, institutional, foreign_trades, trust_trades, combined_inst, dealer_trades, ai_summary, sector_inst, mover_sector, market_trend
+from processor import index_stats, market_breadth, movers, institutional, foreign_trades, trust_trades, combined_inst, dealer_trades, ai_summary, sector_inst, mover_sector, market_trend, sector_flow
 from processor.utils import parse_num, change_pct
-from fetcher import price_cache, exrights
+from fetcher import price_cache, exrights, inst_flow_cache
 from generator import renderer, index_builder, today_builder
 
 logger = logging.getLogger(__name__)
@@ -338,6 +338,17 @@ def build(target_date: date) -> "bool | str":
         logger.warning(f"price_cache.save failed: {e}")
 
     sections["market_trend"] = _safe(market_trend.build, actual_date)
+
+    # ── 法人流向快取: 存今天 → 算 5/20 日子類股資金流向 ──────────────────────
+    # 只在 completeness gate 過關的路徑上跑（partial 那條在上面就 return 了），
+    # 半份資料寫進去不會報錯，只會讓 5/20 日累計安靜偏小。
+    try:
+        inst_flow_cache.save(actual_date, raw.get("twse_t86") or {},
+                             raw.get("tpex_all") or [], twse_prices, tpex_prices)
+    except Exception as e:
+        logger.warning(f"inst_flow_cache.save failed: {e}")
+
+    sections["sector_flow"] = _safe(sector_flow.build, actual_date)
 
     # AI summary last so its prompt can draw on every other section
     sections["ai_summary"] = _safe(

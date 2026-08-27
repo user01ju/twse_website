@@ -5,8 +5,8 @@ market's OHLC for a given date, so a 13-month backfill is only ~270
 requests (vs 14k+ with the per-stock STOCK_DAY endpoint, which gets
 rate-banned after ~50 stocks).
 
-TPEX: no public historical endpoint found; TPEX data accumulates going
-forward from the daily report runs.
+TPEX: 用 www/zh-tw/afterTrading/dailyQuotes（吃 date 參數，回溯得到多年）。
+不是 /openapi/v1/ 那套 —— OpenAPI 一律只回最新一天，不吃日期。
 
 Usage:
   python backfill_prices.py               # backfill last 13 months
