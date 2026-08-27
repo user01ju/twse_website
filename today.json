@@ -1,6 +1,6 @@
 {
   "date": "2026-08-27",
-  "generated_at": "2026-08-27 15:01:19",
+  "generated_at": "2026-08-27 16:00:59",
   "complete": false,
   "taiex": {
     "close": 45975.22,
@@ -24,16 +24,16 @@
       "limit_down_pct": 0.0
     },
     "tpex": {
-      "up": 0,
-      "down": 0,
-      "flat": 0,
-      "limit_up": 0,
+      "up": 440,
+      "down": 326,
+      "flat": 102,
+      "limit_up": 30,
       "limit_down": 0,
-      "total": 0,
-      "up_pct": 0.0,
-      "down_pct": 0.0,
-      "flat_pct": 0.0,
-      "limit_up_pct": 0.0,
+      "total": 890,
+      "up_pct": 49.4,
+      "down_pct": 36.6,
+      "flat_pct": 11.5,
+      "limit_up_pct": 3.4,
       "limit_down_pct": 0.0
     }
   },
@@ -60,21 +60,28 @@
       "market": "上市"
     },
     {
-      "code": "6668",
-      "name": "中揚光",
-      "close": 42.95,
-      "change_pct": 9.987195902688859,
-      "market": "上市"
+      "code": "3105",
+      "name": "穩懋",
+      "close": 445.5,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "8039",
-      "name": "台虹",
-      "close": 352.5,
-      "change_pct": 9.98439937597504,
-      "market": "上市"
+      "code": "3441",
+      "name": "聯一光",
+      "close": 137.5,
+      "change_pct": 10.0,
+      "market": "上櫃"
     }
   ],
   "top_losers": [
+    {
+      "code": "8932",
+      "name": "智通*",
+      "close": 105.0,
+      "change_pct": -8.695652173913043,
+      "market": "上櫃"
+    },
     {
       "code": "1709",
       "name": "和益",
@@ -83,31 +90,24 @@
       "market": "上市"
     },
     {
+      "code": "8937",
+      "name": "合騏*",
+      "close": 26.45,
+      "change_pct": -7.517482517482518,
+      "market": "上櫃"
+    },
+    {
+      "code": "7734",
+      "name": "印能科技",
+      "close": 2870.0,
+      "change_pct": -7.419354838709677,
+      "market": "上櫃"
+    },
+    {
       "code": "3018",
       "name": "隆銘綠能",
       "close": 12.0,
       "change_pct": -6.976744186046512,
-      "market": "上市"
-    },
-    {
-      "code": "2383",
-      "name": "台光電",
-      "close": 5500.0,
-      "change_pct": -6.700593723494487,
-      "market": "上市"
-    },
-    {
-      "code": "7795",
-      "name": "長廣",
-      "close": 545.0,
-      "change_pct": -6.0344827586206895,
-      "market": "上市"
-    },
-    {
-      "code": "2852",
-      "name": "第一保",
-      "close": 28.45,
-      "change_pct": -5.324459234608985,
       "market": "上市"
     }
   ]
