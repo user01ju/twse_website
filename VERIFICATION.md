@@ -100,6 +100,8 @@ gh workflow run --repo user01ju/twse_website daily_update.yml -f skip_verify=tru
 
 `exdiv-not-fake-flat` 是 2026-07-30「除息 X → 假平盤」bug 的迴歸測試（見 llm_wiki: twse-exdiv-change-x-zero-pct）。做法是比對 ref-aware 重算的持平家數與 naive（直接吃交易所漲跌欄）的差異，確認除權息基準有生效。
 
+它問的是「基準有沒有生效」，判準因此是 `today.json` 的持平家數**離哪一邊近**（容差 ±3，同 `breadth-vs-official`），不是等於誰。逐檔相等本來就辦不到：pipeline 的上市分支另外吃 TWT84U 官方漲跌停價（收盤撞到漲停價 → `limit_up` → 併進 `up`），而 Tier B 的 MI_INDEX 重算沒有那份資料，只看漲跌欄 —— 「交易所標無比價(X) 又沒有除權息參考價」的個股（復牌首日就是這種）於是兩邊差一家。2026-08-27 就這樣紅過一次：8105 凌巨 復牌，`today.json` 123 vs 重算 124，而 naive 是 141，基準明明生效（離 naive 差 18 家）卻被嚴格相等判成 FAIL。反過來，naive 與 ref-aware 本身差不到 7 家時容差會吃掉判別力，這條直接 SKIP。
+
 外部源掛掉／超時／非 200 一律 SKIP。呼叫上限 3 次、間隔 ≥1 秒。
 
 ## Cross-repo

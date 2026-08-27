@@ -106,6 +106,21 @@ TAIEX_TOL_WARN_PCT = 0.5
 EXDIV_COVERAGE_WARN_PCT = 70.0
 EXDIV_COVERAGE_MIN_ROWS_FOR_FAIL = 3   # 有 ≥3 檔 X 但一檔 ref 都沒有 → 系統性失敗
 
+# exdiv-not-fake-flat 的持平家數容差。這條問的是「除權息基準有沒有生效」，
+# 不是家數精準度（那是 breadth-vs-official 的事）—— 但它原本用嚴格相等，
+# 反而比同一組數字的 breadth-vs-official（±3）還嚴。
+# 兩邊本來就不可能逐檔一致：pipeline 的上市分支還吃 TWT84U 官方漲跌停價
+# （收盤撞到漲停價 → limit_up → 併進 up），而這裡的 MI_INDEX 重算沒有那份資料，
+# 只看漲跌欄。所以「交易所標無比價(X)、我們又沒有除權息參考價」的個股
+# （復牌首日就是這種）會在 pipeline 記 up、在重算記 flat，差 1 家。
+# 2026-08-27 就是這樣紅的：8105 凌巨 復牌（前一個交易日連 price cache 都沒有
+# 它），today.json flat 123 vs ref-aware 重算 124、naive 141 —— 除權息基準明明有生效
+# （離 naive 差 18 家），卻因為差這 1 家被判 FAIL。假警報比沒警報貴，就在這裡。
+EXDIV_FLAT_ABS_TOL = BREADTH_ABS_TOL_PASS
+# 容差吃掉判別力就沒意義了：naive 與 ref-aware 至少要差到容差的兩倍以上，
+# 「貼著 aware」與「貼著 naive」才是互斥的兩件事，否則這條直接 SKIP。
+EXDIV_FLAT_MIN_GAP = EXDIV_FLAT_ABS_TOL * 2 + 1
+
 # Tier B 外部呼叫預算（全 Tier B 共用，同一端點只抓一次）與抽樣上限。
 MAX_EXTERNAL_CALLS = 3
 EXTERNAL_SLEEP_SEC = 1.2
@@ -686,26 +701,37 @@ def check_exdiv_not_fake_flat(ctx: Ctx):
     """2026-07-30『除息 X → 假平盤』的迴歸測試。
 
     重算兩次上市持平家數：naive（完全照交易所漲跌欄，除息股一律 flat）與
-    ref-aware（有參考價就用 close vs ref）。today.json 必須等於 ref-aware；
-    等於 naive 而不等於 ref-aware，就代表 ex_refs 沒有傳進 market_breadth，
-    bug 復發。這是對**產出**的檢查，不是對函數的檢查。
+    ref-aware（有參考價就用 close vs ref）。today.json 要**貼著 ref-aware**；
+    貼著 naive 就代表 ex_refs 沒有傳進 market_breadth，bug 復發。
+    這是對**產出**的檢查，不是對函數的檢查。
+
+    問的是「基準有沒有生效」，所以判準是離哪一邊近，不是等於誰 —— 逐檔相等
+    本來就辦不到：pipeline 的上市分支另外吃 TWT84U 官方漲跌停價（收盤撞到漲停價
+    → limit_up → 併進 up），這裡的 MI_INDEX 重算沒有那份資料。「交易所標無比價(X)
+    又沒有除權息參考價」的個股（復牌首日）於是兩邊差一家。那種雜訊
+    breadth-vs-official 早就用同一個 ±3 吸收了，這條沒有理由比它嚴。
     """
     ours = (ctx.today_json.get("breadth") or {}).get("twse") or {}
     if not ours.get("total"):
         return SKIP, "today.json 沒有上市 breadth（partial 報告）"
     naive = _recount_from_mi(ctx, use_ex_refs=False)["flat"]
     aware = _recount_from_mi(ctx, use_ex_refs=True)["flat"]
-    mine = ours["flat"]
-    if naive == aware:
-        return SKIP, (f"{ctx.report_date} 當日沒有『有參考價且收盤 ≠ 參考價』的個股"
-                      f"（naive flat = ref-aware flat = {aware}），這條區分不出差異")
+    mine = int(parse_num(ours["flat"]))   # 訊息用 :+d 格式，不能是 float/str
+    gap = abs(naive - aware)
+    if gap < EXDIV_FLAT_MIN_GAP:
+        return SKIP, (f"{ctx.report_date} naive flat {naive} 與 ref-aware flat {aware} "
+                      f"只差 {gap} 家（< {EXDIV_FLAT_MIN_GAP}），在 ±{EXDIV_FLAT_ABS_TOL} "
+                      f"容差下區分不出 today.json 貼著哪一邊")
     msg = (f"{ctx.report_date} 上市持平家數 today.json {mine}，"
-           f"ref-aware 重算 {aware}，naive（吃交易所漲跌欄）{naive}")
-    if mine == aware:
+           f"ref-aware 重算 {aware}（差 {mine - aware:+d}），"
+           f"naive（吃交易所漲跌欄）{naive}（差 {mine - naive:+d}）；"
+           f"容差 ±{EXDIV_FLAT_ABS_TOL}")
+    # gap ≥ 2×tol+1 保證以下兩個條件互斥。
+    if abs(mine - aware) <= EXDIV_FLAT_ABS_TOL:
         return PASS, msg + " — 除權息基準有生效"
-    if mine == naive:
-        return FAIL, msg + " — 等於 naive，除息股被算成假平盤（7/30 bug 復發）"
-    return FAIL, msg + " — 三者都不同，漲跌基準邏輯與兩種算法都對不上"
+    if abs(mine - naive) <= EXDIV_FLAT_ABS_TOL:
+        return FAIL, msg + " — 貼著 naive，除息股被算成假平盤（7/30 bug 復發）"
+    return FAIL, msg + " — 兩邊都不貼，漲跌基準邏輯與兩種算法都對不上"
 
 
 # ══════════════════════════════════════════════════════════════════════════
