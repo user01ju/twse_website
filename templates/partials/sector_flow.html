@@ -133,6 +133,9 @@
 .sf-cold { color: var(--neg); background: var(--neg-glow); }
 .sf-flip { opacity: 0.85; }
 .sf-row { cursor: pointer; }
+/* 全站只有 .si-panel.hidden 這條複合選擇器，單獨的 .hidden 沒有任何規則 —
+   明細列得自己宣告，不然 class 加了也照樣顯示（收不起來）。 */
+.sf-detail.hidden { display: none; }
 .sf-caret { display: inline-block; width: 12px; opacity: 0.5; font-size: 10px; transition: transform .12s; }
 .sf-row.open .sf-caret { transform: rotate(90deg); opacity: 1; }
 .sf-detail > td { padding: 0 0 10px 34px; background: rgba(127,127,127,.04); }
