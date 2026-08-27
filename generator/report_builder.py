@@ -221,7 +221,16 @@ def build(target_date: date) -> "bool | str":
     ok, stale = _inst_date_ok()
     if not ok:
         logger.info(f"Institutional data not ready for {actual_date.isoformat()}: {stale} — writing partial today.json")
-        updated = today_builder.build(actual_date, raw, complete=False)
+        # twse_stocks 缺席時這份 raw 是空殼：breadth / movers 全歸零，寫進 today.json
+        # 就是「加權有指數、上市 0 家」的半殘快照。更糟的是它跟上一輪不同 → 回
+        # "partial" → update.py exit 0（宣稱有新產出）→ 觸發 Tier A → 過了 17:00
+        # 寬限線就是紅燈。2026-08-20 實際發生：TWSE 個股檔延到 21:00 才更新，但
+        # MI_5MINS_HIST（大盤）19:00 就翻到當日，_detect_data_date 的 fallback 因此
+        # 樂觀採信新日期，走進這個分支。
+        # 這種輪次沒有任何比上一輪多的東西，所以退化成 date-only placeholder，交給
+        # today_builder 的「不覆蓋更好的快照」守則吃掉 → False → exit 2 安靜重試。
+        payload_raw = raw if raw.get("twse_stocks") else {}
+        updated = today_builder.build(actual_date, payload_raw, complete=False)
         if updated:
             renderer.copy_static()
             index_builder.rebuild()
