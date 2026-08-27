@@ -163,6 +163,22 @@ def build(today: date) -> dict:
     for code in series_by_code:
         codes_by_sector[code_to_sector.get(code) or "其他"].append(code)
 
+    # 市值 = 報告日收盤 × 發行股數。股數只有最新快照，整個窗口共用今天的值
+    # （股數以月為尺度變動、窗口只有 20 天），所以市值比是近似值。
+    last_px = {c: v.get("c", 0) for c, v in price_cache.load(window[-1][0]).items()}
+    share_map = shares.load()
+    mcaps = {c: last_px[c] * share_map[c] / 1e8
+             for c in series_by_code
+             if share_map.get(c) and last_px.get(c)}
+
+    # 子類股市值用**全部成分股**加總，不是只算窗口內有流向的那幾檔 —— 分母要是
+    # 整個族群的規模，否則冷門類股會因為分母縮水而比率虛高。
+    sector_mcap: dict[str, float] = defaultdict(float)
+    for code, sh in share_map.items():
+        px = last_px.get(code)
+        if px:
+            sector_mcap[code_to_sector.get(code) or "其他"] += px * sh / 1e8
+
     sectors = sorted({s for _, snap in window for s in snap})
     tabs = {}
     for key, label in _TABS:
@@ -199,9 +215,12 @@ def build(today: date) -> dict:
             stocks = (picks if len(picks) <= _STOCK_CAP
                       else picks[:_STOCK_CAP // 2] + picks[-(_STOCK_CAP - _STOCK_CAP // 2):])
 
+            smc = sector_mcap.get(sec)
             rows.append({
                 "sector": sec,
                 "parent": sector_parent.get(sec, ""),
+                "mcap":   round(smc) if smc else None,
+                "net5_pct": round(net5 / smc * 100, 2) if smc else None,
                 "net5":   round(net5,  2),
                 "net20":  round(net20, 2),
                 "streak": _streak(series),
@@ -217,14 +236,6 @@ def build(today: date) -> dict:
 
     # 個股表：跟母表同一份 series，只是不分子類股。子類股內成分差異大時，
     # 分組本身就是雜訊 —— 這裡讓個股自己排隊。
-    # 市值 = 報告日收盤 × 發行股數。股數只有最新快照，整個窗口共用今天的值
-    # （股數以月為尺度變動、窗口只有 20 天），所以市值比是近似值。
-    last_px = {c: v.get("c", 0) for c, v in price_cache.load(window[-1][0]).items()}
-    share_map = shares.load()
-    mcaps = {c: last_px[c] * share_map[c] / 1e8
-             for c in series_by_code
-             if share_map.get(c) and last_px.get(c)}
-
     stock_tabs = {}
     for key, _label in _TABS:
         ki = _SER_IDX[key]

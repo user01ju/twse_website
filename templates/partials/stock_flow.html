@@ -122,7 +122,9 @@ if (typeof window.sfSortable !== 'function') {
         var asc = th.classList.contains('desc');
         table.querySelectorAll('th.si-sort').forEach(function (o) { o.classList.remove('asc', 'desc'); });
         th.classList.add(asc ? 'asc' : 'desc');
-        var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr:not(.sf-detail)'));
+        // :scope > 只取母表直屬列。少了它會連展開列裡子表格的 <tr> 一起掃進來
+        // （第 7 區塊實測 83 列變 613 列，排序等於把巢狀結構打散）。
+        var rows = Array.prototype.slice.call(tbody.querySelectorAll(':scope > tr:not(.sf-detail)'));
         rows.sort(function (a, b) {
           var va = parseFloat(a.children[col].dataset.order) || 0;
           var vb = parseFloat(b.children[col].dataset.order) || 0;

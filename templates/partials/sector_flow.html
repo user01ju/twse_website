@@ -37,7 +37,8 @@
   <div class="si-meta">
     窗口 <strong>{{ d.start }} ~ {{ d.end }}</strong>（{{ d.days }} 個交易日）　
     共 <strong>{{ rows | length }}</strong> 個子類股　
-    <span class="sf-note">加速 = 近 {{ d.short }} 日均量 ÷ {{ d.days }} 日均量（≥1.5 加速、≤0.67 減速、換邊為翻轉）</span>
+    <span class="sf-note">加速 = 近 {{ d.short }} 日均量 ÷ {{ d.days }} 日均量（≥1.5 加速、≤0.67 減速、換邊為翻轉）；
+      市值為該子類股**全部成分股**加總（不是只算有流向的那幾檔）</span>
     <div class="sf-note">點子類股列展開成分股（依 {{ d.short }} 日淨額排序，門檻 |淨額| ≥ {{ d.stock_min }} 億、
       每類最多 {{ d.stock_cap }} 檔，小型子類股保底列前幾名）。此處<strong>不套</strong>第 5/6 區塊的
       前 100 名截斷，所以出現的個股可能與那兩區不同。</div>
@@ -49,11 +50,13 @@
         <th class="si-th-rank">#</th>
         <th class="si-th-sector">子類股</th>
         <th class="si-th-num">個股數</th>
-        <th class="si-th-yi si-sort" data-col="3">{{ d.short }}日淨買賣超(億)<span class="si-sort-ind"></span></th>
-        <th class="si-th-yi si-sort" data-col="4">{{ d.long }}日淨買賣超(億)<span class="si-sort-ind"></span></th>
-        <th class="si-th-yi si-sort" data-col="5">連續天數<span class="si-sort-ind"></span></th>
-        <th class="si-th-yi si-sort" data-col="6">加速度<span class="si-sort-ind"></span></th>
-        <th class="si-th-yi si-sort" data-col="7">近{{ d.ret_days }}日漲跌<span class="si-sort-ind"></span></th>
+        <th class="sf-th-yi si-sort" data-col="3">{{ d.short }}日(億)<span class="si-sort-ind"></span></th>
+        <th class="sf-th-yi si-sort" data-col="4">{{ d.long }}日(億)<span class="si-sort-ind"></span></th>
+        <th class="sf-th-yi si-sort" data-col="5">市值(億)<span class="si-sort-ind"></span></th>
+        <th class="sf-th-yi si-sort" data-col="6">{{ d.short }}日/市值<span class="si-sort-ind"></span></th>
+        <th class="sf-th-yi si-sort" data-col="7">連續<span class="si-sort-ind"></span></th>
+        <th class="si-th-yi si-sort" data-col="8">加速度<span class="si-sort-ind"></span></th>
+        <th class="sf-th-yi si-sort" data-col="9">近{{ d.ret_days }}日<span class="si-sort-ind"></span></th>
       </tr>
     </thead>
     <tbody>
@@ -75,6 +78,13 @@
         <td class="si-yi {{ 'pos' if g.net20 >= 0 else 'neg' }}" data-order="{{ g.net20 }}">
           {{ "{:+,.1f}".format(g.net20) }}
         </td>
+        <td class="si-yi sf-mcap" data-order="{{ g.mcap or 0 }}">
+          {%- if g.mcap %}{{ "{:,}".format(g.mcap) }}{% else %}–{% endif -%}
+        </td>
+        <td class="si-yi {{ 'pos' if (g.net5_pct or 0) >= 0 else 'neg' }}"
+            data-order="{{ g.net5_pct if g.net5_pct is not none else 0 }}">
+          {%- if g.net5_pct is not none %}{{ "{:+.2f}".format(g.net5_pct) }}%{% else %}–{% endif -%}
+        </td>
         <td class="si-yi {{ 'pos' if g.streak > 0 else ('neg' if g.streak < 0 else '') }}"
             data-order="{{ g.streak }}">
           {% if g.streak %}{{ '買' if g.streak > 0 else '賣' }} {{ g.streak | abs }} 天{% else %}–{% endif %}
@@ -95,7 +105,7 @@
       </tr>
       {% if g.stocks %}
       {# 明細列刻意壓成單行：1600+ 列 × 每列 9 行縮排 = 幾百 KB 的純空白 #}
-      <tr class="sf-detail hidden" id="{{ did }}"><td colspan="8"><table class="sf-sub"><thead><tr>
+      <tr class="sf-detail hidden" id="{{ did }}"><td colspan="10"><table class="sf-sub"><thead><tr>
         <th>代號</th><th>名稱</th><th>{{ d.short }}日</th><th>{{ d.long }}日</th><th>連續</th><th>近{{ d.ret_days }}日</th>
         </tr></thead><tbody>
         {%- for st in g.stocks -%}
@@ -128,6 +138,8 @@
 .sf-table th.si-sort.asc  .si-sort-ind,
 .sf-table th.si-sort.desc .si-sort-ind { opacity: 1; }
 .sf-note { opacity: 0.65; font-size: 12px; }
+.sf-th-yi { width: 82px; text-align: right; }
+.sf-mcap { color: var(--text-muted); font-weight: 500; }
 .sf-accel { white-space: nowrap; }
 .sf-tag { font-size: 12px; padding: 1px 6px; border-radius: 4px; background: var(--surface-2, rgba(127,127,127,.12)); }
 .sf-hot  { color: var(--pos); background: var(--pos-glow); }
@@ -174,7 +186,9 @@ if (typeof window.sfSortable !== 'function') {
         table.querySelectorAll('th.si-sort').forEach(function (o) { o.classList.remove('asc', 'desc'); });
         th.classList.add(asc ? 'asc' : 'desc');
         // 只排母列；明細列緊跟著自己的母列一起搬，不然排序會把兩者拆散
-        var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr:not(.sf-detail)'));
+        // :scope > 只取母表直屬列。少了它會連展開列裡子表格的 <tr> 一起掃進來
+        // （第 7 區塊實測 83 列變 613 列，排序等於把巢狀結構打散）。
+        var rows = Array.prototype.slice.call(tbody.querySelectorAll(':scope > tr:not(.sf-detail)'));
         rows.sort(function (a, b) {
           var va = parseFloat(a.children[col].dataset.order) || 0;
           var vb = parseFloat(b.children[col].dataset.order) || 0;
