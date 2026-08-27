@@ -1,13 +1,13 @@
 {
   "date": "2026-08-27",
-  "generated_at": "2026-08-27 14:06:05",
+  "generated_at": "2026-08-27 15:01:19",
   "complete": false,
   "taiex": {
     "close": 45975.22,
     "change_pts": 142.6,
     "change_pct": 0.31,
-    "trading_amount_yi": 9207.04832462,
-    "transaction_count": 2681365
+    "trading_amount_yi": 9597.67959737,
+    "transaction_count": 4528970
   },
   "breadth": {
     "twse": {
