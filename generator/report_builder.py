@@ -10,7 +10,7 @@ from fetcher import twse_client, tpex_client
 from fetcher.market_calendar import roc_to_date, is_trading_day
 from processor import index_stats, market_breadth, movers, institutional, foreign_trades, trust_trades, combined_inst, dealer_trades, ai_summary, sector_inst, mover_sector, market_trend, sector_flow
 from processor.utils import parse_num, change_pct
-from fetcher import price_cache, exrights, inst_flow_cache
+from fetcher import price_cache, exrights, inst_flow_cache, shares
 from generator import renderer, index_builder, today_builder
 
 logger = logging.getLogger(__name__)
@@ -347,6 +347,12 @@ def build(target_date: date) -> "bool | str":
                              raw.get("tpex_all") or [], twse_prices, tpex_prices)
     except Exception as e:
         logger.warning(f"inst_flow_cache.save failed: {e}")
+
+    # 發行股數（市值比用）。只有最新快照，抓失敗沿用舊檔，不擋報告。
+    try:
+        shares.update()
+    except Exception as e:
+        logger.warning(f"shares.update failed: {e}")
 
     sections["sector_flow"] = _safe(sector_flow.build, actual_date)
 

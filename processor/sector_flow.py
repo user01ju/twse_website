@@ -14,7 +14,7 @@ import logging
 from collections import defaultdict
 from datetime import date
 
-from fetcher import exrights, inst_flow_cache, price_cache
+from fetcher import exrights, inst_flow_cache, price_cache, shares
 from processor.market_trend import _WILD, _Chain
 from processor.sector_inst import _load_sector_map
 
@@ -217,6 +217,14 @@ def build(today: date) -> dict:
 
     # 個股表：跟母表同一份 series，只是不分子類股。子類股內成分差異大時，
     # 分組本身就是雜訊 —— 這裡讓個股自己排隊。
+    # 市值 = 報告日收盤 × 發行股數。股數只有最新快照，整個窗口共用今天的值
+    # （股數以月為尺度變動、窗口只有 20 天），所以市值比是近似值。
+    last_px = {c: v.get("c", 0) for c, v in price_cache.load(window[-1][0]).items()}
+    share_map = shares.load()
+    mcaps = {c: last_px[c] * share_map[c] / 1e8
+             for c in series_by_code
+             if share_map.get(c) and last_px.get(c)}
+
     stock_tabs = {}
     for key, _label in _TABS:
         ki = _SER_IDX[key]
@@ -227,10 +235,13 @@ def build(today: date) -> dict:
             if s5 == 0:
                 continue
             ratio, tag = _accel(ss, _ACCEL_MIN_AVG_STOCK)
+            mcap = mcaps.get(code)
             srows.append({
                 "code":   code,
                 "name":   names.get(code, ""),
                 "sector": code_to_sector.get(code) or "其他",
+                "mcap":   round(mcap) if mcap else None,
+                "net5_pct": round(s5 / mcap * 100, 2) if mcap else None,
                 "net5":   round(s5, 2),
                 "net20":  round(sum(ss), 2),
                 "streak": _streak(ss),

@@ -27,7 +27,8 @@
   <div class="si-meta">
     窗口 <strong>{{ d.start }} ~ {{ d.end }}</strong>（{{ d.days }} 個交易日）　
     {{ d.stock_universe }} 檔有進出，列出買超前 {{ d.stock_top }} + 賣超前 {{ d.stock_top }}
-    <span class="sf-note">　子類股欄只是標籤，不做分組 —— 同一類股內個股差異大時，分組本身就是雜訊</span>
+    <span class="sf-note">　子類股欄只是標籤，不做分組。市值 = 報告日收盤 × 發行股數（股數只有最新快照，
+      整個窗口共用今天的值，所以市值比是近似值）</span>
   </div>
 
   <table class="si-table stf-table">
@@ -37,11 +38,13 @@
         <th class="stf-th-code">代號</th>
         <th class="stf-th-name">名稱</th>
         <th class="stf-th-sector">子類股</th>
-        <th class="si-th-yi si-sort" data-col="4">{{ d.short }}日淨買賣超(億)<span class="si-sort-ind"></span></th>
-        <th class="si-th-yi si-sort" data-col="5">{{ d.long }}日淨買賣超(億)<span class="si-sort-ind"></span></th>
-        <th class="si-th-yi si-sort" data-col="6">連續天數<span class="si-sort-ind"></span></th>
-        <th class="si-th-yi si-sort" data-col="7">加速度<span class="si-sort-ind"></span></th>
-        <th class="si-th-yi si-sort" data-col="8">近{{ d.ret_days }}日漲跌<span class="si-sort-ind"></span></th>
+        <th class="stf-th-yi si-sort" data-col="4">{{ d.short }}日(億)<span class="si-sort-ind"></span></th>
+        <th class="stf-th-yi si-sort" data-col="5">{{ d.long }}日(億)<span class="si-sort-ind"></span></th>
+        <th class="stf-th-yi si-sort" data-col="6">市值(億)<span class="si-sort-ind"></span></th>
+        <th class="stf-th-yi si-sort" data-col="7">{{ d.short }}日/市值<span class="si-sort-ind"></span></th>
+        <th class="stf-th-yi si-sort" data-col="8">連續<span class="si-sort-ind"></span></th>
+        <th class="si-th-yi si-sort" data-col="9">加速度<span class="si-sort-ind"></span></th>
+        <th class="stf-th-yi si-sort" data-col="10">近{{ d.ret_days }}日<span class="si-sort-ind"></span></th>
       </tr>
     </thead>
     <tbody>
@@ -53,6 +56,12 @@
         <td class="stf-sector">{{ r.sector }}</td>
         <td class="si-yi {{ 'pos' if r.net5 >= 0 else 'neg' }}" data-order="{{ r.net5 }}">{{ "{:+,.1f}".format(r.net5) }}</td>
         <td class="si-yi {{ 'pos' if r.net20 >= 0 else 'neg' }}" data-order="{{ r.net20 }}">{{ "{:+,.1f}".format(r.net20) }}</td>
+        <td class="si-yi stf-mcap" data-order="{{ r.mcap or 0 }}">
+          {%- if r.mcap %}{{ "{:,}".format(r.mcap) }}{% else %}–{% endif -%}
+        </td>
+        <td class="si-yi {{ 'pos' if (r.net5_pct or 0) >= 0 else 'neg' }}" data-order="{{ r.net5_pct if r.net5_pct is not none else 0 }}">
+          {%- if r.net5_pct is not none %}{{ "{:+.2f}".format(r.net5_pct) }}%{% else %}–{% endif -%}
+        </td>
         <td class="si-yi {{ 'pos' if r.streak > 0 else ('neg' if r.streak < 0 else '') }}" data-order="{{ r.streak }}">
           {%- if r.streak %}{{ '買' if r.streak > 0 else '賣' }} {{ r.streak | abs }} 天{% else %}–{% endif -%}
         </td>
@@ -86,7 +95,9 @@
 .stf-table th.si-sort.desc .si-sort-ind { opacity: 1; }
 .stf-th-code { width: 60px; }
 .stf-th-name { width: 96px; }
-.stf-th-sector { width: 110px; }
+.stf-th-sector { width: 104px; }
+.stf-th-yi { width: 76px; text-align: right; }
+.stf-mcap { color: var(--text-muted); font-weight: 500; }
 .stf-code { font-family: var(--font-mono); color: var(--text-muted); }
 .stf-name { font-weight: 700; color: var(--text-primary); }
 .stf-sector { font-size: 11px; color: var(--text-muted); }
