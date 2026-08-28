@@ -289,7 +289,8 @@ def build(today: date) -> dict:
             up   = sum(1 for _, v in moved if v > 0)
             down = sum(1 for _, v in moved if v < 0)
             gross = sum(abs(v) for _, v in moved)
-            lead = round(max((abs(v) for _, v in moved), default=0) / gross * 100) if gross else None
+            lead_code, lead_v = max(moved, key=lambda x: abs(x[1]), default=(None, 0.0))
+            lead = round(abs(lead_v) / gross * 100) if gross else None
 
             smc = sector_mcap.get(sec)
             rows.append({
@@ -297,6 +298,8 @@ def build(today: date) -> dict:
                 "down":  down,
                 "moved": len(moved),
                 "lead":  lead,
+                "lead_name": names.get(lead_code, "") if lead_code else "",
+                "lead_code": lead_code or "",
                 "sector": sec,
                 "parent": sector_parent.get(sec, ""),
                 "mcap":   round(smc) if smc else None,

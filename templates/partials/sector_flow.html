@@ -78,7 +78,8 @@
             title="{{ g.moved }} 檔有進出：{{ g.up }} 買 / {{ g.down }} 賣">
           <span class="pos">{{ g.up }}</span>/<span class="neg">{{ g.down }}</span>
         </td>
-        <td class="si-yi sf-lead" data-order="{{ g.lead or 0 }}">
+        <td class="si-yi sf-lead" data-order="{{ g.lead or 0 }}"
+            {% if g.lead_name %}title="最大一檔：{{ g.lead_name }} {{ g.lead_code }}"{% endif %}>
           {%- if g.lead is not none %}{{ g.lead }}%{% else %}–{% endif -%}
         </td>
         <td class="si-yi {{ 'pos' if g.net5 >= 0 else 'neg' }}" data-order="{{ g.net5 }}">
