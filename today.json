@@ -1,6 +1,6 @@
 {
   "date": "2026-08-28",
-  "generated_at": "2026-08-28 15:00:58",
+  "generated_at": "2026-08-28 16:02:14",
   "complete": false,
   "taiex": {
     "close": 46331.45,
@@ -24,17 +24,17 @@
       "limit_down_pct": 0.1
     },
     "tpex": {
-      "up": 0,
-      "down": 0,
-      "flat": 0,
-      "limit_up": 0,
-      "limit_down": 0,
-      "total": 0,
-      "up_pct": 0.0,
-      "down_pct": 0.0,
-      "flat_pct": 0.0,
-      "limit_up_pct": 0.0,
-      "limit_down_pct": 0.0
+      "up": 353,
+      "down": 427,
+      "flat": 92,
+      "limit_up": 17,
+      "limit_down": 3,
+      "total": 890,
+      "up_pct": 39.7,
+      "down_pct": 48.0,
+      "flat_pct": 10.3,
+      "limit_up_pct": 1.9,
+      "limit_down_pct": 0.3
     }
   },
   "top_gainers": [
@@ -46,41 +46,55 @@
       "market": "上市"
     },
     {
-      "code": "3665",
-      "name": "貿聯-KY",
-      "close": 2260.0,
-      "change_pct": 9.975669099756692,
-      "market": "上市"
+      "code": "3066",
+      "name": "李洲",
+      "close": 27.5,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "6272",
-      "name": "驊陞",
-      "close": 26.5,
-      "change_pct": 9.95850622406639,
-      "market": "上市"
+      "code": "4198",
+      "name": "欣大健康",
+      "close": 44.0,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "7835",
-      "name": "永悅健康-創",
-      "close": 25.4,
-      "change_pct": 9.956709956709958,
-      "market": "上市"
+      "code": "5386",
+      "name": "青雲",
+      "close": 258.5,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "3406",
-      "name": "玉晶光",
-      "close": 917.0,
-      "change_pct": 9.952038369304557,
-      "market": "上市"
+      "code": "6584",
+      "name": "南俊國際",
+      "close": 682.0,
+      "change_pct": 10.0,
+      "market": "上櫃"
     }
   ],
   "top_losers": [
+    {
+      "code": "5314",
+      "name": "世紀*",
+      "close": 34.2,
+      "change_pct": -10.0,
+      "market": "上櫃"
+    },
     {
       "code": "2464",
       "name": "盟立",
       "close": 190.0,
       "change_pct": -9.95260663507109,
       "market": "上市"
+    },
+    {
+      "code": "6538",
+      "name": "倉和",
+      "close": 200.0,
+      "change_pct": -9.90990990990991,
+      "market": "上櫃"
     },
     {
       "code": "6225",
@@ -90,25 +104,11 @@
       "market": "上市"
     },
     {
-      "code": "2321",
-      "name": "東訊",
-      "close": 13.65,
-      "change_pct": -7.457627118644068,
-      "market": "上市"
-    },
-    {
-      "code": "7610",
-      "name": "聯友金屬-創",
-      "close": 1495.0,
-      "change_pct": -6.269592476489027,
-      "market": "上市"
-    },
-    {
-      "code": "8499",
-      "name": "鼎炫-KY",
-      "close": 271.0,
-      "change_pct": -6.228373702422145,
-      "market": "上市"
+      "code": "7751",
+      "name": "竑騰",
+      "close": 1790.0,
+      "change_pct": -9.82367758186398,
+      "market": "上櫃"
     }
   ]
 }
