@@ -1,7 +1,7 @@
 {
   "date": "2026-08-31",
-  "generated_at": "2026-08-31 16:01:16",
-  "complete": false,
+  "generated_at": "2026-08-31 17:03:16",
+  "complete": true,
   "taiex": {
     "close": 46128.47,
     "change_pts": -202.98,
@@ -11,15 +11,15 @@
   },
   "breadth": {
     "twse": {
-      "up": 408,
-      "down": 833,
-      "flat": 124,
+      "up": 411,
+      "down": 836,
+      "flat": 118,
       "limit_up": 11,
       "limit_down": 6,
       "total": 1365,
-      "up_pct": 29.9,
-      "down_pct": 61.0,
-      "flat_pct": 9.1,
+      "up_pct": 30.1,
+      "down_pct": 61.2,
+      "flat_pct": 8.6,
       "limit_up_pct": 0.8,
       "limit_down_pct": 0.4
     },
@@ -46,31 +46,31 @@
       "market": "上市"
     },
     {
+      "code": "3086",
+      "name": "華義*",
+      "close": 30.25,
+      "change_pct": 10.0,
+      "market": "上櫃"
+    },
+    {
+      "code": "4908",
+      "name": "前鼎",
+      "close": 209.0,
+      "change_pct": 10.0,
+      "market": "上櫃"
+    },
+    {
+      "code": "6240",
+      "name": "松崗",
+      "close": 25.3,
+      "change_pct": 10.0,
+      "market": "上櫃"
+    },
+    {
       "code": "1326",
       "name": "台化",
       "close": 68.3,
       "change_pct": 9.983896940418681,
-      "market": "上市"
-    },
-    {
-      "code": "1303",
-      "name": "南亞",
-      "close": 242.5,
-      "change_pct": 9.977324263038549,
-      "market": "上市"
-    },
-    {
-      "code": "2434",
-      "name": "統懋",
-      "close": 62.0,
-      "change_pct": 9.929078014184396,
-      "market": "上市"
-    },
-    {
-      "code": "2455",
-      "name": "全新",
-      "close": 477.0,
-      "change_pct": 9.90783410138249,
       "market": "上市"
     }
   ],
