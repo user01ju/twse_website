@@ -1,6 +1,6 @@
 {
   "date": "2026-08-31",
-  "generated_at": "2026-08-31 15:01:15",
+  "generated_at": "2026-08-31 16:01:16",
   "complete": false,
   "taiex": {
     "close": 46128.47,
@@ -24,17 +24,17 @@
       "limit_down_pct": 0.4
     },
     "tpex": {
-      "up": 0,
-      "down": 0,
-      "flat": 0,
-      "limit_up": 0,
-      "limit_down": 0,
-      "total": 0,
-      "up_pct": 0.0,
-      "down_pct": 0.0,
-      "flat_pct": 0.0,
-      "limit_up_pct": 0.0,
-      "limit_down_pct": 0.0
+      "up": 268,
+      "down": 506,
+      "flat": 85,
+      "limit_up": 12,
+      "limit_down": 1,
+      "total": 890,
+      "up_pct": 30.1,
+      "down_pct": 56.9,
+      "flat_pct": 9.6,
+      "limit_up_pct": 1.3,
+      "limit_down_pct": 0.1
     }
   },
   "top_gainers": [
