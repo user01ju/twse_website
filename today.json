@@ -1,114 +1,114 @@
 {
-  "date": "2026-08-28",
-  "generated_at": "2026-08-28 17:01:59",
-  "complete": true,
+  "date": "2026-08-31",
+  "generated_at": "2026-08-31 15:01:15",
+  "complete": false,
   "taiex": {
-    "close": 46331.45,
-    "change_pts": 356.23,
-    "change_pct": 0.77,
-    "trading_amount_yi": 10592.14003734,
-    "transaction_count": 4945456
+    "close": 46128.47,
+    "change_pts": -202.98,
+    "change_pct": -0.44,
+    "trading_amount_yi": 12419.16839382,
+    "transaction_count": 5068998
   },
   "breadth": {
     "twse": {
-      "up": 513,
-      "down": 726,
-      "flat": 127,
-      "limit_up": 19,
-      "limit_down": 1,
-      "total": 1366,
-      "up_pct": 37.6,
-      "down_pct": 53.1,
-      "flat_pct": 9.3,
-      "limit_up_pct": 1.4,
-      "limit_down_pct": 0.1
+      "up": 408,
+      "down": 833,
+      "flat": 124,
+      "limit_up": 11,
+      "limit_down": 6,
+      "total": 1365,
+      "up_pct": 29.9,
+      "down_pct": 61.0,
+      "flat_pct": 9.1,
+      "limit_up_pct": 0.8,
+      "limit_down_pct": 0.4
     },
     "tpex": {
-      "up": 353,
-      "down": 427,
-      "flat": 92,
-      "limit_up": 17,
-      "limit_down": 3,
-      "total": 890,
-      "up_pct": 39.7,
-      "down_pct": 48.0,
-      "flat_pct": 10.3,
-      "limit_up_pct": 1.9,
-      "limit_down_pct": 0.3
+      "up": 0,
+      "down": 0,
+      "flat": 0,
+      "limit_up": 0,
+      "limit_down": 0,
+      "total": 0,
+      "up_pct": 0.0,
+      "down_pct": 0.0,
+      "flat_pct": 0.0,
+      "limit_up_pct": 0.0,
+      "limit_down_pct": 0.0
     }
   },
   "top_gainers": [
     {
-      "code": "2492",
-      "name": "華新科",
-      "close": 313.5,
+      "code": "6933",
+      "name": "AMAX-KY",
+      "close": 286.0,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "3066",
-      "name": "李洲",
-      "close": 27.5,
-      "change_pct": 10.0,
-      "market": "上櫃"
+      "code": "1326",
+      "name": "台化",
+      "close": 68.3,
+      "change_pct": 9.983896940418681,
+      "market": "上市"
     },
     {
-      "code": "4198",
-      "name": "欣大健康",
-      "close": 44.0,
-      "change_pct": 10.0,
-      "market": "上櫃"
+      "code": "1303",
+      "name": "南亞",
+      "close": 242.5,
+      "change_pct": 9.977324263038549,
+      "market": "上市"
     },
     {
-      "code": "5386",
-      "name": "青雲",
-      "close": 258.5,
-      "change_pct": 10.0,
-      "market": "上櫃"
+      "code": "2434",
+      "name": "統懋",
+      "close": 62.0,
+      "change_pct": 9.929078014184396,
+      "market": "上市"
     },
     {
-      "code": "6584",
-      "name": "南俊國際",
-      "close": 682.0,
-      "change_pct": 10.0,
-      "market": "上櫃"
+      "code": "2455",
+      "name": "全新",
+      "close": 477.0,
+      "change_pct": 9.90783410138249,
+      "market": "上市"
     }
   ],
   "top_losers": [
     {
-      "code": "5314",
-      "name": "世紀*",
-      "close": 34.2,
+      "code": "3037",
+      "name": "欣興",
+      "close": 999.0,
       "change_pct": -10.0,
-      "market": "上櫃"
-    },
-    {
-      "code": "2464",
-      "name": "盟立",
-      "close": 190.0,
-      "change_pct": -9.95260663507109,
       "market": "上市"
     },
     {
-      "code": "6538",
-      "name": "倉和",
-      "close": 200.0,
-      "change_pct": -9.90990990990991,
-      "market": "上櫃"
-    },
-    {
-      "code": "6225",
-      "name": "天瀚",
-      "close": 59.5,
-      "change_pct": -9.848484848484848,
+      "code": "6415",
+      "name": "矽力*-KY",
+      "close": 412.5,
+      "change_pct": -9.934497816593886,
       "market": "上市"
     },
     {
-      "code": "7751",
-      "name": "竑騰",
-      "close": 1790.0,
-      "change_pct": -9.82367758186398,
-      "market": "上櫃"
+      "code": "7795",
+      "name": "長廣",
+      "close": 508.0,
+      "change_pct": -9.929078014184398,
+      "market": "上市"
+    },
+    {
+      "code": "2491",
+      "name": "吉祥全",
+      "close": 50.8,
+      "change_pct": -9.929078014184396,
+      "market": "上市"
+    },
+    {
+      "code": "6715",
+      "name": "嘉基",
+      "close": 318.5,
+      "change_pct": -9.900990099009901,
+      "market": "上市"
     }
   ]
 }
