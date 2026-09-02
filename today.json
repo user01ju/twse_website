@@ -1,7 +1,7 @@
 {
   "date": "2026-09-02",
-  "generated_at": "2026-09-02 16:01:12",
-  "complete": false,
+  "generated_at": "2026-09-02 17:02:23",
+  "complete": true,
   "taiex": {
     "close": 46164.72,
     "change_pts": -784.0,
@@ -11,15 +11,15 @@
   },
   "breadth": {
     "twse": {
-      "up": 450,
-      "down": 773,
-      "flat": 148,
+      "up": 452,
+      "down": 780,
+      "flat": 139,
       "limit_up": 12,
       "limit_down": 0,
       "total": 1371,
-      "up_pct": 32.8,
-      "down_pct": 56.4,
-      "flat_pct": 10.8,
+      "up_pct": 33.0,
+      "down_pct": 56.9,
+      "flat_pct": 10.1,
       "limit_up_pct": 0.9,
       "limit_down_pct": 0.0
     },
@@ -38,6 +38,13 @@
     }
   },
   "top_gainers": [
+    {
+      "code": "2464",
+      "name": "盟立",
+      "close": 202.0,
+      "change_pct": 10.806363137685128,
+      "market": "上市"
+    },
     {
       "code": "6872",
       "name": "浩宇生醫",
@@ -64,13 +71,6 @@
       "name": "九暘",
       "close": 82.9,
       "change_pct": 9.946949602122016,
-      "market": "上櫃"
-    },
-    {
-      "code": "3141",
-      "name": "晶宏",
-      "close": 99.5,
-      "change_pct": 9.94475138121547,
       "market": "上櫃"
     }
   ],
