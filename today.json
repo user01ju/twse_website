@@ -1,6 +1,6 @@
 {
   "date": "2026-09-02",
-  "generated_at": "2026-09-02 15:01:20",
+  "generated_at": "2026-09-02 16:01:12",
   "complete": false,
   "taiex": {
     "close": 46164.72,
@@ -24,20 +24,27 @@
       "limit_down_pct": 0.0
     },
     "tpex": {
-      "up": 0,
-      "down": 0,
-      "flat": 0,
-      "limit_up": 0,
+      "up": 291,
+      "down": 474,
+      "flat": 92,
+      "limit_up": 13,
       "limit_down": 0,
-      "total": 0,
-      "up_pct": 0.0,
-      "down_pct": 0.0,
-      "flat_pct": 0.0,
-      "limit_up_pct": 0.0,
+      "total": 890,
+      "up_pct": 32.7,
+      "down_pct": 53.3,
+      "flat_pct": 10.3,
+      "limit_up_pct": 1.5,
       "limit_down_pct": 0.0
     }
   },
   "top_gainers": [
+    {
+      "code": "6872",
+      "name": "浩宇生醫",
+      "close": 15.4,
+      "change_pct": 10.0,
+      "market": "上櫃"
+    },
     {
       "code": "6224",
       "name": "聚鼎",
@@ -46,35 +53,49 @@
       "market": "上市"
     },
     {
-      "code": "6272",
-      "name": "驊陞",
-      "close": 27.65,
-      "change_pct": 9.940357852882704,
-      "market": "上市"
+      "code": "6538",
+      "name": "倉和",
+      "close": 248.5,
+      "change_pct": 9.955752212389381,
+      "market": "上櫃"
     },
     {
-      "code": "5285",
-      "name": "界霖",
-      "close": 89.6,
-      "change_pct": 9.938650306748466,
-      "market": "上市"
+      "code": "8040",
+      "name": "九暘",
+      "close": 82.9,
+      "change_pct": 9.946949602122016,
+      "market": "上櫃"
     },
     {
-      "code": "4976",
-      "name": "佳凌",
-      "close": 41.55,
-      "change_pct": 9.920634920634921,
-      "market": "上市"
-    },
-    {
-      "code": "6451",
-      "name": "訊芯-KY",
-      "close": 500.0,
-      "change_pct": 9.89010989010989,
-      "market": "上市"
+      "code": "3141",
+      "name": "晶宏",
+      "close": 99.5,
+      "change_pct": 9.94475138121547,
+      "market": "上櫃"
     }
   ],
   "top_losers": [
+    {
+      "code": "4304",
+      "name": "勝昱",
+      "close": 20.6,
+      "change_pct": -9.649122807017545,
+      "market": "上櫃"
+    },
+    {
+      "code": "3529",
+      "name": "力旺",
+      "close": 2395.0,
+      "change_pct": -9.280303030303031,
+      "market": "上櫃"
+    },
+    {
+      "code": "8444",
+      "name": "綠河-KY",
+      "close": 4.51,
+      "change_pct": -7.770961145194274,
+      "market": "上櫃"
+    },
     {
       "code": "6805",
       "name": "富世達",
@@ -87,27 +108,6 @@
       "name": "台達電",
       "close": 1730.0,
       "change_pct": -7.238605898123325,
-      "market": "上市"
-    },
-    {
-      "code": "2243",
-      "name": "宏旭-KY",
-      "close": 42.9,
-      "change_pct": -7.142857142857142,
-      "market": "上市"
-    },
-    {
-      "code": "2404",
-      "name": "漢唐",
-      "close": 1025.0,
-      "change_pct": -6.8181818181818175,
-      "market": "上市"
-    },
-    {
-      "code": "1714",
-      "name": "和桐",
-      "close": 17.35,
-      "change_pct": -6.469002695417789,
       "market": "上市"
     }
   ]
