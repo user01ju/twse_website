@@ -1,6 +1,6 @@
 {
   "date": "2026-09-04",
-  "generated_at": "2026-09-04 15:01:04",
+  "generated_at": "2026-09-04 16:01:32",
   "complete": false,
   "taiex": {
     "close": 46551.13,
@@ -24,17 +24,17 @@
       "limit_down_pct": 0.1
     },
     "tpex": {
-      "up": 0,
-      "down": 0,
-      "flat": 0,
-      "limit_up": 0,
-      "limit_down": 0,
-      "total": 0,
-      "up_pct": 0.0,
-      "down_pct": 0.0,
-      "flat_pct": 0.0,
-      "limit_up_pct": 0.0,
-      "limit_down_pct": 0.0
+      "up": 512,
+      "down": 248,
+      "flat": 101,
+      "limit_up": 21,
+      "limit_down": 4,
+      "total": 890,
+      "up_pct": 57.5,
+      "down_pct": 27.9,
+      "flat_pct": 11.3,
+      "limit_up_pct": 2.4,
+      "limit_down_pct": 0.4
     }
   },
   "top_gainers": [
@@ -53,24 +53,24 @@
       "market": "上市"
     },
     {
+      "code": "3324",
+      "name": "雙鴻",
+      "close": 1485.0,
+      "change_pct": 10.0,
+      "market": "上櫃"
+    },
+    {
+      "code": "3441",
+      "name": "聯一光",
+      "close": 143.0,
+      "change_pct": 10.0,
+      "market": "上櫃"
+    },
+    {
       "code": "2327",
       "name": "國巨*",
       "close": 562.0,
       "change_pct": 9.980430528375733,
-      "market": "上市"
-    },
-    {
-      "code": "3022",
-      "name": "威強電",
-      "close": 95.9,
-      "change_pct": 9.977064220183484,
-      "market": "上市"
-    },
-    {
-      "code": "6271",
-      "name": "同欣電",
-      "close": 237.0,
-      "change_pct": 9.976798143851507,
       "market": "上市"
     }
   ],
@@ -83,32 +83,32 @@
       "market": "上市"
     },
     {
-      "code": "2491",
-      "name": "吉祥全",
-      "close": 42.0,
-      "change_pct": -6.666666666666667,
-      "market": "上市"
+      "code": "3664",
+      "name": "安瑞-KY",
+      "close": 8.19,
+      "change_pct": -10.0,
+      "market": "上櫃"
     },
     {
-      "code": "5225",
-      "name": "東科-KY",
-      "close": 57.4,
-      "change_pct": -5.901639344262295,
-      "market": "上市"
+      "code": "6716",
+      "name": "應廣",
+      "close": 117.0,
+      "change_pct": -10.0,
+      "market": "上櫃"
     },
     {
-      "code": "2368",
-      "name": "金像電",
-      "close": 1045.0,
-      "change_pct": -5.0,
-      "market": "上市"
+      "code": "6240",
+      "name": "松崗",
+      "close": 25.2,
+      "change_pct": -9.838998211091235,
+      "market": "上櫃"
     },
     {
-      "code": "2464",
-      "name": "盟立",
-      "close": 211.0,
-      "change_pct": -4.954954954954955,
-      "market": "上市"
+      "code": "3259",
+      "name": "鑫創",
+      "close": 12.15,
+      "change_pct": -9.66542750929368,
+      "market": "上櫃"
     }
   ]
 }
