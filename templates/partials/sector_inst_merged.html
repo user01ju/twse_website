@@ -30,6 +30,8 @@
     <strong class="{{ 'pos' if net_total.v >= 0 else 'neg' }}">{{ "{:+,.1f}".format(net_total.v) }} 億</strong>
   </div>
 
+  <div class="si-scroll-hint">← 左右滑動可看到完整欄位 →</div>
+  <div class="si-scroll">
   <table class="si-table si-merged-table">
     <thead>
       <tr>
@@ -70,6 +72,7 @@
       {% endfor %}
     </tbody>
   </table>
+  </div>
   {% endif %}
 </div>
 {% endfor %}

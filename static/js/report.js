@@ -171,6 +171,27 @@
   });
 })();
 
+// 寬表格的「可左右滑動」提示：只在真的滑得動時顯示。切頁簽、展開／收合區塊、
+// 轉向都會改變可視寬度，ResizeObserver（display:none → 可見時也會觸發）一併處理。
+(function () {
+  function sync(wrap) {
+    var hint = wrap.previousElementSibling;
+    if (!hint || !hint.classList.contains("si-scroll-hint")) return;
+    hint.classList.toggle("show", wrap.scrollWidth > wrap.clientWidth + 1);
+  }
+  var wraps = Array.prototype.slice.call(document.querySelectorAll(".si-scroll"));
+  if (!wraps.length) return;
+  if (typeof ResizeObserver === "function") {
+    var ro = new ResizeObserver(function (entries) {
+      entries.forEach(function (e) { sync(e.target); });
+    });
+    wraps.forEach(function (w) { ro.observe(w); sync(w); });
+  } else {
+    wraps.forEach(sync);
+    window.addEventListener("resize", function () { wraps.forEach(sync); });
+  }
+})();
+
 document.addEventListener("DOMContentLoaded", function () {
   // Collapsible sections
   document.querySelectorAll(".section-header").forEach(function (hdr) {

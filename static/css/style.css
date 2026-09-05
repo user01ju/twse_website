@@ -641,6 +641,25 @@ table.inst-compact th:nth-child(n+3) { text-align: right; }
 }
 
 .si-table { width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
+
+/* 寬表格的橫向捲動容器 —— .section 是 overflow:hidden，表格超出容器的部分
+   會被直接切掉，手機上既看不到右邊欄位也滑不動。包一層自己的捲動容器，
+   欄寬維持可讀寬度，窄螢幕改用左右滑動。 */
+.si-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+/* 提示預設不顯示，report.js 量到表格真的溢出時才掛上 .show */
+.si-scroll-hint { display: none; }
+.si-scroll-hint.show {
+  display: block;
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+  font-family: var(--font-mono);
+}
 .si-table thead th {
   background: var(--bg-primary);
   color: var(--text-muted);
@@ -697,6 +716,21 @@ table.inst-compact th:nth-child(n+3) { text-align: right; }
 .si-code  { color: var(--text-muted); font-family: var(--font-mono); }
 .si-sname { color: var(--text-primary); font-weight: 600; }
 .si-zhang { font-weight: 700; font-size: 10px; font-family: var(--font-mono); }
+
+/* 手機：讓表格保持原本欄寬（超出視窗），由 .si-scroll 負責左右滑動 */
+@media (max-width: 768px) {
+  .si-scroll {
+    /* 吃掉 .section-body 的 padding，讓表格可以滑到螢幕邊緣 */
+    margin: 0 -20px;
+    padding: 0 20px;
+  }
+  .si-merged-table { min-width: 720px; }
+  /* 加速度欄的標籤（🔥 加速流入 1.8x）比宣告的 90px 寬。桌機是靠 fixed layout
+     把剩餘空間分回各欄才不擠，手機沒有剩餘空間可分，得自己給足寬度，
+     否則會壓到隔壁的「近 N 日」欄。 */
+  .sf-table .si-th-yi,
+  .stf-table .si-th-yi { width: 128px; }
+}
 
 /* ── Sector-inst summary table ────────────────────────── */
 .sis-table { width: 100%; border-collapse: collapse; font-size: 12px; }
