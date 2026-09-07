@@ -1,7 +1,7 @@
 {
   "date": "2026-09-07",
-  "generated_at": "2026-09-07 18:01:10",
-  "complete": false,
+  "generated_at": "2026-09-07 19:01:56",
+  "complete": true,
   "taiex": {
     "close": 47326.27,
     "change_pts": 775.14,
@@ -11,15 +11,15 @@
   },
   "breadth": {
     "twse": {
-      "up": 541,
-      "down": 703,
-      "flat": 129,
+      "up": 542,
+      "down": 705,
+      "flat": 126,
       "limit_up": 11,
       "limit_down": 3,
       "total": 1373,
-      "up_pct": 39.4,
-      "down_pct": 51.2,
-      "flat_pct": 9.4,
+      "up_pct": 39.5,
+      "down_pct": 51.3,
+      "flat_pct": 9.2,
       "limit_up_pct": 0.8,
       "limit_down_pct": 0.2
     },
@@ -53,25 +53,25 @@
       "market": "上市"
     },
     {
-      "code": "3026",
-      "name": "禾伸堂",
-      "close": 771.0,
-      "change_pct": 9.985734664764621,
-      "market": "上市"
+      "code": "3354",
+      "name": "律勝",
+      "close": 26.4,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "2436",
-      "name": "偉詮電",
-      "close": 71.7,
-      "change_pct": 9.969325153374232,
-      "market": "上市"
+      "code": "5314",
+      "name": "世紀*",
+      "close": 35.2,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "3167",
-      "name": "大量",
-      "close": 883.0,
-      "change_pct": 9.9626400996264,
-      "market": "上市"
+      "code": "6441",
+      "name": "廣錠",
+      "close": 23.1,
+      "change_pct": 10.0,
+      "market": "上櫃"
     }
   ],
   "top_losers": [
@@ -83,6 +83,13 @@
       "market": "上市"
     },
     {
+      "code": "6949",
+      "name": "沛爾生醫*-創",
+      "close": 67.1,
+      "change_pct": -9.932885906040276,
+      "market": "上市"
+    },
+    {
       "code": "3003",
       "name": "健和興",
       "close": 59.0,
@@ -90,25 +97,18 @@
       "market": "上市"
     },
     {
-      "code": "4943",
-      "name": "康控-KY",
-      "close": 6.61,
-      "change_pct": -7.032348804500703,
-      "market": "上市"
+      "code": "3664",
+      "name": "安瑞-KY",
+      "close": 7.38,
+      "change_pct": -9.89010989010989,
+      "market": "上櫃"
     },
     {
-      "code": "4956",
-      "name": "光鋐",
-      "close": 35.1,
-      "change_pct": -6.772908366533864,
-      "market": "上市"
-    },
-    {
-      "code": "3406",
-      "name": "玉晶光",
-      "close": 987.0,
-      "change_pct": -6.4454976303317535,
-      "market": "上市"
+      "code": "4304",
+      "name": "勝昱",
+      "close": 17.3,
+      "change_pct": -9.660574412532636,
+      "market": "上櫃"
     }
   ]
 }
