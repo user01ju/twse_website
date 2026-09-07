@@ -1,114 +1,114 @@
 {
-  "date": "2026-09-04",
-  "generated_at": "2026-09-04 17:03:20",
-  "complete": true,
+  "date": "2026-09-07",
+  "generated_at": "2026-09-07 15:01:48",
+  "complete": false,
   "taiex": {
-    "close": 46551.13,
-    "change_pts": 693.47,
-    "change_pct": 1.51,
-    "trading_amount_yi": 8557.64428317,
-    "transaction_count": 4020244
+    "close": 47326.27,
+    "change_pts": 775.14,
+    "change_pct": 1.67,
+    "trading_amount_yi": 9950.0758184,
+    "transaction_count": 5043453
   },
   "breadth": {
     "twse": {
-      "up": 985,
-      "down": 250,
-      "flat": 133,
-      "limit_up": 15,
-      "limit_down": 1,
-      "total": 1368,
-      "up_pct": 72.0,
-      "down_pct": 18.3,
-      "flat_pct": 9.7,
-      "limit_up_pct": 1.1,
-      "limit_down_pct": 0.1
+      "up": 541,
+      "down": 703,
+      "flat": 129,
+      "limit_up": 11,
+      "limit_down": 3,
+      "total": 1373,
+      "up_pct": 39.4,
+      "down_pct": 51.2,
+      "flat_pct": 9.4,
+      "limit_up_pct": 0.8,
+      "limit_down_pct": 0.2
     },
     "tpex": {
-      "up": 512,
-      "down": 248,
-      "flat": 101,
-      "limit_up": 21,
-      "limit_down": 4,
-      "total": 890,
-      "up_pct": 57.5,
-      "down_pct": 27.9,
-      "flat_pct": 11.3,
-      "limit_up_pct": 2.4,
-      "limit_down_pct": 0.4
+      "up": 0,
+      "down": 0,
+      "flat": 0,
+      "limit_up": 0,
+      "limit_down": 0,
+      "total": 0,
+      "up_pct": 0.0,
+      "down_pct": 0.0,
+      "flat_pct": 0.0,
+      "limit_up_pct": 0.0,
+      "limit_down_pct": 0.0
     }
   },
   "top_gainers": [
     {
-      "code": "2426",
-      "name": "鼎元",
-      "close": 104.5,
+      "code": "2303",
+      "name": "聯電",
+      "close": 143.0,
       "change_pct": 10.0,
+      "market": "上市"
+    },
+    {
+      "code": "8021",
+      "name": "尖點",
+      "close": 462.0,
+      "change_pct": 10.0,
+      "market": "上市"
+    },
+    {
+      "code": "3026",
+      "name": "禾伸堂",
+      "close": 771.0,
+      "change_pct": 9.985734664764621,
+      "market": "上市"
+    },
+    {
+      "code": "2436",
+      "name": "偉詮電",
+      "close": 71.7,
+      "change_pct": 9.969325153374232,
       "market": "上市"
     },
     {
       "code": "3167",
       "name": "大量",
-      "close": 803.0,
-      "change_pct": 10.0,
-      "market": "上市"
-    },
-    {
-      "code": "3324",
-      "name": "雙鴻",
-      "close": 1485.0,
-      "change_pct": 10.0,
-      "market": "上櫃"
-    },
-    {
-      "code": "3441",
-      "name": "聯一光",
-      "close": 143.0,
-      "change_pct": 10.0,
-      "market": "上櫃"
-    },
-    {
-      "code": "2327",
-      "name": "國巨*",
-      "close": 562.0,
-      "change_pct": 9.980430528375733,
+      "close": 883.0,
+      "change_pct": 9.9626400996264,
       "market": "上市"
     }
   ],
   "top_losers": [
     {
-      "code": "4943",
-      "name": "康控-KY",
-      "close": 7.11,
+      "code": "3008",
+      "name": "大立光",
+      "close": 6660.0,
       "change_pct": -10.0,
       "market": "上市"
     },
     {
-      "code": "3664",
-      "name": "安瑞-KY",
-      "close": 8.19,
-      "change_pct": -10.0,
-      "market": "上櫃"
+      "code": "3003",
+      "name": "健和興",
+      "close": 59.0,
+      "change_pct": -9.923664122137405,
+      "market": "上市"
     },
     {
-      "code": "6716",
-      "name": "應廣",
-      "close": 117.0,
-      "change_pct": -10.0,
-      "market": "上櫃"
+      "code": "4943",
+      "name": "康控-KY",
+      "close": 6.61,
+      "change_pct": -7.032348804500703,
+      "market": "上市"
     },
     {
-      "code": "6240",
-      "name": "松崗",
-      "close": 25.2,
-      "change_pct": -9.838998211091235,
-      "market": "上櫃"
+      "code": "4956",
+      "name": "光鋐",
+      "close": 35.1,
+      "change_pct": -6.772908366533864,
+      "market": "上市"
     },
     {
-      "code": "3259",
-      "name": "鑫創",
-      "close": 12.15,
-      "change_pct": -9.66542750929368,
-      "market": "上櫃"
+      "code": "3406",
+      "name": "玉晶光",
+      "close": 987.0,
+      "change_pct": -6.4454976303317535,
+      "market": "上市"
     }
   ]
 }
