@@ -1,13 +1,13 @@
 {
   "date": "2026-09-07",
-  "generated_at": "2026-09-07 15:01:48",
+  "generated_at": "2026-09-07 18:01:10",
   "complete": false,
   "taiex": {
     "close": 47326.27,
     "change_pts": 775.14,
     "change_pct": 1.67,
-    "trading_amount_yi": 9950.0758184,
-    "transaction_count": 5043453
+    "trading_amount_yi": 9979.44843239,
+    "transaction_count": 5043482
   },
   "breadth": {
     "twse": {
@@ -24,17 +24,17 @@
       "limit_down_pct": 0.2
     },
     "tpex": {
-      "up": 0,
-      "down": 0,
-      "flat": 0,
-      "limit_up": 0,
-      "limit_down": 0,
-      "total": 0,
-      "up_pct": 0.0,
-      "down_pct": 0.0,
-      "flat_pct": 0.0,
-      "limit_up_pct": 0.0,
-      "limit_down_pct": 0.0
+      "up": 331,
+      "down": 464,
+      "flat": 80,
+      "limit_up": 20,
+      "limit_down": 1,
+      "total": 890,
+      "up_pct": 37.2,
+      "down_pct": 52.1,
+      "flat_pct": 9.0,
+      "limit_up_pct": 2.2,
+      "limit_down_pct": 0.1
     }
   },
   "top_gainers": [
