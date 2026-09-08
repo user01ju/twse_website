@@ -1,6 +1,6 @@
 {
   "date": "2026-09-08",
-  "generated_at": "2026-09-08 15:03:01",
+  "generated_at": "2026-09-08 16:01:00",
   "complete": false,
   "taiex": {
     "close": 47105.78,
@@ -24,16 +24,16 @@
       "limit_down_pct": 0.3
     },
     "tpex": {
-      "up": 0,
-      "down": 0,
-      "flat": 0,
-      "limit_up": 0,
+      "up": 236,
+      "down": 530,
+      "flat": 100,
+      "limit_up": 13,
       "limit_down": 0,
-      "total": 0,
-      "up_pct": 0.0,
-      "down_pct": 0.0,
-      "flat_pct": 0.0,
-      "limit_up_pct": 0.0,
+      "total": 890,
+      "up_pct": 26.5,
+      "down_pct": 59.6,
+      "flat_pct": 11.2,
+      "limit_up_pct": 1.5,
       "limit_down_pct": 0.0
     }
   },
@@ -46,32 +46,32 @@
       "market": "上市"
     },
     {
-      "code": "1528",
-      "name": "恩德",
-      "close": 21.05,
-      "change_pct": 9.921671018276761,
-      "market": "上市"
+      "code": "1591",
+      "name": "駿吉-KY",
+      "close": 39.1,
+      "change_pct": 9.985935302390997,
+      "market": "上櫃"
     },
     {
-      "code": "5484",
-      "name": "慧友",
-      "close": 43.3,
-      "change_pct": 9.898477157360407,
-      "market": "上市"
+      "code": "6179",
+      "name": "亞通",
+      "close": 33.1,
+      "change_pct": 9.966777408637874,
+      "market": "上櫃"
     },
     {
-      "code": "6657",
-      "name": "華安",
-      "close": 33.45,
-      "change_pct": 9.852216748768472,
-      "market": "上市"
+      "code": "6441",
+      "name": "廣錠",
+      "close": 25.4,
+      "change_pct": 9.956709956709958,
+      "market": "上櫃"
     },
     {
-      "code": "1721",
-      "name": "國慶科技",
-      "close": 24.6,
-      "change_pct": 9.821428571428571,
-      "market": "上市"
+      "code": "5314",
+      "name": "世紀*",
+      "close": 38.7,
+      "change_pct": 9.943181818181818,
+      "market": "上櫃"
     }
   ],
   "top_losers": [
