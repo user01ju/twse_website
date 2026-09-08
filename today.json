@@ -1,114 +1,114 @@
 {
-  "date": "2026-09-07",
-  "generated_at": "2026-09-07 19:01:56",
-  "complete": true,
+  "date": "2026-09-08",
+  "generated_at": "2026-09-08 15:03:01",
+  "complete": false,
   "taiex": {
-    "close": 47326.27,
-    "change_pts": 775.14,
-    "change_pct": 1.67,
-    "trading_amount_yi": 9979.44843239,
-    "transaction_count": 5043482
+    "close": 47105.78,
+    "change_pts": -220.49,
+    "change_pct": -0.47,
+    "trading_amount_yi": 9195.49532971,
+    "transaction_count": 4777113
   },
   "breadth": {
     "twse": {
-      "up": 542,
-      "down": 705,
-      "flat": 126,
-      "limit_up": 11,
-      "limit_down": 3,
-      "total": 1373,
-      "up_pct": 39.5,
-      "down_pct": 51.3,
-      "flat_pct": 9.2,
-      "limit_up_pct": 0.8,
-      "limit_down_pct": 0.2
+      "up": 355,
+      "down": 894,
+      "flat": 118,
+      "limit_up": 6,
+      "limit_down": 4,
+      "total": 1367,
+      "up_pct": 26.0,
+      "down_pct": 65.4,
+      "flat_pct": 8.6,
+      "limit_up_pct": 0.4,
+      "limit_down_pct": 0.3
     },
     "tpex": {
-      "up": 331,
-      "down": 464,
-      "flat": 80,
-      "limit_up": 20,
-      "limit_down": 1,
-      "total": 890,
-      "up_pct": 37.2,
-      "down_pct": 52.1,
-      "flat_pct": 9.0,
-      "limit_up_pct": 2.2,
-      "limit_down_pct": 0.1
+      "up": 0,
+      "down": 0,
+      "flat": 0,
+      "limit_up": 0,
+      "limit_down": 0,
+      "total": 0,
+      "up_pct": 0.0,
+      "down_pct": 0.0,
+      "flat_pct": 0.0,
+      "limit_up_pct": 0.0,
+      "limit_down_pct": 0.0
     }
   },
   "top_gainers": [
     {
-      "code": "2303",
-      "name": "聯電",
-      "close": 143.0,
+      "code": "6515",
+      "name": "穎崴",
+      "close": 7700.0,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "8021",
-      "name": "尖點",
-      "close": 462.0,
-      "change_pct": 10.0,
+      "code": "1528",
+      "name": "恩德",
+      "close": 21.05,
+      "change_pct": 9.921671018276761,
       "market": "上市"
     },
     {
-      "code": "3354",
-      "name": "律勝",
-      "close": 26.4,
-      "change_pct": 10.0,
-      "market": "上櫃"
+      "code": "5484",
+      "name": "慧友",
+      "close": 43.3,
+      "change_pct": 9.898477157360407,
+      "market": "上市"
     },
     {
-      "code": "5314",
-      "name": "世紀*",
-      "close": 35.2,
-      "change_pct": 10.0,
-      "market": "上櫃"
+      "code": "6657",
+      "name": "華安",
+      "close": 33.45,
+      "change_pct": 9.852216748768472,
+      "market": "上市"
     },
     {
-      "code": "6441",
-      "name": "廣錠",
-      "close": 23.1,
-      "change_pct": 10.0,
-      "market": "上櫃"
+      "code": "1721",
+      "name": "國慶科技",
+      "close": 24.6,
+      "change_pct": 9.821428571428571,
+      "market": "上市"
     }
   ],
   "top_losers": [
     {
-      "code": "3008",
-      "name": "大立光",
-      "close": 6660.0,
+      "code": "7711",
+      "name": "永擎",
+      "close": 594.0,
       "change_pct": -10.0,
       "market": "上市"
     },
     {
       "code": "6949",
       "name": "沛爾生醫*-創",
-      "close": 67.1,
-      "change_pct": -9.932885906040276,
+      "close": 60.4,
+      "change_pct": -9.985096870342772,
       "market": "上市"
     },
     {
-      "code": "3003",
-      "name": "健和興",
-      "close": 59.0,
-      "change_pct": -9.923664122137405,
+      "code": "2059",
+      "name": "川湖",
+      "close": 12520.0,
+      "change_pct": -9.96044588277598,
       "market": "上市"
     },
     {
-      "code": "3664",
-      "name": "安瑞-KY",
-      "close": 7.38,
-      "change_pct": -9.89010989010989,
-      "market": "上櫃"
+      "code": "8039",
+      "name": "台虹",
+      "close": 294.5,
+      "change_pct": -9.938837920489297,
+      "market": "上市"
     },
     {
-      "code": "4304",
-      "name": "勝昱",
-      "close": 17.3,
-      "change_pct": -9.660574412532636,
-      "market": "上櫃"
+      "code": "3450",
+      "name": "聯鈞",
+      "close": 527.0,
+      "change_pct": -9.914529914529915,
+      "market": "上市"
     }
   ]
 }
