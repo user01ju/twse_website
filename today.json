@@ -1,6 +1,6 @@
 {
   "date": "2026-09-09",
-  "generated_at": "2026-09-09 15:02:17",
+  "generated_at": "2026-09-09 16:01:15",
   "complete": false,
   "taiex": {
     "close": 47183.36,
@@ -24,20 +24,34 @@
       "limit_down_pct": 0.0
     },
     "tpex": {
-      "up": 0,
-      "down": 0,
-      "flat": 0,
-      "limit_up": 0,
+      "up": 395,
+      "down": 375,
+      "flat": 97,
+      "limit_up": 11,
       "limit_down": 0,
-      "total": 0,
-      "up_pct": 0.0,
-      "down_pct": 0.0,
-      "flat_pct": 0.0,
-      "limit_up_pct": 0.0,
+      "total": 890,
+      "up_pct": 44.4,
+      "down_pct": 42.1,
+      "flat_pct": 10.9,
+      "limit_up_pct": 1.2,
       "limit_down_pct": 0.0
     }
   },
   "top_gainers": [
+    {
+      "code": "8227",
+      "name": "巨有科技",
+      "close": 198.0,
+      "change_pct": 10.0,
+      "market": "上櫃"
+    },
+    {
+      "code": "6179",
+      "name": "亞通",
+      "close": 36.4,
+      "change_pct": 9.969788519637461,
+      "market": "上櫃"
+    },
     {
       "code": "2460",
       "name": "建通",
@@ -53,25 +67,11 @@
       "market": "上市"
     },
     {
-      "code": "7788",
-      "name": "松川精密",
-      "close": 320.5,
-      "change_pct": 9.948542024013722,
-      "market": "上市"
-    },
-    {
-      "code": "2338",
-      "name": "光罩",
-      "close": 41.5,
-      "change_pct": 9.933774834437086,
-      "market": "上市"
-    },
-    {
-      "code": "6505",
-      "name": "台塑化",
-      "close": 87.5,
-      "change_pct": 9.92462311557789,
-      "market": "上市"
+      "code": "5464",
+      "name": "霖宏",
+      "close": 82.8,
+      "change_pct": 9.9601593625498,
+      "market": "上櫃"
     }
   ],
   "top_losers": [
@@ -83,6 +83,20 @@
       "market": "上市"
     },
     {
+      "code": "6654",
+      "name": "天正國際",
+      "close": 206.0,
+      "change_pct": -7.415730337078652,
+      "market": "上櫃"
+    },
+    {
+      "code": "3349",
+      "name": "寶德",
+      "close": 20.4,
+      "change_pct": -7.272727272727273,
+      "market": "上櫃"
+    },
+    {
       "code": "4569",
       "name": "六方科-KY",
       "close": 159.5,
@@ -90,25 +104,11 @@
       "market": "上市"
     },
     {
-      "code": "6969",
-      "name": "成信實業*-創",
-      "close": 34.5,
-      "change_pct": -6.630581867388363,
-      "market": "上市"
-    },
-    {
-      "code": "4739",
-      "name": "康普",
-      "close": 77.6,
-      "change_pct": -5.481120584652863,
-      "market": "上市"
-    },
-    {
-      "code": "6515",
-      "name": "穎崴",
-      "close": 7280.0,
-      "change_pct": -5.454545454545454,
-      "market": "上市"
+      "code": "4609",
+      "name": "唐鋒",
+      "close": 4.15,
+      "change_pct": -6.741573033707865,
+      "market": "上櫃"
     }
   ]
 }
