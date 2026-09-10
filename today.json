@@ -1,6 +1,6 @@
 {
   "date": "2026-09-10",
-  "generated_at": "2026-09-10 15:02:23",
+  "generated_at": "2026-09-10 16:01:07",
   "complete": false,
   "taiex": {
     "close": 46940.49,
@@ -24,16 +24,16 @@
       "limit_down_pct": 0.0
     },
     "tpex": {
-      "up": 0,
-      "down": 0,
-      "flat": 0,
-      "limit_up": 0,
+      "up": 241,
+      "down": 529,
+      "flat": 90,
+      "limit_up": 13,
       "limit_down": 0,
-      "total": 0,
-      "up_pct": 0.0,
-      "down_pct": 0.0,
-      "flat_pct": 0.0,
-      "limit_up_pct": 0.0,
+      "total": 891,
+      "up_pct": 27.0,
+      "down_pct": 59.4,
+      "flat_pct": 10.1,
+      "limit_up_pct": 1.5,
       "limit_down_pct": 0.0
     }
   },
@@ -67,47 +67,47 @@
       "market": "上市"
     },
     {
-      "code": "6861",
-      "name": "睿生光電",
-      "close": 204.0,
-      "change_pct": 9.973045822102426,
-      "market": "上市"
+      "code": "6739",
+      "name": "竹陞科技",
+      "close": 1320.0,
+      "change_pct": 10.0,
+      "market": "上櫃"
     }
   ],
   "top_losers": [
+    {
+      "code": "6547",
+      "name": "高端疫苗",
+      "close": 61.4,
+      "change_pct": -9.838472834067549,
+      "market": "上櫃"
+    },
+    {
+      "code": "4939",
+      "name": "亞電",
+      "close": 82.4,
+      "change_pct": -9.151047409040794,
+      "market": "上櫃"
+    },
+    {
+      "code": "6276",
+      "name": "安鈦克",
+      "close": 18.9,
+      "change_pct": -8.25242718446602,
+      "market": "上櫃"
+    },
+    {
+      "code": "8096",
+      "name": "擎亞",
+      "close": 91.8,
+      "change_pct": -8.108108108108109,
+      "market": "上櫃"
+    },
     {
       "code": "3376",
       "name": "新日興",
       "close": 189.5,
       "change_pct": -8.009708737864079,
-      "market": "上市"
-    },
-    {
-      "code": "2308",
-      "name": "台達電",
-      "close": 1675.0,
-      "change_pct": -6.685236768802229,
-      "market": "上市"
-    },
-    {
-      "code": "2360",
-      "name": "致茂",
-      "close": 2180.0,
-      "change_pct": -6.638115631691649,
-      "market": "上市"
-    },
-    {
-      "code": "1409",
-      "name": "新纖",
-      "close": 25.15,
-      "change_pct": -6.33147113594041,
-      "market": "上市"
-    },
-    {
-      "code": "5607",
-      "name": "遠雄港",
-      "close": 52.3,
-      "change_pct": -6.2724014336917575,
       "market": "上市"
     }
   ]
