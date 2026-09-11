@@ -1,113 +1,113 @@
 {
-  "date": "2026-09-10",
-  "generated_at": "2026-09-10 17:02:36",
-  "complete": true,
+  "date": "2026-09-11",
+  "generated_at": "2026-09-11 15:01:27",
+  "complete": false,
   "taiex": {
-    "close": 46940.49,
-    "change_pts": -242.87,
-    "change_pct": -0.51,
-    "trading_amount_yi": 7459.5059559,
-    "transaction_count": 4045258
+    "close": 46184.85,
+    "change_pts": -755.64,
+    "change_pct": -1.61,
+    "trading_amount_yi": 7606.89624524,
+    "transaction_count": 4824549
   },
   "breadth": {
     "twse": {
-      "up": 322,
-      "down": 945,
-      "flat": 100,
+      "up": 283,
+      "down": 988,
+      "flat": 96,
       "limit_up": 8,
-      "limit_down": 0,
+      "limit_down": 7,
       "total": 1367,
-      "up_pct": 23.6,
-      "down_pct": 69.1,
-      "flat_pct": 7.3,
+      "up_pct": 20.7,
+      "down_pct": 72.3,
+      "flat_pct": 7.0,
       "limit_up_pct": 0.6,
-      "limit_down_pct": 0.0
+      "limit_down_pct": 0.5
     },
     "tpex": {
-      "up": 241,
-      "down": 529,
-      "flat": 90,
-      "limit_up": 13,
+      "up": 0,
+      "down": 0,
+      "flat": 0,
+      "limit_up": 0,
       "limit_down": 0,
-      "total": 891,
-      "up_pct": 27.0,
-      "down_pct": 59.4,
-      "flat_pct": 10.1,
-      "limit_up_pct": 1.5,
+      "total": 0,
+      "up_pct": 0.0,
+      "down_pct": 0.0,
+      "flat_pct": 0.0,
+      "limit_up_pct": 0.0,
       "limit_down_pct": 0.0
     }
   },
   "top_gainers": [
     {
-      "code": "2305",
-      "name": "全友",
-      "close": 38.5,
+      "code": "6706",
+      "name": "惠特",
+      "close": 137.5,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "2338",
-      "name": "光罩",
-      "close": 45.65,
-      "change_pct": 10.0,
+      "code": "2468",
+      "name": "華經",
+      "close": 35.8,
+      "change_pct": 9.984639016897082,
       "market": "上市"
     },
     {
-      "code": "3016",
-      "name": "嘉晶",
-      "close": 110.0,
-      "change_pct": 10.0,
+      "code": "3296",
+      "name": "勝德",
+      "close": 26.0,
+      "change_pct": 9.936575052854124,
       "market": "上市"
     },
     {
-      "code": "3346",
-      "name": "麗清",
-      "close": 20.35,
-      "change_pct": 10.0,
+      "code": "3229",
+      "name": "晟鈦",
+      "close": 67.5,
+      "change_pct": 9.93485342019544,
       "market": "上市"
     },
     {
-      "code": "6739",
-      "name": "竹陞科技",
-      "close": 1320.0,
-      "change_pct": 10.0,
-      "market": "上櫃"
+      "code": "3311",
+      "name": "閎暉",
+      "close": 35.0,
+      "change_pct": 9.89010989010989,
+      "market": "上市"
     }
   ],
   "top_losers": [
     {
-      "code": "6547",
-      "name": "高端疫苗",
-      "close": 61.4,
-      "change_pct": -9.838472834067549,
-      "market": "上櫃"
+      "code": "7711",
+      "name": "永擎",
+      "close": 531.0,
+      "change_pct": -10.0,
+      "market": "上市"
     },
     {
-      "code": "4939",
-      "name": "亞電",
-      "close": 82.4,
-      "change_pct": -9.151047409040794,
-      "market": "上櫃"
+      "code": "3661",
+      "name": "世芯-KY",
+      "close": 3650.0,
+      "change_pct": -9.98766954377312,
+      "market": "上市"
     },
     {
-      "code": "6276",
-      "name": "安鈦克",
-      "close": 18.9,
-      "change_pct": -8.25242718446602,
-      "market": "上櫃"
+      "code": "6994",
+      "name": "富威電力",
+      "close": 29.35,
+      "change_pct": -9.969325153374232,
+      "market": "上市"
     },
     {
-      "code": "8096",
-      "name": "擎亞",
-      "close": 91.8,
-      "change_pct": -8.108108108108109,
-      "market": "上櫃"
+      "code": "9921",
+      "name": "巨大",
+      "close": 87.6,
+      "change_pct": -9.969167523124357,
+      "market": "上市"
     },
     {
-      "code": "3376",
-      "name": "新日興",
-      "close": 189.5,
-      "change_pct": -8.009708737864079,
+      "code": "9914",
+      "name": "美利達",
+      "close": 69.7,
+      "change_pct": -9.948320413436692,
       "market": "上市"
     }
   ]
