@@ -659,13 +659,25 @@ def check_exdiv_ref_coverage(ctx: Ctx):
     （2026-07-30 那批 bug 的源頭）。抽驗列出最多 3 檔沒 ref 的。"""
     rows, f = ctx.mi_quotes()
     ci, si = f["收盤價"], f["漲跌(+/-)"]
-    x_stocks = []
+    # 'X' 不只除權息：前一交易日沒有收盤價（零成交或只有零股）的冷門股，
+    # 隔天也是 X（沒有前收可比）。那種 X 本來就不該有 ref，得先剔掉，否則
+    # 沒有除權息事件的日子會被幾檔殭屍股湊成「一檔 ref 都沒有」的假 FAIL
+    # （2026-09-04 / 09-11 各紅過一次）。前收有沒有，看前一個快照就知道，
+    # 不用多打 API；沒快照可比就退回不剔除，寧可誤報也別靜音。
+    prev = price_cache.load_window(ctx.report_date - timedelta(days=1), 1)
+    prev_codes = set(prev[-1][1]) if prev else None
+    x_stocks, no_prev = [], []
     for r in rows:
         code = str(r[0]).strip()
         if _strip_tags(r[si]) == "X" and is_stock_code(code) and parse_num(r[ci]) > 0:
-            x_stocks.append((code, str(r[1]).strip()))
+            if prev_codes is not None and code not in prev_codes:
+                no_prev.append(code)
+            else:
+                x_stocks.append((code, str(r[1]).strip()))
     if not x_stocks:
-        return SKIP, f"{ctx.report_date} 沒有標記『無比價(X)』的 4 碼個股，無從抽驗"
+        return SKIP, (f"{ctx.report_date} 沒有標記『無比價(X)』的 4 碼個股，無從抽驗"
+                      + (f"（剔除 {len(no_prev)} 檔前一日無收盤價：{'、'.join(no_prev[:SAMPLE_LIMIT])}）"
+                         if no_prev else ""))
     refs = ctx.ex_refs
     covered = [c for c, _ in x_stocks if refs.get(c)]
     uncovered = [(c, n) for c, n in x_stocks if not refs.get(c)]
@@ -674,7 +686,8 @@ def check_exdiv_ref_coverage(ctx: Ctx):
     msg = (f"{ctx.report_date} 交易所標無比價的 4 碼個股 {len(x_stocks)} 檔，"
            f"exrights 有參考價 {len(covered)} 檔（{pct:.0f}%，WARN 門檻 "
            f"{EXDIV_COVERAGE_WARN_PCT}%）"
-           + (f"；缺 ref：{sample}" if uncovered else ""))
+           + (f"；缺 ref：{sample}" if uncovered else "")
+           + (f"；另剔除 {len(no_prev)} 檔前一日無收盤價" if no_prev else ""))
     if not covered and len(x_stocks) >= EXDIV_COVERAGE_MIN_ROWS_FOR_FAIL:
         return FAIL, msg + " — 一檔都沒有，exrights 抓取整組失敗"
     if pct < EXDIV_COVERAGE_WARN_PCT:
