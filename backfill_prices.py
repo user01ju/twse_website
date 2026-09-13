@@ -16,7 +16,8 @@ Usage:
   python backfill_prices.py --sleep 5     # seconds between requests (default 3)
 
 Each day is saved immediately, so an interrupted run resumes where it
-left off (existing files are skipped without --force).
+left off (existing files are skipped without --force). 2026-09-13 起快取多了
+v（成交張數）/ a（成交金額，億）；沒有這兩個鍵的舊日子會自動重抓。
 """
 import argparse
 import json
@@ -28,6 +29,11 @@ from datetime import date, timedelta
 from pathlib import Path
 
 import requests
+import urllib3
+
+# tpex.org.tw 憑證鏈在本機 Python/OpenSSL 3.x 驗不過（llm_wiki: tpex-ssl-missing-ski），
+# 公開盤後資料、無憑證，只對這個 host 關驗證。
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 sys.path.insert(0, str(Path(__file__).parent))
 
@@ -50,7 +56,7 @@ TPEX_DAILY    = "https://www.tpex.org.tw/www/zh-tw/afterTrading/dailyQuotes"
 def _fetch_tpex_day(d: date) -> dict[str, dict] | None:
     """
     Fetch all-market 上櫃 OHLC for one trading day via TPEX dailyQuotes.
-    Fields: 0=代號, 2=收盤, 5=最高, 6=最低. Returns {code:{c,h,l}} or None on failure.
+    Fields: 代號/收盤/最高/最低/成交股數/成交金額(元). Returns {code:{c,h,l,v,a}} or None on failure.
     """
     try:
         resp = requests.get(
@@ -58,6 +64,7 @@ def _fetch_tpex_day(d: date) -> dict[str, dict] | None:
             params={"date": d.strftime("%Y/%m/%d"), "type": "EW", "response": "json"},
             headers=HEADERS,
             timeout=30,
+            verify=False,
         )
         if resp.status_code != 200:
             logger.warning(f"{d.isoformat()} [TPEX]: HTTP {resp.status_code}")
@@ -75,6 +82,8 @@ def _fetch_tpex_day(d: date) -> dict[str, dict] | None:
         i_close = fields.index("收盤")
         i_high  = fields.index("最高")
         i_low   = fields.index("最低")
+        i_vol   = fields.index("成交股數")
+        i_amt   = fields.index("成交金額(元)")
 
         prices = {}
         for row in table.get("data", []):
@@ -86,7 +95,9 @@ def _fetch_tpex_day(d: date) -> dict[str, dict] | None:
                 h  = parse_num(row[i_high])
                 lo = parse_num(row[i_low])
                 if c > 0:
-                    prices[code] = {"c": c, "h": h or c, "l": lo or c}
+                    prices[code] = {"c": c, "h": h or c, "l": lo or c,
+                                    "v": int(parse_num(row[i_vol]) // 1000),
+                                    "a": round(parse_num(row[i_amt]) / 1e8, 3)}
             except Exception:
                 continue
         return prices
@@ -98,7 +109,7 @@ def _fetch_tpex_day(d: date) -> dict[str, dict] | None:
 def _fetch_day(d: date) -> dict[str, dict] | None:
     """
     Fetch all-market OHLC for one trading day via MI_INDEX.
-    Returns {code: {"c":, "h":, "l":}} or None on failure (incl. rate-limit).
+    Returns {code: {"c":, "h":, "l":, "v": 張, "a": 億}} or None on failure (incl. rate-limit).
     """
     try:
         resp = requests.get(
@@ -128,6 +139,8 @@ def _fetch_day(d: date) -> dict[str, dict] | None:
         i_high  = fields.index("最高價")
         i_low   = fields.index("最低價")
         i_close = fields.index("收盤價")
+        i_vol   = fields.index("成交股數")
+        i_amt   = fields.index("成交金額")
 
         prices = {}
         for row in table.get("data", []):
@@ -139,7 +152,9 @@ def _fetch_day(d: date) -> dict[str, dict] | None:
                 h  = parse_num(row[i_high])
                 lo = parse_num(row[i_low])
                 if c > 0:
-                    prices[code] = {"c": c, "h": h or c, "l": lo or c}
+                    prices[code] = {"c": c, "h": h or c, "l": lo or c,
+                                    "v": int(parse_num(row[i_vol]) // 1000),
+                                    "a": round(parse_num(row[i_amt]) / 1e8, 3)}
             except Exception:
                 continue
         return prices
@@ -181,7 +196,12 @@ def main():
     def needs_fetch(day: date) -> bool:
         if args.force:
             return True
-        return len(load(day)) < threshold
+        cached = load(day)
+        if len(cached) < threshold:
+            return True
+        # 舊格式沒有成交量 → 重抓補 v/a。要看「有沒有任何一筆缺」：分市場跑（--source twse
+        # 再 --source tpex）時同一天會一半有一半沒有，只抽第一筆會把 TPEX 那半跳過。
+        return any("v" not in r for r in cached.values())
 
     todo = [d for d in trading_days if needs_fetch(d)]
     logger.info(f"Range: {start.isoformat()} → {today.isoformat()}, "

@@ -22,7 +22,10 @@ def _path(d: date) -> Path:
 
 
 def save(d: date, twse_stocks: list[dict], tpex_stocks: list[dict]) -> None:
-    """Extract close/high/low from raw API rows and write to cache."""
+    """Extract close/high/low + 成交量（張）/ 成交金額（億）from raw API rows and write to cache.
+
+    v/a 是 2026-09-13 加的（量比、法人佔成交比要用）；舊快取沒有這兩個鍵，讀的人要 .get()。
+    """
     _PRICES_DIR.mkdir(parents=True, exist_ok=True)
     prices = {}
 
@@ -35,7 +38,9 @@ def save(d: date, twse_stocks: list[dict], tpex_stocks: list[dict]) -> None:
             h = parse_num(s.get("HighestPrice", 0))
             lo = parse_num(s.get("LowestPrice", 0))
             if c > 0:
-                prices[code] = {"c": c, "h": h, "l": lo}
+                prices[code] = {"c": c, "h": h, "l": lo,
+                                "v": int(parse_num(s.get("TradeVolume", 0)) // 1000),
+                                "a": round(parse_num(s.get("TradeValue", 0)) / 1e8, 3)}
         except Exception:
             continue
 
@@ -49,7 +54,9 @@ def save(d: date, twse_stocks: list[dict], tpex_stocks: list[dict]) -> None:
             h = parse_num(s.get("High", 0))
             lo = parse_num(s.get("Low", 0))
             if c > 0:
-                prices[code] = {"c": c, "h": h, "l": lo}
+                prices[code] = {"c": c, "h": h, "l": lo,
+                                "v": int(parse_num(s.get("TradingShares", 0)) // 1000),
+                                "a": round(parse_num(s.get("TransactionAmount", 0)) / 1e8, 3)}
         except Exception:
             continue
 
