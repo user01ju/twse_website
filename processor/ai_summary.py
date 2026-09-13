@@ -5,30 +5,61 @@ import os
 logger = logging.getLogger(__name__)
 
 
-def _fmt_stocks(stocks: list, n: int, show_yi: bool = True) -> str:
-    parts = []
-    for s in stocks[:n]:
-        yi_str = f"/{s['net_yi']:.1f}億" if show_yi else ""
-        parts.append(f"{s['name']}({s['code']}) {s['net_zhang']:+,}張{yi_str}")
-    return "、".join(parts)
+_GROUPS = (("主流延續",), ("拉回續買",), ("追漲回補", "低接轉買"), ("買不漲",),
+           ("漲多轉賣", "停損轉賣"), ("拉高調節", "反彈續賣"), ("棄守",))
 
 
-def _flow_sector_line(g: dict, short: int, long: int) -> str:
-    bits = [f"{g['sector']} {short}日{g['net5']:+.0f}億"]
-    if g.get("net5_pct") is not None:
-        bits.append(f"佔類股市值{g['net5_pct']:+.2f}%")
-    bits.append(f"{long}日{g['net20']:+.0f}億")
-    if g.get("streak"):
-        bits.append(f"連{'買' if g['streak'] > 0 else '賣'}{abs(g['streak'])}天")
-    if g.get("accel_tag"):
-        bits.append(g["accel_tag"])
-    bits.append(f"成分股買{g.get('up', 0)}/賣{g.get('down', 0)}家")
-    if g.get("lead") is not None:
-        # 一定要寫出是哪一檔：只給「最大一檔佔X%」的話模型會自己猜是誰，
-        # 實測把 PCB-材料設備 的龍頭講成欣興(3037)，但欣興屬 ABF。
-        who = f"（{g['lead_name']}{g['lead_code']}）" if g.get("lead_name") else ""
-        bits.append(f"最大一檔{who}佔{g['lead']}%")
-    return "、".join(bits)
+def _fd_stock(r: dict) -> str:
+    """一檔個股的四維一行：名稱(代號) 5日/20日淨額、漲跌、位階、成本、連續、外資投信。"""
+    bits = [f"{r['name']}({r['code']}) {r['sector']} 5日{r['net5']:+.0f}億/20日{r['net20']:+.0f}億"]
+    if r.get("net5_pct") is not None:
+        bits.append(f"5日佔市值{r['net5_pct']:+.2f}%")
+    if r.get("ret5") is not None and r.get("ret20") is not None:
+        bits.append(f"漲跌5日{r['ret5']:+.1f}%/20日{r['ret20']:+.1f}%")
+    if r.get("pos52") is not None:
+        bits.append(f"距52週高{r['pos52']:+.0f}%")
+    if r.get("vs_cost") is not None:
+        bits.append(f"現價vs法人成本{r['vs_cost']:+.0f}%")
+    if r.get("streak"):
+        bits.append(f"連{'買' if r['streak'] > 0 else '賣'}{abs(r['streak'])}天")
+    if r.get("accel_tag"):
+        bits.append(r["accel_tag"])
+    bits.append(f"外資{r.get('f5', 0):+.0f}/{r.get('f20', 0):+.0f} 投信{r.get('t5', 0):+.0f}/{r.get('t20', 0):+.0f}")
+    return " ".join(bits)
+
+
+def _four_dim_lines(fd: dict, short: int, long: int) -> list[str]:
+    """個股層四維分析餵 prompt：型態分布 + 七組大票 + 連續進出 + 外資投信分歧。"""
+    big = fd.get("big") or []
+    if not big:
+        return []
+    lines = [
+        f"（以下是近 {long} 個交易日的個股層「四維型態」分析：型態 = ({short}日流向, {long}日流向) × "
+        f"({short}日漲跌, {long}日漲跌)。續進/續出 = 兩窗口同號，轉買/轉賣 = 異號；主軸看 {long} 日漲跌。"
+        f"樣本 {fd['total']} 檔，法人淨額合計 {short}日{fd['total_net5']:+.0f}億/{long}日{fd['total_net20']:+.0f}億，"
+        f"個股漲跌中位數 {short}日{fd['median_ret5']:+.2f}%/{long}日{fd['median_ret20']:+.2f}%。"
+        f"「大票」= |{short}日| ≥ 5 億或 |{long}日| ≥ 15 億，共 {len(big)} 檔）"
+    ]
+    lines.append("【型態分布（檔數/5日合計億/20日合計億）】" + "；".join(
+        f"{c['p']} {c['n']}檔 {c['f5']:+d}/{c['f20']:+d}" for c in fd["summary"]))
+    for pats in _GROUPS:
+        sel = sorted((r for r in big if r["pattern"] in pats), key=lambda r: -abs(r["net5"]))[:8]
+        if sel:
+            lines.append(f"【{'/'.join(pats)} 大票 Top{len(sel)}】" + "；".join(_fd_stock(r) for r in sel))
+    streaks = sorted((r for r in big if abs(r.get("streak", 0)) >= 8), key=lambda r: -abs(r["streak"]))[:8]
+    if streaks:
+        lines.append("【連續進出 ≥8 天】" + "；".join(
+            f"{r['name']}({r['code']}) 連{'買' if r['streak'] > 0 else '賣'}{abs(r['streak'])}天 {r['pattern']}"
+            for r in streaks))
+    # 對作要兩邊都有份量：小邊 ≥ 5 億且 ≥ 大邊的 20%，不然台積電「外資 +223 / 投信 -5」也會被算進來
+    split = sorted((r for r in big if r.get("f5", 0) * r.get("t5", 0) < 0
+                    and min(abs(r["f5"]), abs(r["t5"])) >= max(5, 0.2 * max(abs(r["f5"]), abs(r["t5"])))),
+                   key=lambda r: -min(abs(r["f5"]), abs(r["t5"])))[:8]
+    if split:
+        lines.append("【外資投信 5 日對作】" + "；".join(
+            f"{r['name']}({r['code']}) 外資{r['f5']:+.0f}億 投信{r['t5']:+.0f}億 {r['pattern']}"
+            for r in split))
+    return lines
 
 
 def _build_prompt(sections: dict, date_str: str) -> str:
@@ -86,96 +117,44 @@ def _build_prompt(sections: dict, date_str: str) -> str:
                     + (f"（{' / '.join(details)}）" if details else "")
                 )
 
-    # Foreign institutional — expand to top 10
-    if sections.get("foreign", {}).get("ok"):
-        fg = sections["foreign"]["data"]
-        buy  = fg.get("buy_super",  [])[:10]
-        sell = fg.get("sell_super", [])[:10]
-        if buy:
-            lines.append("【外資買超前10】" + _fmt_stocks(buy, 10))
-        if sell:
-            lines.append("【外資賣超前10】" + _fmt_stocks(sell, 10))
-
-    # Trust — expand to top 10
-    if sections.get("trust", {}).get("ok"):
-        tr = sections["trust"]["data"]
-        buy  = tr.get("buy_super",  [])[:10]
-        sell = tr.get("sell_super", [])[:10]
-        if buy:
-            lines.append("【投信買超前10】" + _fmt_stocks(buy, 10, show_yi=False))
-        if sell:
-            lines.append("【投信賣超前10】" + _fmt_stocks(sell, 10, show_yi=False))
-
-    # Top movers — expand to top 10
-    if sections.get("movers", {}).get("ok"):
-        mv = sections["movers"]["data"]
-        gainers = mv.get("gainers", [])[:10]
-        losers  = mv.get("losers",  [])[:10]
-        if gainers:
-            lines.append("【漲幅前10】" + "、".join(
-                f"{s['name']}({s['code']}) {s['change_pct']:+.2f}%"
-                for s in gainers
-            ))
-        if losers:
-            lines.append("【跌幅前10】" + "、".join(
-                f"{s['name']}({s['code']}) {s['change_pct']:+.2f}%"
-                for s in losers
-            ))
-
-    # 資金流向（5/20 日窗口）— 唯一帶時間維度的資料，上面每一段都只有當日。
+    # 個股層四維分析（5/20 日窗口）— 帶時間維度的資料，上面每一段都只有當日。
     # degraded（快取缺天）時整段不進 prompt，規則跟 market_trend 一致：窗口沒湊滿時
     # 5/20 日累計會安靜偏小，錯的數字會污染摘要敘事。
     sf = sections.get("sector_flow", {})
+    fd_lines = []
     if sf.get("ok") and not sf["data"].get("degraded"):
         d = sf["data"]
-        short, long = d.get("short", 5), d.get("long", 20)
-        rows = (d.get("tabs") or {}).get("c") or []
-        if rows:
-            lines.append(f"（以下是近 {d.get('days')} 個交易日的三大法人累計流向，"
-                         f"與上方單日數據互補）")
-            lines.append("【資金流入族群 Top6】" +
-                         "；".join(_flow_sector_line(g, short, long) for g in rows[:6]))
-            out_rows = [g for g in rows[-5:] if g["net5"] < 0]
-            if out_rows:
-                lines.append("【資金流出族群】" +
-                             "；".join(_flow_sector_line(g, short, long) for g in out_rows))
+        fd_lines = _four_dim_lines(d.get("four_dim") or {}, d.get("short", 5), d.get("long", 20))
+    lines.extend(fd_lines)
 
-        srows = (d.get("stock_tabs") or {}).get("c") or []
-        streaks = sorted((r for r in srows if abs(r.get("streak", 0)) >= 5),
-                         key=lambda r: -abs(r["streak"]))[:6]
-        if streaks:
-            lines.append("【連續進出個股】" + "、".join(
-                f"{r['name']}({r['code']}) 連{'買' if r['streak'] > 0 else '賣'}"
-                f"{abs(r['streak'])}天/{short}日{r['net5']:+.0f}億"
-                + (f"/外資投信{r['cons_tag']}" if r.get("cons_tag") else "")
-                for r in streaks))
-        flips = [r for r in srows if r.get("accel_tag") == "翻轉"][:4]
-        if flips:
-            lines.append("【資金翻轉個股】" + "、".join(
-                f"{r['name']}({r['code']}) {long}日{r['net20']:+.0f}億"
-                f"但{short}日{r['net5']:+.0f}億"
-                for r in flips))
-
-    lines.append(
-        "\n請根據以上數據，用繁體中文撰寫「今日盤勢總覽」。\n"
-        "必須嚴格使用以下格式輸出，共五個區塊，每個區塊之間空一行：\n\n"
-        "【大盤概況】\n"
-        "一段話說明指數漲跌、成交量、市場廣度（漲跌家數、漲跌停家數）。\n\n"
-        "【熱門族群】\n"
-        "• 族群名稱（如半導體、金融、航運、AI伺服器等）：說明今日動態，點名 2-3 支代表個股（附代號）\n"
-        "• 族群名稱：...\n"
-        "（列出 3-4 個今日最活躍或有明顯輪動跡象的族群）\n\n"
-        "【法人動向】\n"
-        "• 外資：買超哪些個股/族群（附代號與金額），賣超哪些（附代號與金額）\n"
-        "• 投信：買超哪些個股（附代號），賣超哪些\n\n"
-        "【資金趨勢】\n"
-        "• 說明多日累計流向與單日的差異：哪些族群連續買超、哪些在加速或翻轉\n"
-        "• 用「成分股買X/賣Y家」與「最大一檔佔Z%」判斷那是全族群買盤還是單一檔撐起來的，明講是哪一種\n"
-        "（2-3 項；只根據上面提供的多日數據，沒有的不要編）\n\n"
-        "【弱勢警示】\n"
-        "• 列出今日明顯下跌的族群或個股（附代號），說明原因或現象\n\n"
-        "注意：每個 • 項目約 30-50 字，語氣客觀專業，不提供投資建議，不加任何額外說明文字。"
-    )
+    if fd_lines:
+        fmt = (
+            "必須嚴格使用以下格式輸出，共五個區塊，每個區塊之間空一行：\n\n"
+            "【大盤概況】\n"
+            "一段話說明指數漲跌、成交量、市場廣度（漲跌家數、漲跌停家數）、法人合計。\n\n"
+            "【主流與集中度】\n"
+            "• 主流延續/拉回續買裡「錢＋價＋位階」三合一的是誰（附代號、5/20 日金額、距 52 週高），外資投信是否同買\n"
+            "• 多頭型態的檔數與金額佔比，多頭是分散還是集中在少數幾檔\n\n"
+            "【錢價背離】\n"
+            "• 買不漲：法人續進但 20 日跌的，點名最大的 2-3 檔（附代號），現價 vs 法人成本\n"
+            "• 漲多轉賣/拉高調節：錢在出但價還撐著的，點名 2-3 檔，說明是獲利了結還是出貨結構\n\n"
+            "【賣壓主體】\n"
+            "• 棄守組：哪些族群/個股（附代號與金額）、5 日是否仍在加速、法人成本相對現價 → 是認賠還是獲利了結\n"
+            "• 連賣最久的個股\n\n"
+            "【翻轉與分歧】\n"
+            "• 低接轉買/追漲回補：20 日賣、5 日翻買的是誰（附代號），是族群級還是個股級\n"
+            "• 外資投信對作最大的 2-3 檔，誰接誰倒\n\n"
+            "注意：每個 • 項目約 40-70 字，只用上面提供的數據與型態詞，沒有的不要編；"
+            "語氣客觀專業，不提供投資建議，不加任何額外說明文字。"
+        )
+    else:
+        fmt = (
+            "必須嚴格使用以下格式輸出，只有一個區塊：\n\n"
+            "【大盤概況】\n"
+            "一段話說明指數漲跌、成交量、市場廣度（漲跌家數、漲跌停家數）、法人合計。\n\n"
+            "注意：語氣客觀專業，不提供投資建議，不加任何額外說明文字。"
+        )
+    lines.append("\n請根據以上數據，用繁體中文撰寫「今日盤勢總覽」。\n" + fmt)
 
     return "\n".join(lines)
 

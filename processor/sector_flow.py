@@ -48,6 +48,8 @@ _PATTERNS = ("主流延續", "拉回續買", "追漲回補", "低接轉買", "�
              "漲多轉賣", "停損轉賣", "拉高調節", "反彈續賣", "棄守")
 _PATTERN_ORDER = {p: len(_PATTERNS) - i for i, p in enumerate(_PATTERNS)}
 _PATTERN_FLAT = 0.1     # 5 日淨額小於此（億）視為沒有轉向證據，跟著 20 日方向走
+# 四維「大票」門檻（億）：個股層彙總與 AI 摘要只看這些，其餘的型態只進計數
+_BIG_NET5, _BIG_NET20 = 5.0, 15.0
 
 _TABS = (("c", "三大法人"), ("f", "外資"), ("t", "投信"), ("d", "自營商"))
 # 個股層快取一列是 [名稱, c, f, t, d]；載入時名稱另外收，序列只留四個數字，
@@ -226,6 +228,43 @@ def _pattern(net5: float, net20: float, ret5, ret20) -> str:
     return "漲多轉賣" if up20 else "停損轉賣"
 
 
+def _four_dim(full_rows: dict[str, list[dict]]) -> dict:
+    """個股層四維彙總（未截斷的全樣本）：型態分布 + 大票列（帶外資/投信拆分）。
+
+    給 four_dim_report.py（每日報告）與 ai_summary（盤勢總覽）共用；第 8 區塊的
+    stock_tabs 只留買賣超各前 50，型態分布要用全樣本才算得對。
+    """
+    rows = full_rows.get("c") or []
+    if not rows:
+        return {}
+    fmap = {r["code"]: r for r in full_rows.get("f", ())}
+    tmap = {r["code"]: r for r in full_rows.get("t", ())}
+    counts = {p: {"p": p, "n": 0, "f5": 0.0, "f20": 0.0} for p in _PATTERNS}
+    big = []
+    for r in rows:
+        c = counts.get(r["pattern"])
+        if c:
+            c["n"] += 1; c["f5"] += r["net5"]; c["f20"] += r["net20"]
+        if abs(r["net5"]) >= _BIG_NET5 or abs(r["net20"]) >= _BIG_NET20:
+            f, t = fmap.get(r["code"], {}), tmap.get(r["code"], {})
+            big.append(dict(r, f5=f.get("net5", 0.0), f20=f.get("net20", 0.0),
+                            t5=t.get("net5", 0.0), t20=t.get("net20", 0.0),
+                            net20_pct=round(r["net20"] / r["mcap"] * 100, 2) if r.get("mcap") else None))
+    ret5 = sorted(r["ret5"] for r in rows if r["ret5"] is not None)
+    ret20 = sorted(r["ret20"] for r in rows if r["ret20"] is not None)
+    med = lambda a: round(a[len(a) // 2], 2) if a else None
+    return {
+        "total":   len(rows),
+        "summary": [{"p": p, "n": c["n"], "f5": round(c["f5"]), "f20": round(c["f20"])}
+                    for p, c in counts.items()],
+        "big":     big,
+        "median_ret5": med(ret5),
+        "median_ret20": med(ret20),
+        "total_net5":  round(sum(r["net5"] for r in rows), 1),
+        "total_net20": round(sum(r["net20"] for r in rows), 1),
+    }
+
+
 def build(today: date) -> dict:
     window = inst_flow_cache.load_window(today, _DAYS)
     coverage = price_cache.window_coverage(window, today)
@@ -233,7 +272,7 @@ def build(today: date) -> dict:
 
     if days < 2:
         logger.warning("sector_flow: inst_flow 快取不足（%d 天）— 先跑 backfill_inst.py", days)
-        return {"days": days, "ret_days": 0, "ret_days_long": 0, "coverage": coverage, "degraded": True,
+        return {"days": days, "ret_days": 0, "ret_days_long": 0, "coverage": coverage, "degraded": True, "four_dim": {},
                 "tabs": {}, "stock_tabs": {}, "start": None, "end": None}
 
     degraded = coverage["pct"] < _MIN_COVERAGE or days < _MIN_DAYS
@@ -365,6 +404,7 @@ def build(today: date) -> dict:
     # 分組本身就是雜訊 —— 這裡讓個股自己排隊。
     flow_dates = [d for d, _ in window]
     stock_tabs = {}
+    full_rows: dict[str, list[dict]] = {}
     for key, _label in _TABS:
         ki = _SER_IDX[key]
         srows = []
@@ -401,10 +441,12 @@ def build(today: date) -> dict:
                 "pattern": _pattern(s5, sum(ss), code_rets.get(code), code_rets20.get(code)),
             })
         srows.sort(key=lambda r: r["net5"], reverse=True)
+        full_rows[key] = srows
         stock_tabs[key] = (srows if len(srows) <= _STOCK_TABLE_TOP * 2
                            else srows[:_STOCK_TABLE_TOP] + srows[-_STOCK_TABLE_TOP:])
 
     return {
+        "four_dim": _four_dim(full_rows),
         "days":     days,
         "ret_days": ret_days.get(_SHORT, 0),
         "ret_days_long": ret_days.get(_DAYS, 0),
