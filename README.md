@@ -13,7 +13,7 @@ CI（GitHub Actions）跑完後以 `peaceiris/actions-gh-pages` 部署到 GitHub
 - **法人資金流向（子類股）**：今日 / 5 日 / 20 日三尺度，四法人別頁籤，含 z 分數、翻向首日、連續天數、加速度、擴散度、型態標籤，可展開成分股
 - **法人資金流向（個股）**：同一窗口不分子類股，今日與 5 日買賣超兩端聯集，含位階、vs 法人成本、外資投信一致性
 - **漲幅 / 跌幅前 100 個股**：上市 + 上櫃合併，DataTables 可排序
-- **漲跌幅前 100 的子類股分布**（CMoney 分類）
+- **族群廣度**（CMoney 分類）：每個子類股全部成分股的今日漲/跌/平家數、漲跌中位、站上 20MA 比例、52 週新高/新低家數、近 5 / 20 日中位，領漲領跌各 2 檔
 - **首頁即時快照** `output/today.json`：每次執行都寫，法人資料未就緒時先出「更新中」版本
 
 ## 架構
@@ -38,15 +38,12 @@ twse_website/
 │   ├── index_stats.py      # 加權指數
 │   ├── market_breadth.py   # 漲跌統計（TWT84U 漲跌停）+ 漲跌幅分布
 │   ├── market_trend.py     # 20MA breadth、52 週新高低（還原權息序列）
-│   ├── sector_flow.py      # 5/20 日資金流向（子類股層 + 個股層）、連續天數、加速度
+│   ├── sector_flow.py      # 今日/5/20 日資金流向（子類股層 + 個股層）、z 分數、連續天數、加速度、型態
+│   ├── sector_breadth.py   # 族群廣度（全成分股漲跌家數 / 20MA / 52 週新高低）
 │   ├── movers.py           # 漲跌幅前 100
-│   ├── mover_sector.py     # 漲跌幅前 100 的子類股分布
 │   ├── institutional.py    # 三大法人彙總
-│   ├── foreign_trades.py   # 外資買賣超
-│   ├── trust_trades.py     # 投信買賣超
-│   ├── combined_inst.py    # 三大法人合計買賣超
-│   ├── dealer_trades.py    # 自營商買賣超
-│   ├── sector_inst.py      # 子類股法人分析（CMoney 分類）
+│   ├── combined_inst.py    # T86 / TPEX 法人解析器（inst_flow_cache 用；foreign/trust/dealer 三個舊模組已不進報告）
+│   ├── sector_inst.py      # CMoney 子類股對照表載入
 │   └── ai_summary.py       # AI 摘要
 ├── generator/
 │   ├── report_builder.py   # 並行抓資料 + 組裝 sections + 渲染

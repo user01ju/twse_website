@@ -115,15 +115,18 @@
   </div>
 </div>
 
-{# 漲跌幅前100 子類股分析 #}
+{# 族群廣度：每個子類股全部成分股的漲跌家數 / 中位數 / 20MA / 52 週新高低（取代舊的「漲跌幅前 100 子類股分析」） #}
 <div class="section accent-amber collapsed">
   <div class="section-header">
     <span class="section-accent"></span>
-    <span class="section-title">8. 漲幅 / 跌幅前 100 子類股分析</span>
+    <span class="section-title">8. 族群廣度（漲跌家數 / 20MA / 52 週新高低）</span>
+    {% if sections.sector_breadth and sections.sector_breadth.ok and sections.sector_breadth.data.rows %}
+    <span class="section-subtitle">{{ sections.sector_breadth.data.rows | length }} 個子類股 · 站上 20MA {{ sections.sector_breadth.data.market.ma20_pct }}%</span>
+    {% endif %}
     <span class="section-toggle-icon">▼</span>
   </div>
   <div class="section-body">
-    {% include "partials/mover_sector.html" %}
+    {% include "partials/sector_breadth.html" %}
   </div>
 </div>
 

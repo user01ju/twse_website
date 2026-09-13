@@ -1,0 +1,138 @@
+{# 族群廣度 — 每個子類股的全部成分股：今日漲跌家數 / 漲跌中位 / 站上 20MA / 52 週新高低 / 近 5、20 日中位，可排序 #}
+{% set s = sections.sector_breadth %}
+{% if not s.ok %}
+<div class="error-box">族群廣度資料錯誤：{{ s.error }}</div>
+{% else %}
+{% set d = s.data %}
+{% if d.degraded %}
+<div class="error-box">
+  ⚠️ 價格快取不完整：窗口 {{ d.coverage.got }} / {{ d.coverage.expected }} 個交易日（全窗 {{ d.coverage.pct }}% / 近 20 日 {{ d.coverage.recent_pct }}%）。
+  20MA 與 52 週高低會失真，本區塊數字勿採用。
+</div>
+{% endif %}
+{% if not d.rows %}
+<div class="error-box">暫無資料</div>
+{% else %}
+<div class="si-meta">
+  {{ d.rows | length }} 個子類股（成分股 ≥ 3 檔才列），共 {{ d.market.n }} 檔
+  全市場：上漲 <strong class="pos">{{ d.market.up }}</strong> / 下跌 <strong class="neg">{{ d.market.down }}</strong>、
+  漲跌中位 <strong class="{{ 'pos' if (d.market.med1 or 0) >= 0 else 'neg' }}">{{ "{:+.2f}".format(d.market.med1 or 0) }}%</strong>、
+  站上 20MA <strong>{{ d.market.ma20_pct }}%</strong>
+  <div class="sf-note">看的是<strong>全部成分股</strong>，不是進了漲跌幅前 100 的那幾檔（那樣一個族群 30 檔只有 2 檔進榜就平均那 2 檔）。
+    廣度 = (漲家數 − 跌家數) ÷ 家數；中位數 = 成分股漲跌幅中位（還原權息）；20MA、52 週高低都在還原權息序列上判斷。
+    領漲／領跌各列 2 檔。</div>
+</div>
+
+<div class="sb-wrap">
+<table class="si-table sb-table">
+  <thead>
+    <tr>
+      <th class="si-th-rank">#</th>
+      <th class="si-th-sector">子類股</th>
+      <th class="sb-th-n si-sort" data-col="2">家數<span class="si-sort-ind"></span></th>
+      <th class="sb-th-bar si-sort" data-col="3" title="漲 / 跌 / 平 家數；排序用 (漲−跌)÷家數">漲/跌/平<span class="si-sort-ind"></span></th>
+      <th class="sb-th-pct si-sort desc" data-col="4">今日中位<span class="si-sort-ind"></span></th>
+      <th class="sb-th-pct si-sort" data-col="5" title="成分股站上 20 日均線的比例">20MA↑<span class="si-sort-ind"></span></th>
+      <th class="sb-th-hl si-sort" data-col="6" title="創 52 週新高 / 新低家數（滿半年資料才計）">52週高/低<span class="si-sort-ind"></span></th>
+      <th class="sb-th-pct si-sort" data-col="7">近{{ d.ret_days[5] }}日中位<span class="si-sort-ind"></span></th>
+      <th class="sb-th-pct si-sort" data-col="8">近{{ d.ret_days[20] }}日中位<span class="si-sort-ind"></span></th>
+      <th class="sb-th-lead">領漲</th>
+      <th class="sb-th-lead">領跌</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in d.rows %}
+    {% set upw = r.up / r.n * 100 %}{% set dnw = r.down / r.n * 100 %}
+    <tr class="si-row {% if loop.index % 2 == 0 %}si-alt{% endif %}">
+      <td class="si-rank">{{ loop.index }}</td>
+      <td class="si-sector">
+        <span class="si-sector-name">{{ r.sector }}</span>
+        {% if r.parent %}<span class="si-parent">{{ r.parent }}</span>{% endif %}
+      </td>
+      <td class="si-yi sb-n" data-order="{{ r.n }}">{{ r.n }}</td>
+      <td class="sb-bar-cell" data-order="{{ r.breadth }}" title="漲 {{ r.up }} / 跌 {{ r.down }} / 平 {{ r.flat }}">
+        <div class="sb-bar"><i class="sb-up" style="width:{{ '%.0f' % upw }}%"></i><i class="sb-dn" style="width:{{ '%.0f' % dnw }}%"></i></div>
+        <span class="sb-bar-txt"><span class="pos">{{ r.up }}</span>/<span class="neg">{{ r.down }}</span>/<span class="sb-flat">{{ r.flat }}</span></span>
+      </td>
+      <td class="si-yi {{ 'pos' if r.med1 > 0 else ('neg' if r.med1 < 0 else '') }}" data-order="{{ r.med1 }}">{{ "{:+.2f}".format(r.med1) }}%</td>
+      <td class="si-yi sb-ma" data-order="{{ r.ma20_pct if r.ma20_pct is not none else -1 }}">
+        {%- if r.ma20_pct is not none %}<span class="sb-ma-bar"><i style="width:{{ r.ma20_pct }}%"></i></span>{{ r.ma20_pct }}%{% else %}–{% endif -%}
+      </td>
+      <td class="si-yi sb-hl" data-order="{{ r.nh - r.nl }}">
+        {%- if r.nh %}<span class="pos">{{ r.nh }}</span>{% else %}<span class="sb-flat">0</span>{% endif %} / {% if r.nl %}<span class="neg">{{ r.nl }}</span>{% else %}<span class="sb-flat">0</span>{% endif -%}
+      </td>
+      <td class="si-yi {{ 'pos' if (r.med5 or 0) > 0 else ('neg' if (r.med5 or 0) < 0 else '') }}" data-order="{{ r.med5 if r.med5 is not none else 0 }}">
+        {%- if r.med5 is not none %}{{ "{:+.2f}".format(r.med5) }}%{% else %}–{% endif -%}
+      </td>
+      <td class="si-yi {{ 'pos' if (r.med20 or 0) > 0 else ('neg' if (r.med20 or 0) < 0 else '') }}" data-order="{{ r.med20 if r.med20 is not none else 0 }}">
+        {%- if r.med20 is not none %}{{ "{:+.2f}".format(r.med20) }}%{% else %}–{% endif -%}
+      </td>
+      <td class="sb-lead">{% for m in r.leaders %}<span class="si-stock-tag"><span class="si-code">{{ m.code }}</span><span class="si-sname">{{ m.name }}</span><span class="si-zhang {{ 'pos' if m.pct > 0 else ('neg' if m.pct < 0 else 'flat') }}">{{ "{:+.2f}".format(m.pct) }}%</span></span>{% endfor %}</td>
+      <td class="sb-lead">{% for m in r.laggards %}<span class="si-stock-tag"><span class="si-code">{{ m.code }}</span><span class="si-sname">{{ m.name }}</span><span class="si-zhang {{ 'pos' if m.pct > 0 else ('neg' if m.pct < 0 else 'flat') }}">{{ "{:+.2f}".format(m.pct) }}%</span></span>{% endfor %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+<style>
+.sb-wrap { overflow-x: auto; }
+.sb-table th.si-sort { cursor: pointer; user-select: none; white-space: nowrap; }
+.sb-table th.si-sort:hover { color: var(--text); }
+.sb-table .si-sort-ind { display: inline-block; width: 0; opacity: 0.4; font-size: 10px; margin-left: 3px; }
+.sb-table th.si-sort.asc  .si-sort-ind::after { content: "▲"; }
+.sb-table th.si-sort.desc .si-sort-ind::after { content: "▼"; }
+.sb-table th.si-sort.asc  .si-sort-ind, .sb-table th.si-sort.desc .si-sort-ind { opacity: 1; }
+.sb-th-n { width: 52px; text-align: right; }
+.sb-th-bar { width: 128px; }
+.sb-th-pct { width: 78px; text-align: right; }
+.sb-th-hl { width: 84px; text-align: right; }
+.sb-th-lead { width: 172px; }
+.sb-n { color: var(--text-muted); }
+.sb-flat { color: var(--text-dim); }
+/* 漲跌家數條：紅漲綠跌（台股慣例），灰底 = 平盤 */
+.sb-bar { display: flex; height: 8px; border-radius: 2px; overflow: hidden; background: rgba(127,127,127,.18); margin-bottom: 3px; }
+.sb-bar i { display: block; height: 100%; }
+.sb-bar .sb-up { background: var(--pos); }
+.sb-bar .sb-dn { background: var(--neg); margin-left: auto; }
+.sb-bar-txt { font-family: var(--font-mono); font-size: 11px; }
+.sb-ma { white-space: nowrap; }
+.sb-ma-bar { display: inline-block; width: 40px; height: 6px; border-radius: 2px; background: rgba(127,127,127,.18); margin-right: 6px; vertical-align: middle; overflow: hidden; }
+.sb-ma-bar i { display: block; height: 100%; background: var(--text-muted); }
+.sb-hl { font-family: var(--font-mono); white-space: nowrap; }
+.sb-lead { white-space: nowrap; }
+.sb-lead .si-stock-tag { margin-right: 6px; }
+</style>
+<script>
+// 排序器與資金流向兩塊共用；誰先渲染誰定義（guard 寫法同 sector_flow / stock_flow）
+if (typeof window.sfSortable !== 'function') {
+  window.sfSortable = function (table) {
+    var tbody = table.querySelector('tbody');
+    table.querySelectorAll('th.si-sort').forEach(function (th) {
+      th.addEventListener('click', function () {
+        var col = parseInt(th.dataset.col, 10);
+        var asc = th.classList.contains('desc');
+        table.querySelectorAll('th.si-sort').forEach(function (o) { o.classList.remove('asc', 'desc'); });
+        th.classList.add(asc ? 'asc' : 'desc');
+        var rows = Array.prototype.slice.call(tbody.querySelectorAll(':scope > tr:not(.sf-detail)'));
+        rows.sort(function (a, b) {
+          var va = parseFloat(a.children[col].dataset.order) || 0;
+          var vb = parseFloat(b.children[col].dataset.order) || 0;
+          return asc ? va - vb : vb - va;
+        });
+        rows.forEach(function (r, i) {
+          tbody.appendChild(r);
+          var det = r.dataset.target && document.getElementById(r.dataset.target);
+          if (det) tbody.appendChild(det);
+          var rk = r.querySelector('.si-rank');
+          if (rk) rk.textContent = i + 1;
+          r.classList.toggle('si-alt', (i + 1) % 2 === 0);
+        });
+      });
+    });
+  };
+}
+document.querySelectorAll('.sb-table').forEach(function (t) { window.sfSortable(t); });
+</script>
+{% endif %}
+{% endif %}

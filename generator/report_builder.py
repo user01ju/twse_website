@@ -8,7 +8,7 @@ _TZ = ZoneInfo("Asia/Taipei")
 from config import REPORTS_DIR, FORCE_REBUILD
 from fetcher import twse_client, tpex_client
 from fetcher.market_calendar import roc_to_date, is_trading_day
-from processor import index_stats, market_breadth, movers, institutional, ai_summary, mover_sector, market_trend, sector_flow
+from processor import index_stats, market_breadth, movers, institutional, ai_summary, market_trend, sector_flow, sector_breadth
 from fetcher import price_cache, exrights, inst_flow_cache, shares
 from generator import renderer, index_builder, today_builder
 
@@ -253,11 +253,6 @@ def build(target_date: date) -> "bool | str":
         raw.get("tpex_daily") or [],
         ex_refs,
     )
-    sections["mover_sector"] = _safe(
-        mover_sector.build,
-        sections["movers"]["data"]["gainers"] if sections["movers"]["ok"] else [],
-        sections["movers"]["data"]["losers"]  if sections["movers"]["ok"] else [],
-    )
     # 單日法人買賣超個股/子類股（foreign/trust/combined/dealer/sector_merged）2026-09-13 起
     # 不再算：那兩個區塊已併進 sector_flow 的「今日」欄。
     # ── Price cache: save today → compute trend metrics ─────────────────────
@@ -284,6 +279,7 @@ def build(target_date: date) -> "bool | str":
         logger.warning(f"shares.update failed: {e}")
 
     sections["sector_flow"] = _safe(sector_flow.build, actual_date)
+    sections["sector_breadth"] = _safe(sector_breadth.build, actual_date)
 
     # AI summary last so its prompt can draw on every other section
     sections["ai_summary"] = _safe(
