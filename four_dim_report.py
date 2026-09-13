@@ -5,7 +5,7 @@
     python four_dim_report.py render --date D --narrative N.json   # 把敘事 JSON 塞進模板 → output/four_dim/D.html
 
 四維 = (5 日流向, 20 日流向) × (5 日漲跌, 20 日漲跌)，型態詞與資料都直接吃
-processor.sector_flow（跟第 7/8 區塊同一套口徑），這裡只做彙總與排版。
+processor.sector_flow（跟第 5/6 區塊同一套口徑），這裡只做彙總與排版。
 
 資料來源是 gh-pages 上的每日快取；`--sync` 會 `git archive origin/gh-pages data` 把
 data/ 整包蓋進 output/（只蓋 data/，不碰本機報告）。排程時 CI 可能還沒推，所以 check 會

@@ -77,36 +77,11 @@
   </div>
 </div>
 
-{# Sections 7+8+9: 法人買賣超合併三欄 #}
-<div class="section accent-blue collapsed">
-  <div class="section-header">
-    <span class="section-accent"></span>
-    <span class="section-title">5. 法人買賣超個股</span>
-    <span class="section-toggle-icon">▼</span>
-  </div>
-  <div class="section-body">
-    {% include "partials/inst_combined_table.html" %}
-  </div>
-</div>
-
-{# 三大法人合併 by 子類股（買賣超一起看） #}
+{# 法人資金流向 by 子類股：今日 / 5 日 / 20 日（原單日「法人買賣超子類股分析」已併入） #}
 <div class="section accent-teal collapsed">
   <div class="section-header">
     <span class="section-accent"></span>
-    <span class="section-title">6. 法人買賣超子類股分析</span>
-    {% if sections.sector_merged and sections.sector_merged.ok and sections.sector_merged.data.combined %}
-    <span class="section-subtitle">{{ sections.sector_merged.data.combined | length }} 個子類股</span>
-    {% endif %}
-    <span class="section-toggle-icon">▼</span>
-  </div>
-  <div class="section-body">{% include "partials/sector_inst_merged.html" %}</div>
-</div>
-
-{# 近期法人資金流向 by 子類股（時間序列，與第 6 區塊的當日快照互補） #}
-<div class="section accent-teal collapsed">
-  <div class="section-header">
-    <span class="section-accent"></span>
-    <span class="section-title">7. 法人資金流向（近 5 / 20 日子類股）</span>
+    <span class="section-title">5. 法人資金流向（子類股：今日 / 5 日 / 20 日）</span>
     {% if sections.sector_flow and sections.sector_flow.ok and sections.sector_flow.data.tabs %}
     <span class="section-subtitle">{{ sections.sector_flow.data.days }} 個交易日窗口</span>
     {% endif %}
@@ -115,11 +90,11 @@
   <div class="section-body">{% include "partials/sector_flow.html" %}</div>
 </div>
 
-{# 個股資金流向（與第 7 區塊同源，不分子類股） #}
+{# 個股資金流向（與第 5 區塊同源，不分子類股；原單日「法人買賣超個股」已併入） #}
 <div class="section accent-teal collapsed">
   <div class="section-header">
     <span class="section-accent"></span>
-    <span class="section-title">8. 法人資金流向（個股）</span>
+    <span class="section-title">6. 法人資金流向（個股：今日 / 5 日 / 20 日）</span>
     {% if sections.sector_flow and sections.sector_flow.ok and sections.sector_flow.data.stock_tabs %}
     <span class="section-subtitle">{{ sections.sector_flow.data.stock_universe }} 檔有進出</span>
     {% endif %}
@@ -128,11 +103,11 @@
   <div class="section-body">{% include "partials/stock_flow.html" %}</div>
 </div>
 
-{# Sections 5+6: 漲跌幅前100 #}
+{# 漲跌幅前100 #}
 <div class="section accent-amber collapsed">
   <div class="section-header">
     <span class="section-accent"></span>
-    <span class="section-title">9. 漲幅 / 跌幅前 100 個股</span>
+    <span class="section-title">7. 漲幅 / 跌幅前 100 個股</span>
     <span class="section-toggle-icon">▼</span>
   </div>
   <div class="section-body">
@@ -144,7 +119,7 @@
 <div class="section accent-amber collapsed">
   <div class="section-header">
     <span class="section-accent"></span>
-    <span class="section-title">10. 漲幅 / 跌幅前 100 子類股分析</span>
+    <span class="section-title">8. 漲幅 / 跌幅前 100 子類股分析</span>
     <span class="section-toggle-icon">▼</span>
   </div>
   <div class="section-body">

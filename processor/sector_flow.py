@@ -1,7 +1,7 @@
-"""近期法人資金流向 by CMoney 子類股（第 7 區塊）。
+"""法人資金流向 by CMoney 子類股（第 5 區塊）＋個股表（第 6 區塊）。
 
-與第 6 區塊的差別：6 是「今日快照 + 個股明細」，這裡是**時間序列** —
-5 日 / 20 日累計、連續流入流出天數、加速度、以及同期子類股漲跌幅。
+今日 / 5 日 / 20 日三個尺度放同一列：今日淨額（含 z 分數與翻向首日）、5 / 20 日累計、
+連續流入流出天數、加速度、以及同期漲跌幅。原本的單日買賣超區塊（舊 5/6）2026-09-13 併進來。
 
 資料來自 output/data/inst_flow/ 的每日快取（fetcher/inst_flow_cache），
 所以跟 market_trend 一樣：快取缺一大塊時窗口會安靜地往更早日期湊，
@@ -41,6 +41,7 @@ _CONSENSUS_MIN = 0.1   # 外資/投信 5 日淨額低於此（億）不判一致
 _DISPERSE_MIN = 0.05   # 成分股 5 日淨額低於此（億）不計入擴散度家數
 # 個股表每個法人別取買超前 N + 賣超前 N（全列 1162 檔 × 4 頁簽會讓 HTML 再翻倍）
 _STOCK_TABLE_TOP = 50
+_Z_MIN_DAYS = 10        # 今日 z 分數至少要這麼多天的歷史才算
 
 # 型態：流向狀態（續進/續出/轉買/轉賣）× 20 日漲跌，再用 5 日漲跌拆出「拉回續買」
 # 與「反彈續賣」。順序 = 多空排序用（越前面越多頭），模板的 data-order 取 index。
@@ -77,6 +78,29 @@ def _streak(series: list[float]) -> int:
     return n * sign
 
 
+def _today_stats(series: list[float], min_abs: float) -> tuple[float | None, int, int]:
+    """今日淨額的脈絡：(z 分數, 轉向, 轉向前連續天數)。
+
+    z = 今日 ÷ 前 N 日淨額標準差（不含今日）——「聯發科 +240 億」對它是常態、
+    「中型股 +8 億」可能是三個標準差，市值比看不出這件事。
+    轉向 = 今日符號與前一日相反（兩天都要 ≥ _FLAT_YI）：+1 翻買、-1 翻賣、0 無。
+    轉向前連續天數 = 前一日往回數的同向天數（模板寫成「翻買 ←賣 6 天」）。
+    """
+    z = None
+    hist = series[:-1]
+    # 今日太小不給 z：小型股 20 日幾乎沒動，2 億就能噴 12σ，排序會被這種噪音佔滿
+    if len(hist) >= _Z_MIN_DAYS and abs(series[-1]) >= min_abs:
+        mean = sum(hist) / len(hist)
+        sd = (sum((v - mean) ** 2 for v in hist) / len(hist)) ** 0.5
+        if sd > 0:
+            z = round(series[-1] / sd, 1)
+    flip, prev = 0, 0
+    if len(series) >= 2 and abs(series[-1]) >= _FLAT_YI and abs(series[-2]) >= _FLAT_YI             and (series[-1] > 0) != (series[-2] > 0):
+        flip = 1 if series[-1] > 0 else -1
+        prev = _streak(hist)
+    return z, flip, prev
+
+
 def _accel(series: list[float], min_avg: float = _ACCEL_MIN_AVG) -> tuple[float | None, str]:
     """短窗日均 / 長窗日均 → (倍數, 標籤)。分母太小或樣本不足回 (None, '')。"""
     if len(series) < _MIN_DAYS:
@@ -101,7 +125,7 @@ def _price_metrics(today: date, sector_of: dict[str, str]
     """一次載入 52 週價格窗口，算完所有價格衍生指標。
 
     回傳 ({N: 子類股近 N 日等權報酬}, {N: 個股近 N 日報酬}, 個股 52 週位階,
-          {date: 當日快照}, {N: 實際報酬天數})，N ∈ {_SHORT, _DAYS}
+          {date: 當日快照}, {N: 實際報酬天數})，N ∈ {1, _SHORT, _DAYS}
 
     52 週高低走還原權息 cum 序列（跟 market_trend 同一套鏈與 ±12% 護欄），
     不然高股息股會因為除息缺口被算成「離高點很遠」。位階 0% = 就在 52 週高點。
@@ -113,7 +137,7 @@ def _price_metrics(today: date, sector_of: dict[str, str]
     refs = exrights.load_refs()
     chains: dict[str, _Chain] = {}
     peak: dict[str, float] = {}
-    ret_start = {n: max(0, len(window) - n - 1) for n in (_SHORT, _DAYS)}
+    ret_start = {n: max(0, len(window) - n - 1) for n in (1, _SHORT, _DAYS)}
     cum_at_start: dict[int, dict[str, float]] = {}
 
     for i, (d, snap) in enumerate(window):
@@ -231,7 +255,7 @@ def _pattern(net5: float, net20: float, ret5, ret20) -> str:
 def _four_dim(full_rows: dict[str, list[dict]]) -> dict:
     """個股層四維彙總（未截斷的全樣本）：型態分布 + 大票列（帶外資/投信拆分）。
 
-    給 four_dim_report.py（每日報告）與 ai_summary（盤勢總覽）共用；第 8 區塊的
+    給 four_dim_report.py（每日報告）與 ai_summary（盤勢總覽）共用；第 6 區塊的
     stock_tabs 只留買賣超各前 50，型態分布要用全樣本才算得對。
     """
     rows = full_rows.get("c") or []
@@ -291,6 +315,7 @@ def build(today: date) -> dict:
     sector_rets, all_code_rets, pos52, snap_by_date, ret_days = _price_metrics(today, code_to_sector)
     rets,   rets20      = sector_rets.get(_SHORT, {}),   sector_rets.get(_DAYS, {})
     code_rets, code_rets20 = all_code_rets.get(_SHORT, {}), all_code_rets.get(_DAYS, {})
+    rets1, code_rets1 = sector_rets.get(1, {}), all_code_rets.get(1, {})
 
     # 個股層（展開列用）。日期序列跟母表同一組，缺檔的日子給 {}。
     stock_window = inst_flow_cache.load_window(today, _DAYS, stocks=True)
@@ -336,6 +361,7 @@ def build(today: date) -> dict:
             if abs(net5) < 0.1 and abs(net20) < 0.1:
                 continue                       # 整段幾乎沒進出，不佔版面
             ratio, tag = _accel(series)
+            z1, flip, prev_streak = _today_stats(series, _ACCEL_MIN_AVG)
 
             ki = _SER_IDX[key]
             members = []
@@ -347,6 +373,7 @@ def build(today: date) -> dict:
                 members.append({
                     "code":   code,
                     "name":   names.get(code, ""),
+                    "net1":   round(ss[-1], 2),
                     "net5":   round(s5, 2),
                     "net20":  round(sum(ss), 2),
                     "streak": _streak(ss),
@@ -385,6 +412,11 @@ def build(today: date) -> dict:
                 "parent": sector_parent.get(sec, ""),
                 "mcap":   round(smc) if smc else None,
                 "net5_pct": round(net5 / smc * 100, 2) if smc else None,
+                "net1":   round(series[-1], 2),
+                "z1":     z1,
+                "flip":   flip,
+                "prev_streak": prev_streak,
+                "ret1":   rets1.get(sec),
                 "net5":   round(net5,  2),
                 "net20":  round(net20, 2),
                 "streak": _streak(series),
@@ -414,6 +446,7 @@ def build(today: date) -> dict:
             if s5 == 0:
                 continue
             ratio, tag = _accel(ss, _ACCEL_MIN_AVG_STOCK)
+            z1, flip, prev_streak = _today_stats(ss, _ACCEL_MIN_AVG_STOCK)
             mcap = mcaps.get(code)
             close_now = last_px.get(code, 0)
             cost, vs_cost = _inst_cost(ss, flow_dates, snap_by_date, code, close_now)
@@ -431,19 +464,32 @@ def build(today: date) -> dict:
                 "sector": code_to_sector.get(code) or "其他",
                 "mcap":   round(mcap) if mcap else None,
                 "net5_pct": round(s5 / mcap * 100, 2) if mcap else None,
+                "net1":   round(ss[-1], 2),
+                "z1":     z1,
+                "flip":   flip,
+                "prev_streak": prev_streak,
                 "net5":   round(s5, 2),
                 "net20":  round(sum(ss), 2),
                 "streak": _streak(ss),
                 "accel":  ratio,
                 "accel_tag": tag,
+                "ret1":   code_rets1.get(code),
                 "ret5":   code_rets.get(code),
                 "ret20":  code_rets20.get(code),
                 "pattern": _pattern(s5, sum(ss), code_rets.get(code), code_rets20.get(code)),
             })
         srows.sort(key=lambda r: r["net5"], reverse=True)
         full_rows[key] = srows
-        stock_tabs[key] = (srows if len(srows) <= _STOCK_TABLE_TOP * 2
-                           else srows[:_STOCK_TABLE_TOP] + srows[-_STOCK_TABLE_TOP:])
+        # 個股表 = 今日買賣超兩端 ∪ 5 日買賣超兩端（原單日「法人買賣超個股」區塊併進來），
+        # 預設按今日淨額排。
+        if len(srows) <= _STOCK_TABLE_TOP * 2:
+            picked = srows
+        else:
+            by1 = sorted(srows, key=lambda r: r["net1"], reverse=True)
+            keep = {id(r) for r in srows[:_STOCK_TABLE_TOP] + srows[-_STOCK_TABLE_TOP:]
+                    + by1[:_STOCK_TABLE_TOP] + by1[-_STOCK_TABLE_TOP:]}
+            picked = [r for r in srows if id(r) in keep]
+        stock_tabs[key] = sorted(picked, key=lambda r: r["net1"], reverse=True)
 
     return {
         "four_dim": _four_dim(full_rows),

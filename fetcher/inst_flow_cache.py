@@ -11,7 +11,7 @@ Files（跟 prices 一樣住在 output/ 裡，隨 gh-pages 部署持久化、下
 個股層只留任一法人別 |淨額| ≥ _STOCK_MIN_YI 的，長尾砍掉六成檔數但只丟 0.6%
 金額（2026-08-26 實測：1842 檔 58 KB → 747 檔 24 KB，涵蓋 99.4%）。
 
-口徑與第 5/6 區塊同源（直接用 combined_inst 的解析器），但**不套 top-100 截斷** —
+口徑與原單日買賣超區塊同源（直接用 combined_inst 的解析器），但**不套 top-100 截斷** —
 資金流向要看整個子類股，不是只看當日前 100 大個股。
 """
 import json
@@ -58,7 +58,7 @@ def per_stock(twse_t86: dict, tpex_all: list[dict],
             continue
         k = 1000 * close / 1e8      # 張 → 億元
         out[s["code"]] = (s["name"],
-                          s["net_yi"],                 # 與第 5/6 區塊同一個數字
+                          s["net_yi"],                 # 與 combined_inst 同一個數字
                           s["foreign_net"] * k,
                           s["trust_net"]   * k,
                           s["dealer_net"]  * k)

@@ -64,7 +64,7 @@ EXRIGHTS_STALE_DAYS = 30
 # 52 週新高低本來就要 _HALF_YEAR≈126 天才開始計，200 以下這區塊已無意義。
 _MIN_WINDOW_DAYS = 200
 
-# 法人流向窗口（第 7 區塊）的天數下限。滿窗 20 天，少於 10 天加速度就不判了。
+# 法人流向窗口（第 5/6 區塊）的天數下限。滿窗 20 天，少於 10 天加速度就不判了。
 _MIN_FLOW_DAYS = 10
 
 # T86 個股股數 × 收盤價 Σ vs BFI82U 金額。差異來源是「收盤價 ≠ 當日成交均價」，
@@ -463,7 +463,7 @@ def check_price_window_coverage(ctx: Ctx):
 
 
 def check_inst_flow_window_coverage(ctx: Ctx):
-    """法人流向窗口完整度（第 7 區塊）。
+    """法人流向窗口完整度（第 5/6 區塊）。
 
     只 WARN，不 FAIL：真正致命的「gh-pages 還原失敗 → 部署抹掉線上快取」已經由
     check_price_window_coverage FAIL 擋住了（兩份快取住在同一個 output/，一起還原
@@ -473,7 +473,7 @@ def check_inst_flow_window_coverage(ctx: Ctx):
     比率之外一樣看絕對天數（分母會跟著縮的老問題），但兩者都只到 WARN。"""
     window = inst_flow_cache.load_window(ctx.report_date, 20)
     if not window:
-        return WARN, ("output/data/inst_flow/ 一片空白 — 第 7 區塊會顯示暫無資料；"
+        return WARN, ("output/data/inst_flow/ 一片空白 — 第 5/6 區塊會顯示暫無資料；"
                       "跑 python backfill_inst.py 回補")
     cov = price_cache.window_coverage(window, ctx.report_date)
     msg = f"inst_flow {cov['got']}/{cov['expected']} 個交易日（{cov['pct']}%）"

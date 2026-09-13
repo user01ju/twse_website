@@ -1,4 +1,5 @@
-{# 近期法人資金流向 by 子類股 — 4 頁簽（三大法人/外資/投信/自營商），可排序 #}
+{# 法人資金流向 by 子類股（今日 / 5 日 / 20 日）— 4 頁簽（三大法人/外資/投信/自營商），可排序。
+   原「法人買賣超子類股分析」單日區塊已併進來（今日欄）#}
 {% set s = sections.sector_flow %}
 {% if not s.ok %}
 <div class="error-box">資金流向資料錯誤：{{ s.error }}</div>
@@ -45,7 +46,8 @@
     <span class="sf-note">加速 = 近 {{ d.short }} 日均量 ÷ {{ d.days }} 日均量（≥1.5 加速、≤0.67 減速、換邊為翻轉）；
       市值為該子類股**全部成分股**加總（不是只算有流向的那幾檔）；
       買/賣是 {{ d.short }} 日淨額同向的家數、龍頭佔比 = 最大一檔佔該類總進出量 ——
-      兩者一起看就知道這波是全族群還是單一檔撐起來的</span>
+      兩者一起看就知道這波是全族群還是單一檔撐起來的；
+      σ = 今日淨額 ÷ 前 {{ d.long }} 日淨額標準差（|今日| &lt; 1 億不給）；連續欄的 ↺ = 今日翻向且翻向前已連續 ≥ 3 天</span>
     <div class="sf-note">型態 = (5 日流向, {{ d.long }} 日流向) × (5 日漲跌, {{ d.long }} 日漲跌)：
       <span class="sf-pat sf-pat-bull">主流延續</span> 續進且雙窗口漲・
       <span class="sf-pat sf-pat-bull">拉回續買</span> 續進、{{ d.long }} 日漲但 5 日跌・
@@ -56,8 +58,7 @@
       <span class="sf-pat sf-pat-bear">反彈續賣</span> 續出、{{ d.long }} 日跌但 5 日漲・
       <span class="sf-pat sf-pat-bear">棄守</span> 續出且雙窗口跌</div>
     <div class="sf-note">點子類股列展開成分股（依 {{ d.short }} 日淨額排序，門檻 |淨額| ≥ {{ d.stock_min }} 億、
-      每類最多 {{ d.stock_cap }} 檔，小型子類股保底列前幾名）。此處<strong>不套</strong>第 5/6 區塊的
-      前 100 名截斷，所以出現的個股可能與那兩區不同。</div>
+      每類最多 {{ d.stock_cap }} 檔，小型子類股保底列前幾名）。此處<strong>不套</strong>前 100 名截斷。</div>
   </div>
 
   <table class="si-table sf-table">
@@ -67,15 +68,18 @@
         <th class="si-th-sector">子類股</th>
         <th class="sf-th-yi si-sort" data-col="2" title="窗口內 5 日淨額同向的成分股家數">買/賣<span class="si-sort-ind"></span></th>
         <th class="sf-th-yi si-sort" data-col="3" title="最大一檔佔該類股 5 日總進出量的比例">龍頭佔比<span class="si-sort-ind"></span></th>
-        <th class="sf-th-yi si-sort" data-col="4">{{ d.short }}日(億)<span class="si-sort-ind"></span></th>
-        <th class="sf-th-yi si-sort" data-col="5">{{ d.long }}日(億)<span class="si-sort-ind"></span></th>
-        <th class="sf-th-yi si-sort" data-col="6">市值(億)<span class="si-sort-ind"></span></th>
-        <th class="sf-th-yi si-sort" data-col="7">{{ d.short }}日/市值<span class="si-sort-ind"></span></th>
-        <th class="sf-th-yi si-sort" data-col="8">連續<span class="si-sort-ind"></span></th>
-        <th class="si-th-yi si-sort" data-col="9">加速度<span class="si-sort-ind"></span></th>
-        <th class="sf-th-yi si-sort" data-col="10">近{{ d.ret_days }}日<span class="si-sort-ind"></span></th>
-        <th class="sf-th-yi si-sort" data-col="11">近{{ d.ret_days_long }}日<span class="si-sort-ind"></span></th>
-        <th class="si-th-yi si-sort" data-col="12" title="由多到空排序">型態<span class="si-sort-ind"></span></th>
+        <th class="sf-th-yi si-sort" data-col="4">今日(億)<span class="si-sort-ind"></span></th>
+        <th class="sf-th-z si-sort" data-col="5" title="今日淨額 ÷ 前 {{ d.long }} 日淨額標準差">σ<span class="si-sort-ind"></span></th>
+        <th class="sf-th-yi si-sort desc" data-col="6">{{ d.short }}日(億)<span class="si-sort-ind"></span></th>
+        <th class="sf-th-yi si-sort" data-col="7">{{ d.long }}日(億)<span class="si-sort-ind"></span></th>
+        <th class="sf-th-yi si-sort" data-col="8">市值(億)<span class="si-sort-ind"></span></th>
+        <th class="sf-th-yi si-sort" data-col="9">{{ d.short }}日/市值<span class="si-sort-ind"></span></th>
+        <th class="sf-th-streak si-sort" data-col="10" title="↺ = 今日翻向，後面是翻向前的連續天數">連續<span class="si-sort-ind"></span></th>
+        <th class="si-th-yi si-sort" data-col="11">加速度<span class="si-sort-ind"></span></th>
+        <th class="sf-th-pct si-sort" data-col="12">今日%<span class="si-sort-ind"></span></th>
+        <th class="sf-th-pct si-sort" data-col="13">近{{ d.ret_days }}日<span class="si-sort-ind"></span></th>
+        <th class="sf-th-pct si-sort" data-col="14">近{{ d.ret_days_long }}日<span class="si-sort-ind"></span></th>
+        <th class="si-th-yi si-sort" data-col="15" title="由多到空排序">型態<span class="si-sort-ind"></span></th>
       </tr>
     </thead>
     <tbody>
@@ -98,6 +102,12 @@
             {% if g.lead_name %}title="最大一檔：{{ g.lead_name }} {{ g.lead_code }}"{% endif %}>
           {%- if g.lead is not none %}{{ g.lead }}%{% else %}–{% endif -%}
         </td>
+        <td class="si-yi {{ 'pos' if g.net1 >= 0 else 'neg' }}" data-order="{{ g.net1 }}">
+          {{ "{:+,.1f}".format(g.net1) }}
+        </td>
+        <td class="si-yi sf-z {{ 'sf-z-hot' if (g.z1 or 0)|abs >= 2 else '' }}" data-order="{{ g.z1 if g.z1 is not none else 0 }}">
+          {%- if g.z1 is not none %}{{ "{:+.1f}".format(g.z1) }}{% else %}–{% endif -%}
+        </td>
         <td class="si-yi {{ 'pos' if g.net5 >= 0 else 'neg' }}" data-order="{{ g.net5 }}">
           {{ "{:+,.1f}".format(g.net5) }}
         </td>
@@ -111,9 +121,11 @@
             data-order="{{ g.net5_pct if g.net5_pct is not none else 0 }}">
           {%- if g.net5_pct is not none %}{{ "{:+.2f}".format(g.net5_pct) }}%{% else %}–{% endif -%}
         </td>
-        <td class="si-yi {{ 'pos' if g.streak > 0 else ('neg' if g.streak < 0 else '') }}"
-            data-order="{{ g.streak }}">
-          {% if g.streak %}{{ '買' if g.streak > 0 else '賣' }} {{ g.streak | abs }} 天{% else %}–{% endif %}
+        {% set big_flip = g.flip and (g.prev_streak | abs) >= 3 %}
+        <td class="si-yi sf-streak {{ 'pos' if g.streak > 0 else ('neg' if g.streak < 0 else '') }}"
+            data-order="{{ g.flip * (100 + (g.prev_streak | abs)) if big_flip else g.streak }}">
+          {%- if big_flip %}<span class="sf-tag {{ 'sf-hot' if g.flip > 0 else 'sf-cold' }}">↺ {{ '翻買' if g.flip > 0 else '翻賣' }}</span><span class="sf-prev">←{{ '賣' if g.prev_streak < 0 else '買' }}{{ g.prev_streak | abs }}天</span>
+          {%- elif g.streak %}{{ '買' if g.streak > 0 else '賣' }} {{ g.streak | abs }} 天{% else %}–{% endif -%}
         </td>
         <td class="si-yi sf-accel" data-order="{{ g.accel if g.accel is not none else 0 }}">
           {% if g.accel_tag == '翻轉' %}<span class="sf-tag sf-flip">↺ 翻轉</span>
@@ -123,6 +135,10 @@
               {{ '🔥' if g.accel_tag == '加速' else '❄️' }} {{ g.accel_tag }}{{ dir }} {{ "{:.1f}".format(g.accel) }}x</span>
           {% elif g.accel_tag == '持平' %}<span class="sf-tag">持平 {{ "{:.1f}".format(g.accel) }}x</span>
           {% else %}–{% endif %}
+        </td>
+        <td class="si-yi {{ 'pos' if (g.ret1 or 0) >= 0 else 'neg' }}"
+            data-order="{{ g.ret1 if g.ret1 is not none else 0 }}">
+          {% if g.ret1 is not none %}{{ "{:+.2f}".format(g.ret1) }}%{% else %}–{% endif %}
         </td>
         <td class="si-yi {{ 'pos' if (g.ret5 or 0) >= 0 else 'neg' }}"
             data-order="{{ g.ret5 if g.ret5 is not none else 0 }}">
@@ -138,11 +154,12 @@
       </tr>
       {% if g.stocks %}
       {# 明細列刻意壓成單行：1600+ 列 × 每列 9 行縮排 = 幾百 KB 的純空白 #}
-      <tr class="sf-detail hidden" id="{{ did }}"><td colspan="13"><table class="sf-sub"><thead><tr>
-        <th>代號</th><th>名稱</th><th>{{ d.short }}日</th><th>{{ d.long }}日</th><th>連續</th><th>近{{ d.ret_days }}日</th><th>近{{ d.ret_days_long }}日</th><th>型態</th>
+      <tr class="sf-detail hidden" id="{{ did }}"><td colspan="16"><table class="sf-sub"><thead><tr>
+        <th>代號</th><th>名稱</th><th>今日</th><th>{{ d.short }}日</th><th>{{ d.long }}日</th><th>連續</th><th>近{{ d.ret_days }}日</th><th>近{{ d.ret_days_long }}日</th><th>型態</th>
         </tr></thead><tbody>
         {%- for st in g.stocks -%}
         <tr><td class="sf-sub-code">{{ st.code }}</td><td>{{ st.name }}</td>
+        <td class="{{ 'pos' if st.net1 >= 0 else 'neg' }}">{{ "{:+,.1f}".format(st.net1) }}</td>
         <td class="{{ 'pos' if st.net5 >= 0 else 'neg' }}">{{ "{:+,.1f}".format(st.net5) }}</td>
         <td class="{{ 'pos' if st.net20 >= 0 else 'neg' }}">{{ "{:+,.1f}".format(st.net20) }}</td>
         <td class="{{ 'pos' if st.streak > 0 else ('neg' if st.streak < 0 else '') }}">
@@ -174,6 +191,13 @@
 .sf-table th.si-sort.desc .si-sort-ind { opacity: 1; }
 .sf-note { opacity: 0.65; font-size: 12px; }
 .sf-th-yi { width: 82px; text-align: right; }
+.sf-th-z { width: 48px; text-align: right; }
+.sf-th-pct { width: 70px; text-align: right; }
+.sf-th-streak { width: 128px; text-align: right; }
+.sf-streak { white-space: nowrap; }
+.sf-prev { font-size: 11px; color: var(--text-muted); margin-left: 3px; }
+.sf-z { color: var(--text-muted); font-weight: 500; }
+.sf-z-hot { color: var(--text-primary); font-weight: 700; }
 .sf-mcap { color: var(--text-muted); font-weight: 500; }
 .sf-breadth { font-family: var(--font-mono); font-weight: 500; }
 .sf-lead { color: var(--text-muted); font-weight: 500; }
@@ -216,7 +240,7 @@ if (typeof window.siSwitch !== 'function') {
     document.getElementById(panelId).classList.remove('hidden');
   };
 }
-// 第 8 區塊（個股表）用同一支排序器；誰先渲染誰定義，兩個 partial 各自自足
+// 第 6 區塊（個股表）用同一支排序器；誰先渲染誰定義，兩個 partial 各自自足
 // （沿用本檔 siSwitch 的 guard 寫法）。有明細列的表才會用到 dataset.target。
 if (typeof window.sfSortable !== 'function') {
   window.sfSortable = function (table) {
@@ -229,7 +253,7 @@ if (typeof window.sfSortable !== 'function') {
         th.classList.add(asc ? 'asc' : 'desc');
         // 只排母列；明細列緊跟著自己的母列一起搬，不然排序會把兩者拆散
         // :scope > 只取母表直屬列。少了它會連展開列裡子表格的 <tr> 一起掃進來
-        // （第 7 區塊實測 83 列變 613 列，排序等於把巢狀結構打散）。
+        // （子類股表實測 83 列變 613 列，排序等於把巢狀結構打散）。
         var rows = Array.prototype.slice.call(tbody.querySelectorAll(':scope > tr:not(.sf-detail)'));
         rows.sort(function (a, b) {
           var va = parseFloat(a.children[col].dataset.order) || 0;

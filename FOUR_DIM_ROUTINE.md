@@ -51,4 +51,4 @@
 
 - 重試靠「每小時一次 + done marker」而不是 sleep：session 不該掛著等，marker 讓已完成的那天後面幾輪秒退。
 - `check --sync` 只還原 gh-pages 的 `data/`（不碰 reports/today.json），本機 output/ 被 rebuild_local 改過的東西不會被誤傷。
-- 資料與敘事分開：數據由 `sector_flow` 算（跟網站第 7/8 區塊同口徑），敘事由 Claude 每天重寫，模板不動。
+- 資料與敘事分開：數據由 `sector_flow` 算（跟網站第 5/6 區塊同口徑），敘事由 Claude 每天重寫，模板不動。
