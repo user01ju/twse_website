@@ -20,6 +20,11 @@
 {% set tabs = [
   ('c', '📊 三大法人'), ('f', '🌐 外資'), ('t', '🏦 投信'), ('d', '🏛️ 自營商'),
 ] %}
+{% set pat_cls = {
+  '主流延續': 'sf-pat-bull', '拉回續買': 'sf-pat-bull', '追漲回補': 'sf-pat-bull', '低接轉買': 'sf-pat-bull',
+  '買不漲': 'sf-pat-warn', '漲多轉賣': 'sf-pat-warn',
+  '停損轉賣': 'sf-pat-bear', '拉高調節': 'sf-pat-bear', '反彈續賣': 'sf-pat-bear', '棄守': 'sf-pat-bear',
+} %}
 
 <div class="si-tabs">
   {% for key, label in tabs %}
@@ -41,6 +46,15 @@
       市值為該子類股**全部成分股**加總（不是只算有流向的那幾檔）；
       買/賣是 {{ d.short }} 日淨額同向的家數、龍頭佔比 = 最大一檔佔該類總進出量 ——
       兩者一起看就知道這波是全族群還是單一檔撐起來的</span>
+    <div class="sf-note">型態 = (5 日流向, {{ d.long }} 日流向) × (5 日漲跌, {{ d.long }} 日漲跌)：
+      <span class="sf-pat sf-pat-bull">主流延續</span> 續進且雙窗口漲・
+      <span class="sf-pat sf-pat-bull">拉回續買</span> 續進、{{ d.long }} 日漲但 5 日跌・
+      <span class="sf-pat sf-pat-bull">追漲回補</span>／<span class="sf-pat sf-pat-bull">低接轉買</span> {{ d.long }} 日出、5 日轉進（{{ d.long }} 日漲／跌）・
+      <span class="sf-pat sf-pat-warn">買不漲</span> 續進但 {{ d.long }} 日跌（籌碼沉澱或套牢）・
+      <span class="sf-pat sf-pat-warn">漲多轉賣</span>／<span class="sf-pat sf-pat-bear">停損轉賣</span> {{ d.long }} 日進、5 日轉出・
+      <span class="sf-pat sf-pat-bear">拉高調節</span> 續出但 {{ d.long }} 日漲・
+      <span class="sf-pat sf-pat-bear">反彈續賣</span> 續出、{{ d.long }} 日跌但 5 日漲・
+      <span class="sf-pat sf-pat-bear">棄守</span> 續出且雙窗口跌</div>
     <div class="sf-note">點子類股列展開成分股（依 {{ d.short }} 日淨額排序，門檻 |淨額| ≥ {{ d.stock_min }} 億、
       每類最多 {{ d.stock_cap }} 檔，小型子類股保底列前幾名）。此處<strong>不套</strong>第 5/6 區塊的
       前 100 名截斷，所以出現的個股可能與那兩區不同。</div>
@@ -60,6 +74,8 @@
         <th class="sf-th-yi si-sort" data-col="8">連續<span class="si-sort-ind"></span></th>
         <th class="si-th-yi si-sort" data-col="9">加速度<span class="si-sort-ind"></span></th>
         <th class="sf-th-yi si-sort" data-col="10">近{{ d.ret_days }}日<span class="si-sort-ind"></span></th>
+        <th class="sf-th-yi si-sort" data-col="11">近{{ d.ret_days_long }}日<span class="si-sort-ind"></span></th>
+        <th class="si-th-yi si-sort" data-col="12" title="由多到空排序">型態<span class="si-sort-ind"></span></th>
       </tr>
     </thead>
     <tbody>
@@ -112,11 +128,18 @@
             data-order="{{ g.ret5 if g.ret5 is not none else 0 }}">
           {% if g.ret5 is not none %}{{ "{:+.2f}".format(g.ret5) }}%{% else %}–{% endif %}
         </td>
+        <td class="si-yi {{ 'pos' if (g.ret20 or 0) >= 0 else 'neg' }}"
+            data-order="{{ g.ret20 if g.ret20 is not none else 0 }}">
+          {% if g.ret20 is not none %}{{ "{:+.2f}".format(g.ret20) }}%{% else %}–{% endif %}
+        </td>
+        <td class="si-yi sf-pattern" data-order="{{ d.pattern_order.get(g.pattern, 0) }}">
+          {% if g.pattern %}<span class="sf-pat {{ pat_cls[g.pattern] }}">{{ g.pattern }}</span>{% else %}–{% endif %}
+        </td>
       </tr>
       {% if g.stocks %}
       {# 明細列刻意壓成單行：1600+ 列 × 每列 9 行縮排 = 幾百 KB 的純空白 #}
-      <tr class="sf-detail hidden" id="{{ did }}"><td colspan="11"><table class="sf-sub"><thead><tr>
-        <th>代號</th><th>名稱</th><th>{{ d.short }}日</th><th>{{ d.long }}日</th><th>連續</th><th>近{{ d.ret_days }}日</th>
+      <tr class="sf-detail hidden" id="{{ did }}"><td colspan="13"><table class="sf-sub"><thead><tr>
+        <th>代號</th><th>名稱</th><th>{{ d.short }}日</th><th>{{ d.long }}日</th><th>連續</th><th>近{{ d.ret_days }}日</th><th>近{{ d.ret_days_long }}日</th><th>型態</th>
         </tr></thead><tbody>
         {%- for st in g.stocks -%}
         <tr><td class="sf-sub-code">{{ st.code }}</td><td>{{ st.name }}</td>
@@ -126,7 +149,9 @@
         {%- if st.streak %}{{ '買' if st.streak > 0 else '賣' }}{{ st.streak | abs }}{% else %}–{% endif -%}
         </td><td class="{{ 'pos' if (st.ret5 or 0) >= 0 else 'neg' }}">
         {%- if st.ret5 is not none %}{{ "{:+.2f}".format(st.ret5) }}%{% else %}–{% endif -%}
-        </td></tr>
+        </td><td class="{{ 'pos' if (st.ret20 or 0) >= 0 else 'neg' }}">
+        {%- if st.ret20 is not none %}{{ "{:+.2f}".format(st.ret20) }}%{% else %}–{% endif -%}
+        </td><td>{% if st.pattern %}<span class="sf-pat {{ pat_cls[st.pattern] }}">{{ st.pattern }}</span>{% else %}–{% endif %}</td></tr>
         {%- endfor -%}
         </tbody></table>
         {%- if g.hidden %}<div class="sf-sub-note">中間 {{ g.hidden }} 檔略過（只留買賣超兩端）</div>{% endif -%}
@@ -157,6 +182,11 @@
 .sf-hot  { color: var(--pos); background: var(--pos-glow); }
 .sf-cold { color: var(--neg); background: var(--neg-glow); }
 .sf-flip { opacity: 0.85; }
+.sf-pattern { white-space: nowrap; }
+.sf-pat { font-size: 12px; padding: 1px 6px; border-radius: 4px; white-space: nowrap; background: var(--surface-2, rgba(127,127,127,.12)); }
+.sf-pat-bull { color: var(--pos); background: var(--pos-glow); }
+.sf-pat-bear { color: var(--neg); background: var(--neg-glow); }
+.sf-pat-warn { color: var(--warning); background: rgba(245,158,11,.14); }
 .sf-row { cursor: pointer; }
 /* 全站只有 .si-panel.hidden 這條複合選擇器，單獨的 .hidden 沒有任何規則 —
    明細列得自己宣告，不然 class 加了也照樣顯示（收不起來）。 */

@@ -7,8 +7,11 @@
 所以跟 market_trend 一樣：快取缺一大塊時窗口會安靜地往更早日期湊，
 數字看起來合理但是錯的 → 用 coverage 標 degraded。
 
-近 5 日漲跌% 走還原權息（沿用 market_trend 的 cum 鏈與 ±12% 護欄），
+近 5 / 20 日漲跌% 走還原權息（沿用 market_trend 的 cum 鏈與 ±12% 護欄），
 否則除息股會被算成假跌，成分股少的子類股一檔就歪掉。
+
+型態標籤把 (5 日流向, 20 日流向) × (5 日漲跌, 20 日漲跌) 四維壓成一個詞，
+見 _pattern()。
 """
 import logging
 from collections import defaultdict
@@ -38,6 +41,13 @@ _CONSENSUS_MIN = 0.1   # 外資/投信 5 日淨額低於此（億）不判一致
 _DISPERSE_MIN = 0.05   # 成分股 5 日淨額低於此（億）不計入擴散度家數
 # 個股表每個法人別取買超前 N + 賣超前 N（全列 1162 檔 × 4 頁簽會讓 HTML 再翻倍）
 _STOCK_TABLE_TOP = 50
+
+# 型態：流向狀態（續進/續出/轉買/轉賣）× 20 日漲跌，再用 5 日漲跌拆出「拉回續買」
+# 與「反彈續賣」。順序 = 多空排序用（越前面越多頭），模板的 data-order 取 index。
+_PATTERNS = ("主流延續", "拉回續買", "追漲回補", "低接轉買", "買不漲",
+             "漲多轉賣", "停損轉賣", "拉高調節", "反彈續賣", "棄守")
+_PATTERN_ORDER = {p: len(_PATTERNS) - i for i, p in enumerate(_PATTERNS)}
+_PATTERN_FLAT = 0.1     # 5 日淨額小於此（億）視為沒有轉向證據，跟著 20 日方向走
 
 _TABS = (("c", "三大法人"), ("f", "外資"), ("t", "投信"), ("d", "自營商"))
 # 個股層快取一列是 [名稱, c, f, t, d]；載入時名稱另外收，序列只留四個數字，
@@ -85,24 +95,24 @@ def _accel(series: list[float], min_avg: float = _ACCEL_MIN_AVG) -> tuple[float 
 
 
 def _price_metrics(today: date, sector_of: dict[str, str]
-                  ) -> tuple[dict, dict, dict, dict, int]:
+                  ) -> tuple[dict, dict, dict, dict, dict]:
     """一次載入 52 週價格窗口，算完所有價格衍生指標。
 
-    回傳 (子類股近 N 日等權報酬, 個股近 N 日報酬, 個股 52 週位階,
-          {date: 當日快照}, 實際報酬天數)
+    回傳 ({N: 子類股近 N 日等權報酬}, {N: 個股近 N 日報酬}, 個股 52 週位階,
+          {date: 當日快照}, {N: 實際報酬天數})，N ∈ {_SHORT, _DAYS}
 
     52 週高低走還原權息 cum 序列（跟 market_trend 同一套鏈與 ±12% 護欄），
     不然高股息股會因為除息缺口被算成「離高點很遠」。位階 0% = 就在 52 週高點。
     """
     window = price_cache.load_window(today, _WEEK52)
     if len(window) < 2:
-        return {}, {}, {}, {}, 0
+        return {}, {}, {}, {}, {}
 
     refs = exrights.load_refs()
     chains: dict[str, _Chain] = {}
     peak: dict[str, float] = {}
-    ret_start = max(0, len(window) - _SHORT - 1)
-    cum_at_start: dict[str, float] = {}
+    ret_start = {n: max(0, len(window) - n - 1) for n in (_SHORT, _DAYS)}
+    cum_at_start: dict[int, dict[str, float]] = {}
 
     for i, (d, snap) in enumerate(window):
         day_refs = refs.get(d.isoformat(), {})
@@ -123,25 +133,29 @@ def _price_metrics(today: date, sector_of: dict[str, str]
             ch.pc, ch.last_idx = c, i
             if ch.cum > peak.get(code, 0):
                 peak[code] = ch.cum
-        if i == ret_start:
-            cum_at_start = {code: ch.cum for code, ch in chains.items()}
+        for n, start in ret_start.items():
+            if i == start:
+                cum_at_start[n] = {code: ch.cum for code, ch in chains.items()}
 
-    buckets: dict[str, list[float]] = defaultdict(list)
-    rets: dict[str, float] = {}
-    pos52: dict[str, float] = {}
-    for code, ch in chains.items():
-        base = cum_at_start.get(code)
-        if base:
-            r = (ch.cum / base - 1) * 100
-            rets[code] = round(r, 2)
-            buckets[sector_of.get(code) or "其他"].append(r)
-        pk = peak.get(code)
-        if pk:
-            pos52[code] = round((ch.cum / pk - 1) * 100, 1)
+    sector_rets: dict[int, dict[str, float]] = {}
+    code_rets: dict[int, dict[str, float]] = {}
+    for n, base_map in cum_at_start.items():
+        buckets: dict[str, list[float]] = defaultdict(list)
+        rets: dict[str, float] = {}
+        for code, ch in chains.items():
+            base = base_map.get(code)
+            if base:
+                r = (ch.cum / base - 1) * 100
+                rets[code] = round(r, 2)
+                buckets[sector_of.get(code) or "其他"].append(r)
+        code_rets[n] = rets
+        sector_rets[n] = {s: round(sum(v) / len(v), 2) for s, v in buckets.items()}
 
+    pos52 = {code: round((ch.cum / peak[code] - 1) * 100, 1)
+             for code, ch in chains.items() if peak.get(code)}
     snap_by_date = {d: snap for d, snap in window}
-    return ({s: round(sum(v) / len(v), 2) for s, v in buckets.items()},
-            rets, pos52, snap_by_date, len(window) - 1 - ret_start)
+    return (sector_rets, code_rets, pos52, snap_by_date,
+            {n: len(window) - 1 - start for n, start in ret_start.items()})
 
 
 def _inst_cost(series: list[float], dates: list, snap_by_date: dict,
@@ -188,6 +202,30 @@ def _consensus(f5: float, t5: float) -> tuple[int, str]:
     return 0, "分歧"
 
 
+def _pattern(net5: float, net20: float, ret5, ret20) -> str:
+    """四維壓成一個型態詞。缺價格資料回 ''。
+
+    流向：5 日與 20 日同號 → 續進/續出；異號 → 轉買/轉賣（5 日太小不算轉向）。
+    價格主軸看 20 日，5 日只用來把「趨勢中的拉回/反彈」從續進/續出裡拆出來。
+    """
+    if ret5 is None or ret20 is None:
+        return ""
+    long_in = net20 > 0
+    short_in = long_in if abs(net5) < _PATTERN_FLAT else net5 > 0
+    up20, up5 = ret20 > 0, ret5 > 0
+    if short_in and long_in:
+        if not up20:
+            return "買不漲"
+        return "拉回續買" if not up5 else "主流延續"
+    if not short_in and not long_in:
+        if up20:
+            return "拉高調節"
+        return "反彈續賣" if up5 else "棄守"
+    if short_in:                      # 出 → 進
+        return "追漲回補" if up20 else "低接轉買"
+    return "漲多轉賣" if up20 else "停損轉賣"
+
+
 def build(today: date) -> dict:
     window = inst_flow_cache.load_window(today, _DAYS)
     coverage = price_cache.window_coverage(window, today)
@@ -195,7 +233,7 @@ def build(today: date) -> dict:
 
     if days < 2:
         logger.warning("sector_flow: inst_flow 快取不足（%d 天）— 先跑 backfill_inst.py", days)
-        return {"days": days, "ret_days": 0, "coverage": coverage, "degraded": True,
+        return {"days": days, "ret_days": 0, "ret_days_long": 0, "coverage": coverage, "degraded": True,
                 "tabs": {}, "stock_tabs": {}, "start": None, "end": None}
 
     degraded = coverage["pct"] < _MIN_COVERAGE or days < _MIN_DAYS
@@ -211,7 +249,9 @@ def build(today: date) -> dict:
     for code, sec in code_to_sector.items():
         sector_parent.setdefault(sec, code_to_parent.get(code, ""))
 
-    rets, code_rets, pos52, snap_by_date, ret_days = _price_metrics(today, code_to_sector)
+    sector_rets, all_code_rets, pos52, snap_by_date, ret_days = _price_metrics(today, code_to_sector)
+    rets,   rets20      = sector_rets.get(_SHORT, {}),   sector_rets.get(_DAYS, {})
+    code_rets, code_rets20 = all_code_rets.get(_SHORT, {}), all_code_rets.get(_DAYS, {})
 
     # 個股層（展開列用）。日期序列跟母表同一組，缺檔的日子給 {}。
     stock_window = inst_flow_cache.load_window(today, _DAYS, stocks=True)
@@ -272,6 +312,8 @@ def build(today: date) -> dict:
                     "net20":  round(sum(ss), 2),
                     "streak": _streak(ss),
                     "ret5":   code_rets.get(code),
+                    "ret20":  code_rets20.get(code),
+                    "pattern": _pattern(s5, sum(ss), code_rets.get(code), code_rets20.get(code)),
                 })
             picks = [m for m in members if abs(m["net5"]) >= _STOCK_SHOW_YI]
             if len(picks) < _STOCK_MIN_SHOW:      # 小類股保底：至少看得到前幾名
@@ -310,6 +352,8 @@ def build(today: date) -> dict:
                 "accel":  ratio,
                 "accel_tag": tag,
                 "ret5":   rets.get(sec),
+                "ret20":  rets20.get(sec),
+                "pattern": _pattern(net5, net20, rets.get(sec), rets20.get(sec)),
                 "n":      window[-1][1].get(sec, {}).get("n", 0),
                 "stocks": stocks,
                 "hidden": max(0, len(picks) - len(stocks)),
@@ -353,6 +397,8 @@ def build(today: date) -> dict:
                 "accel":  ratio,
                 "accel_tag": tag,
                 "ret5":   code_rets.get(code),
+                "ret20":  code_rets20.get(code),
+                "pattern": _pattern(s5, sum(ss), code_rets.get(code), code_rets20.get(code)),
             })
         srows.sort(key=lambda r: r["net5"], reverse=True)
         stock_tabs[key] = (srows if len(srows) <= _STOCK_TABLE_TOP * 2
@@ -360,7 +406,9 @@ def build(today: date) -> dict:
 
     return {
         "days":     days,
-        "ret_days": ret_days,
+        "ret_days": ret_days.get(_SHORT, 0),
+        "ret_days_long": ret_days.get(_DAYS, 0),
+        "pattern_order": _PATTERN_ORDER,
         "stock_tabs": stock_tabs,
         "stock_top":  _STOCK_TABLE_TOP,
         "stock_universe": len(series_by_code),
