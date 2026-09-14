@@ -29,11 +29,8 @@ from datetime import date, timedelta
 from pathlib import Path
 
 import requests
-import urllib3
 
-# tpex.org.tw 憑證鏈在本機 Python/OpenSSL 3.x 驗不過（llm_wiki: tpex-ssl-missing-ski），
-# 公開盤後資料、無憑證，只對這個 host 關驗證。
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+from fetcher.tls import verify_for
 
 sys.path.insert(0, str(Path(__file__).parent))
 
@@ -64,7 +61,7 @@ def _fetch_tpex_day(d: date) -> dict[str, dict] | None:
             params={"date": d.strftime("%Y/%m/%d"), "type": "EW", "response": "json"},
             headers=HEADERS,
             timeout=30,
-            verify=False,
+            verify=verify_for(TPEX_DAILY),
         )
         if resp.status_code != 200:
             logger.warning(f"{d.isoformat()} [TPEX]: HTTP {resp.status_code}")

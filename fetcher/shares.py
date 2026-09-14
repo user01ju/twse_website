@@ -15,6 +15,8 @@ import logging
 
 import requests
 
+from fetcher.tls import verify_for
+
 from config import OUTPUT_DIR
 from processor.utils import is_stock_code, parse_num
 
@@ -35,7 +37,7 @@ def _fetch() -> dict[str, float]:
         (_TPEX, "SecuritiesCompanyCode", "IssueShares"),
     ):
         try:
-            rows = requests.get(url, headers=_HEADERS, timeout=40).json()
+            rows = requests.get(url, headers=_HEADERS, timeout=40, verify=verify_for(url)).json()
         except Exception as e:
             logger.warning(f"shares: {url} 抓取失敗 — {e}")
             continue

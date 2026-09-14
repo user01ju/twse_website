@@ -19,6 +19,8 @@ from datetime import date, timedelta
 
 import requests
 
+from fetcher.tls import verify_for
+
 from config import BASE_DIR, OUTPUT_DIR, FETCH_TIMEOUT
 
 logger = logging.getLogger(__name__)
@@ -52,7 +54,7 @@ _RANGE_SOURCES = [
 def _get_json(url: str, retries: int = 2) -> dict:
     for attempt in range(retries + 1):
         try:
-            resp = requests.get(url, headers=_HEADERS, timeout=FETCH_TIMEOUT)
+            resp = requests.get(url, headers=_HEADERS, timeout=FETCH_TIMEOUT, verify=verify_for(url))
             resp.raise_for_status()
             return resp.json()
         except requests.RequestException:

@@ -4,6 +4,8 @@ from datetime import date
 
 import requests
 
+from fetcher.tls import verify_for
+
 from config import ENDPOINTS, FETCH_TIMEOUT, FETCH_RETRIES
 
 logger = logging.getLogger(__name__)
@@ -29,7 +31,7 @@ class FetchError(Exception):
 def _get(url: str, timeout: int = FETCH_TIMEOUT) -> list[dict]:
     for attempt in range(FETCH_RETRIES):
         try:
-            resp = requests.get(url, headers=HEADERS, timeout=timeout)
+            resp = requests.get(url, headers=HEADERS, timeout=timeout, verify=verify_for(url))
             resp.raise_for_status()
             data = resp.json()
             if isinstance(data, list):
@@ -95,7 +97,7 @@ def fetch_highlight(target: date = None) -> dict:
     for attempt in range(FETCH_RETRIES):
         try:
             resp = requests.get(ENDPOINTS["tpex_highlight"], headers=HIGHLIGHT_HEADERS,
-                                timeout=FETCH_TIMEOUT)
+                                timeout=FETCH_TIMEOUT, verify=verify_for(ENDPOINTS["tpex_highlight"]))
             resp.raise_for_status()
             data = resp.json()
             if isinstance(data, list) and data:

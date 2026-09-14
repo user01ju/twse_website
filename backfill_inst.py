@@ -28,6 +28,8 @@ from pathlib import Path
 
 import requests
 
+from fetcher.tls import verify_for
+
 sys.path.insert(0, str(Path(__file__).parent))
 
 from fetcher import inst_flow_cache, price_cache
@@ -77,7 +79,7 @@ def _fetch_t86(d: date) -> dict | None:
 def _fetch_tpex(d: date) -> list[dict] | None:
     """上櫃法人買賣超，轉成 OpenAPI 的欄位名，好讓 combined_inst 的解析器直接吃。"""
     try:
-        resp = requests.get(TPEX_INST, headers=HEADERS, timeout=30,
+        resp = requests.get(TPEX_INST, headers=HEADERS, timeout=30, verify=verify_for(TPEX_INST),
                             params={"type": "Daily", "sect": "EW",
                                     "date": d.strftime("%Y/%m/%d"), "id": "",
                                     "response": "json"})

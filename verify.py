@@ -31,6 +31,8 @@ from zoneinfo import ZoneInfo
 
 import requests
 
+from fetcher.tls import verify_for
+
 BASE_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(BASE_DIR))
 
@@ -203,7 +205,7 @@ class Ctx:
         if self.calls:
             time.sleep(EXTERNAL_SLEEP_SEC)
         self.calls += 1
-        resp = requests.get(url, params=params, headers=_UA, timeout=40)
+        resp = requests.get(url, params=params, headers=_UA, timeout=40, verify=verify_for(url))
         resp.raise_for_status()
         j = resp.json()
         if not isinstance(j, dict) or str(j.get("stat", "")).upper() != "OK":
