@@ -59,11 +59,11 @@
         <th class="stf-th-yi si-sort" data-col="11" title="現價相對法人 {{ d.long }} 日加權平均成本">vs成本<span class="si-sort-ind"></span></th>
         <th class="stf-th-cons si-sort" data-col="12" title="外資與投信 {{ d.short }} 日方向是否一致">一致<span class="si-sort-ind"></span></th>
         <th class="stf-th-streak si-sort" data-col="13" title="↺ = 今日翻向，後面是翻向前的連續天數">連續<span class="si-sort-ind"></span></th>
-        <th class="si-th-yi si-sort" data-col="14">加速度<span class="si-sort-ind"></span></th>
+        <th class="stf-th-accel si-sort" data-col="14">加速度<span class="si-sort-ind"></span></th>
         <th class="stf-th-pct si-sort" data-col="15">今日%<span class="si-sort-ind"></span></th>
         <th class="stf-th-pct si-sort" data-col="16">近{{ d.ret_days }}日<span class="si-sort-ind"></span></th>
         <th class="stf-th-pct si-sort" data-col="17">近{{ d.ret_days_long }}日<span class="si-sort-ind"></span></th>
-        <th class="si-th-yi si-sort" data-col="18" title="由多到空排序">型態<span class="si-sort-ind"></span></th>
+        <th class="stf-th-pat si-sort" data-col="18" title="由多到空排序">型態<span class="si-sort-ind"></span></th>
       </tr>
     </thead>
     <tbody>
@@ -151,6 +151,9 @@
 .stf-th-sector { width: 104px; }
 .stf-th-yi { width: 76px; text-align: right; }
 .stf-th-z { width: 48px; text-align: right; }
+/* 加速度標籤 127px、型態標籤+位階 chip 103px：table-layout: fixed 的欄寬要給足，不然溢到右邊/被切 */
+.stf-th-accel { width: 140px; text-align: right; }
+.stf-th-pat { width: 124px; text-align: right; }
 .stf-th-pct { width: 68px; text-align: right; }
 .stf-th-streak { width: 128px; text-align: right; }
 .stf-streak { white-space: nowrap; }

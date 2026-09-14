@@ -91,7 +91,7 @@
         <th class="sf-th-yi si-sort" data-col="8">市值(億)<span class="si-sort-ind"></span></th>
         <th class="sf-th-yi si-sort" data-col="9">{{ d.short }}日/市值<span class="si-sort-ind"></span></th>
         <th class="sf-th-streak si-sort" data-col="10" title="↺ = 今日翻向，後面是翻向前的連續天數">連續<span class="si-sort-ind"></span></th>
-        <th class="si-th-yi si-sort" data-col="11">加速度<span class="si-sort-ind"></span></th>
+        <th class="sf-th-accel si-sort" data-col="11">加速度<span class="si-sort-ind"></span></th>
         <th class="sf-th-pct si-sort" data-col="12">今日%<span class="si-sort-ind"></span></th>
         <th class="sf-th-pct si-sort" data-col="13">近{{ d.ret_days }}日<span class="si-sort-ind"></span></th>
         <th class="sf-th-pct si-sort" data-col="14">近{{ d.ret_days_long }}日<span class="si-sort-ind"></span></th>
@@ -208,6 +208,8 @@
 .sf-note { opacity: 0.65; font-size: 12px; }
 .sf-th-yi { width: 82px; text-align: right; }
 .sf-th-z { width: 48px; text-align: right; }
+/* 「🔥 加速流入 1.5x」標籤實測 127px，table-layout: fixed 下 90px 的欄會讓它壓到右邊欄 */
+.sf-th-accel { width: 140px; text-align: right; }
 .sf-th-pct { width: 70px; text-align: right; }
 .sf-th-streak { width: 128px; text-align: right; }
 .sf-streak { white-space: nowrap; }
