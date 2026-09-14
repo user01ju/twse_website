@@ -1,16 +1,34 @@
+{# 漲跌幅前 100 + 52 週新高/新低清單。脈絡欄（量比 / 距高 / 近20日 / 法人今日 / 型態）來自 movers.enrich，
+   缺資料時該格顯示 –，不影響 DataTables 排序（data-order 給 0）。 #}
 {% set s = sections.movers %}
 {% if s.ok %}
 {% set d = s.data %}
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+{% set pat_cls = {
+  '主流延續': 'sf-pat-bull', '拉回續買': 'sf-pat-bull', '追漲回補': 'sf-pat-bull', '低接轉買': 'sf-pat-bull',
+  '買不漲': 'sf-pat-warn', '漲多轉賣': 'sf-pat-warn',
+  '停損轉賣': 'sf-pat-bear', '拉高調節': 'sf-pat-bear', '反彈續賣': 'sf-pat-bear', '棄守': 'sf-pat-bear',
+} %}
+{% macro ctx_cells(st) -%}
+  <td data-order="{{ st.volr if st.volr is not none else 0 }}" class="{{ 'mv-hot' if (st.volr or 0) >= 2 else '' }}">{% if st.volr is not none %}{{ "{:.1f}".format(st.volr) }}x{% else %}–{% endif %}</td>
+  <td data-order="{{ st.pos52 if st.pos52 is not none else -999 }}" class="mv-dim">{% if st.pos52 is not none %}{{ "{:.0f}".format(st.pos52) }}%{% else %}–{% endif %}</td>
+  <td data-order="{{ st.r20 if st.r20 is not none else 0 }}" class="{{ 'pos' if (st.r20 or 0) > 0 else ('neg' if (st.r20 or 0) < 0 else 'flat') }}">{% if st.r20 is not none %}{{ "{:+.1f}".format(st.r20) }}%{% else %}–{% endif %}</td>
+  <td data-order="{{ st.net1 if st.net1 is not none else 0 }}" class="{{ 'pos' if (st.net1 or 0) > 0 else ('neg' if (st.net1 or 0) < 0 else 'flat') }}">{% if st.net1 is not none %}{{ "{:+.1f}".format(st.net1) }}{% else %}–{% endif %}</td>
+  <td data-order="{{ st.streak or 0 }}">{% if st.pattern %}<span class="sf-pat {{ pat_cls[st.pattern] }}">{{ st.pattern }}</span>{% else %}<span class="mv-dim">–</span>{% endif %}</td>
+{%- endmacro %}
+{% set ctx_head %}<th title="今日成交量 ÷ 前 20 日均量">量比</th><th title="還原權息收盤距 52 週高點">距高</th><th>近20日</th><th title="三大法人今日淨額（億）">法人今日</th><th title="法人四維型態（描述，非方向建議）">型態</th>{% endset %}
+
+<div class="si-meta" style="margin-bottom:10px">
+  <span class="sf-note">脈絡欄：量比 = 今日成交量 ÷ 前 20 日均量（≥ 2x 標粗）；距高 = 還原權息收盤距 52 週高點；法人今日 = 三大法人淨額（億）；
+    型態 = 第 6 區塊的四維標籤。用來分「創高突破」「跌深反彈」「跌停打開的死貓跳」。</span>
+</div>
+
+<div class="mv-grid">
   {% for list_key, list_label in [('gainers','漲幅前 100'), ('losers','跌幅前 100')] %}
-  <div>
+  <div class="mv-wrap">
     <h4 style="margin-bottom:10px;color:var(--text-muted)">{{ list_label }}</h4>
-    <table class="dt-table" data-sort-col="5" data-sort-dir="{{ 'desc' if list_key == 'gainers' else 'asc' }}">
+    <table class="dt-table" data-sort-col="4" data-sort-dir="{{ 'desc' if list_key == 'gainers' else 'asc' }}">
       <thead>
-        <tr>
-          <th>#</th><th>代號</th><th>名稱</th><th>收盤</th>
-          <th>漲跌</th><th>漲跌幅%</th><th>市場</th>
-        </tr>
+        <tr><th>#</th><th>代號</th><th>名稱</th><th>收盤</th><th>漲跌幅%</th>{{ ctx_head }}<th>市場</th></tr>
       </thead>
       <tbody>
         {% for stock in d[list_key] %}
@@ -20,9 +38,9 @@
           <td>{{ stock.code }}</td>
           <td>{{ stock.name }}</td>
           <td data-order="{{ stock.close }}">{{ "{:,.2f}".format(stock.close) }}</td>
-          <td class="{{ cls }}" data-order="{{ stock.change }}">{{ "{:+.2f}".format(stock.change) }}</td>
           <td class="{{ cls }}" data-order="{{ stock.change_pct }}">{{ "{:+.2f}".format(stock.change_pct) }}%</td>
-          <td><span style="color:var(--text-muted);font-size:12px">{{ stock.market }}</span></td>
+          {{ ctx_cells(stock) }}
+          <td><span class="mv-dim" style="font-size:12px">{{ stock.market }}</span></td>
         </tr>
         {% endfor %}
       </tbody>
@@ -30,6 +48,50 @@
   </div>
   {% endfor %}
 </div>
+
+{% if d.new_high is defined %}
+<div class="mv-grid" style="margin-top:28px">
+  {% for list_key, list_label, total in [('new_high', '創 52 週新高', d.new_high_total), ('new_low', '創 52 週新低', d.new_low_total)] %}
+  <div class="mv-wrap">
+    <h4 style="margin-bottom:10px;color:var(--text-muted)">{{ list_label }}
+      <span class="sf-note">共 {{ total }} 檔{% if total > d[list_key] | length %}，列法人今日淨額{{ '最大' if list_key == 'new_high' else '最小' }}的 {{ d[list_key] | length }} 檔{% endif %}（還原權息，滿半年資料才計）</span></h4>
+    {% if not d[list_key] %}
+    <div class="error-box">今日沒有</div>
+    {% else %}
+    <table class="dt-table" data-sort-col="8" data-sort-dir="{{ 'desc' if list_key == 'new_high' else 'asc' }}">
+      <thead>
+        <tr><th>#</th><th>代號</th><th>名稱</th><th>子類股</th><th>今日%</th>{{ ctx_head }}</tr>
+      </thead>
+      <tbody>
+        {% for st in d[list_key] %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ st.code }}</td>
+          <td>{{ st.name }}</td>
+          <td><span class="mv-dim" style="font-size:12px">{{ st.sector }}</span></td>
+          <td class="{{ 'pos' if (st.r1 or 0) > 0 else ('neg' if (st.r1 or 0) < 0 else 'flat') }}" data-order="{{ st.r1 or 0 }}">{% if st.r1 is not none %}{{ "{:+.2f}".format(st.r1) }}%{% else %}–{% endif %}</td>
+          {{ ctx_cells(st) }}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<style>
+.mv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 1100px) { .mv-grid { grid-template-columns: 1fr; } }
+.mv-wrap { overflow-x: auto; }
+.mv-dim { color: var(--text-muted); }
+.mv-hot { font-weight: 700; color: var(--text-primary); }
+.mv-wrap .sf-pat { font-size: 11px; padding: 0 5px; border-radius: 4px; white-space: nowrap; background: var(--surface-2, rgba(127,127,127,.12)); }
+.mv-wrap .sf-pat-bull { color: var(--pos); background: var(--pos-glow); }
+.mv-wrap .sf-pat-bear { color: var(--neg); background: var(--neg-glow); }
+.mv-wrap .sf-pat-warn { color: var(--warning); background: rgba(245,158,11,.14); }
+</style>
 {% else %}
 <div class="error-box">漲跌幅資料載入失敗：{{ s.error }}</div>
 {% endif %}

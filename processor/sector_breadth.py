@@ -21,10 +21,12 @@ logger = logging.getLogger(__name__)
 _SHORT, _LONG = 5, 20
 _LEADERS = 2            # 每個族群列幾檔領漲 / 領跌
 _MIN_MEMBERS = 3        # 成分股少於這麼多檔不列（1~2 檔的「族群廣度」沒有意義）
+_VOL_DAYS = 20          # 量比分母：前 N 日均量（不含今日），至少要 _VOL_MIN 天有量
+_VOL_MIN = 10
 
 
 class _Ch:
-    __slots__ = ("pc", "cum", "last_idx", "cum20", "cum252")
+    __slots__ = ("pc", "cum", "last_idx", "cum20", "cum252", "vols")
 
     def __init__(self):
         self.pc = None
@@ -32,6 +34,7 @@ class _Ch:
         self.last_idx = None
         self.cum20 = deque(maxlen=_MA_DAYS)
         self.cum252 = deque(maxlen=_WEEK52_DAYS)
+        self.vols = deque(maxlen=_VOL_DAYS + 1)     # 含今日；舊快取沒 v 的日子存 None
 
 
 def _load_names() -> dict[str, str]:
@@ -79,6 +82,7 @@ def build(today: date) -> dict:
             ch.pc, ch.last_idx = c, i
             ch.cum20.append(ch.cum)
             ch.cum252.append(ch.cum)
+            ch.vols.append(px.get("v"))
         for k, s in starts.items():
             if i == s:
                 cum_at[k] = {code: ch.cum for code, ch in chains.items()}
@@ -100,9 +104,16 @@ def build(today: date) -> dict:
         if len(ch.cum252) >= _HALF_YEAR:
             m["nh"] = ch.cum >= max(ch.cum252)
             m["nl"] = ch.cum <= min(ch.cum252)
+            m["pos52"] = round((ch.cum / max(ch.cum252) - 1) * 100, 1)
         else:
             m["nh"] = m["nl"] = False
-        members[code_to_sector.get(code) or "其他"].append(m)
+            m["pos52"] = None
+        # 量比 = 今日量 ÷ 前 20 日均量（不含今日；沒 v 的舊日子跳過，太少天不給）
+        hist = [v for v in list(ch.vols)[:-1] if v]
+        tv = ch.vols[-1] if ch.vols else None
+        m["volr"] = round(tv / (sum(hist) / len(hist)), 2) if tv and len(hist) >= _VOL_MIN else None
+        m["sector"] = code_to_sector.get(code) or "其他"
+        members[m["sector"]].append(m)
 
     rows = []
     for sec, ms in members.items():
@@ -138,9 +149,12 @@ def build(today: date) -> dict:
     rows.sort(key=lambda r: r["med1"], reverse=True)
 
     total_n = sum(r["n"] for r in rows)
+    # 個股層指標給其他區塊用（漲跌幅前 100 的脈絡欄、52 週新高低清單）
+    stocks = {m["code"]: m for ms in members.values() for m in ms}
     return {
         "date":     last_date.isoformat(),
         "rows":     rows,
+        "stocks":   stocks,
         "coverage": coverage,
         "degraded": degraded,
         "ret_days": {k: n - 1 - s for k, s in starts.items()},

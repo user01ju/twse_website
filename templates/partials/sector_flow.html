@@ -21,6 +21,14 @@
 {% set tabs = [
   ('c', '📊 三大法人'), ('f', '🌐 外資'), ('t', '🏦 投信'), ('d', '🏛️ 自營商'),
 ] %}
+{% set rows_json = {} %}
+{% for key, _l in tabs %}
+  {% set pts = [] %}
+  {% for g in d.tabs[key] if g.net5_pct is not none and g.net20_pct is not none %}
+    {% set _ = pts.append({'s': g.sector, 'x': g.net20_pct, 'y': g.net5_pct, 'n5': g.net5, 'n20': g.net20, 'p': g.pattern, 'r5': g.ret5, 'r20': g.ret20}) %}
+  {% endfor %}
+  {% set _ = rows_json.update({key: pts | tojson}) %}
+{% endfor %}
 {% set pat_cls = {
   '主流延續': 'sf-pat-bull', '拉回續買': 'sf-pat-bull', '追漲回補': 'sf-pat-bull', '低接轉買': 'sf-pat-bull',
   '買不漲': 'sf-pat-warn', '漲多轉賣': 'sf-pat-warn',
@@ -61,6 +69,14 @@
       每類最多 {{ d.stock_cap }} 檔，小型子類股保底列前幾名）。此處<strong>不套</strong>前 100 名截斷。</div>
   </div>
 
+  {# 族群輪動圖：x = 20 日淨額/市值、y = 5 日淨額/市值。資料塞 JSON，SVG 由下方 script 畫 #}
+  <div class="sf-rot" id="sf-rot-{{ key }}">
+    <div class="sf-rot-head"><strong>族群輪動</strong>
+      <span class="sf-note">橫軸 {{ d.long }} 日淨額 ÷ 市值、縱軸 {{ d.short }} 日淨額 ÷ 市值（%）。右上持續流入、左上剛開始流入、右下開始流出、左下持續流出；
+        顏色 = 型態組（紅多頭 / 琥珀警戒 / 綠空頭）。標名的是離原點最遠的 14 個，其餘滑過看。</span></div>
+    <div class="sf-rot-body"></div>
+    <script type="application/json">{{ rows_json[key] }}</script>
+  </div>
   <table class="si-table sf-table">
     <thead>
       <tr>
@@ -207,6 +223,19 @@
 .sf-cold { color: var(--neg); background: var(--neg-glow); }
 .sf-flip { opacity: 0.85; }
 .sf-pattern { white-space: nowrap; }
+.sf-rot { margin: 6px 0 14px; }
+.sf-rot-head { margin-bottom: 6px; }
+.sf-rot-body { position: relative; max-width: 760px; }
+.sf-rot svg { width: 100%; height: auto; display: block; background: rgba(127,127,127,.04); border: 1px solid rgba(127,127,127,.15); border-radius: 6px; }
+.sf-rot .grid line { stroke: rgba(127,127,127,.18); stroke-width: 1; }
+.sf-rot .zero line { stroke: rgba(127,127,127,.45); stroke-width: 1; }
+.sf-rot text { font-family: var(--font-mono); font-size: 10px; fill: var(--text-muted); }
+.sf-rot text.q { font-family: inherit; font-size: 11px; fill: var(--text-muted); }
+.sf-rot text.lbl { font-family: inherit; font-size: 11px; fill: var(--text-primary); paint-order: stroke; stroke: var(--bg, #14181c); stroke-width: 3px; stroke-linejoin: round; }
+.sf-rot .pt { stroke: rgba(0,0,0,.35); stroke-width: 1; fill-opacity: .85; cursor: pointer; }
+.sf-rot .pt.bull { fill: var(--pos); } .sf-rot .pt.warn { fill: var(--warning); } .sf-rot .pt.bear { fill: var(--neg); } .sf-rot .pt.none { fill: var(--text-muted); }
+.sf-rot .pt:hover { fill-opacity: 1; stroke: var(--text-primary); }
+.sf-rot-tip { position: absolute; pointer-events: none; background: var(--text-primary); color: var(--bg, #14181c); font-size: 12px; line-height: 1.5; padding: 6px 9px; border-radius: 4px; white-space: nowrap; opacity: 0; z-index: 2; }
 .sf-pat { font-size: 12px; padding: 1px 6px; border-radius: 4px; white-space: nowrap; background: var(--surface-2, rgba(127,127,127,.12)); }
 .sf-pat-bull { color: var(--pos); background: var(--pos-glow); }
 .sf-pat-bear { color: var(--neg); background: var(--neg-glow); }
@@ -273,6 +302,47 @@ if (typeof window.sfSortable !== 'function') {
   };
 }
 (function () {
+  var CLS = {'主流延續':'bull','拉回續買':'bull','追漲回補':'bull','低接轉買':'bull','買不漲':'warn','漲多轉賣':'warn',
+             '停損轉賣':'bear','拉高調節':'bear','反彈續賣':'bear','棄守':'bear'};
+  function fmt(v, d) { return v == null ? '–' : (v > 0 ? '+' : '') + v.toFixed(d); }
+  document.querySelectorAll('.sf-rot').forEach(function (box) {
+    var pts; try { pts = JSON.parse(box.querySelector('script').textContent); } catch (e) { return; }
+    if (!pts.length) { box.style.display = 'none'; return; }
+    var W = 760, H = 360, m = {t: 16, r: 14, b: 34, l: 44};
+    var lim = function (a) { var mx = 0; a.forEach(function (v) { mx = Math.max(mx, Math.abs(v)); }); return Math.ceil(mx * 1.08 * 4) / 4 || 1; };
+    var xm = lim(pts.map(function (p) { return p.x; })), ym = lim(pts.map(function (p) { return p.y; }));
+    var sx = function (v) { return m.l + (v + xm) / (2 * xm) * (W - m.l - m.r); };
+    var sy = function (v) { return m.t + (ym - v) / (2 * ym) * (H - m.t - m.b); };
+    var step = function (mx) { return mx > 4 ? 2 : mx > 2 ? 1 : mx > 1 ? 0.5 : 0.25; };
+    var g = '<g class="grid">', tk = '';
+    for (var x = -xm; x <= xm + 1e-9; x += step(xm)) { if (Math.abs(x) < 1e-9) continue; g += '<line x1="' + sx(x) + '" x2="' + sx(x) + '" y1="' + m.t + '" y2="' + (H - m.b) + '"/>'; tk += '<text x="' + sx(x) + '" y="' + (H - m.b + 13) + '" text-anchor="middle">' + fmt(x, 2) + '%</text>'; }
+    for (var y = -ym; y <= ym + 1e-9; y += step(ym)) { if (Math.abs(y) < 1e-9) continue; g += '<line x1="' + m.l + '" x2="' + (W - m.r) + '" y1="' + sy(y) + '" y2="' + sy(y) + '"/>'; tk += '<text x="' + (m.l - 5) + '" y="' + (sy(y) + 3.5) + '" text-anchor="end">' + fmt(y, 2) + '%</text>'; }
+    g += '</g><g class="zero"><line x1="' + sx(0) + '" x2="' + sx(0) + '" y1="' + m.t + '" y2="' + (H - m.b) + '"/><line x1="' + m.l + '" x2="' + (W - m.r) + '" y1="' + sy(0) + '" y2="' + sy(0) + '"/></g>';
+    var q = '<text class="q" x="' + (W - m.r - 4) + '" y="' + (m.t + 12) + '" text-anchor="end">持續流入</text>' +
+            '<text class="q" x="' + (m.l + 4) + '" y="' + (m.t + 12) + '">剛開始流入</text>' +
+            '<text class="q" x="' + (W - m.r - 4) + '" y="' + (H - m.b - 6) + '" text-anchor="end">開始流出</text>' +
+            '<text class="q" x="' + (m.l + 4) + '" y="' + (H - m.b - 6) + '">持續流出</text>';
+    var ranked = pts.slice().sort(function (a, b) { return (Math.abs(b.x) / xm + Math.abs(b.y) / ym) - (Math.abs(a.x) / xm + Math.abs(a.y) / ym); });
+    var label = {}; ranked.slice(0, 14).forEach(function (p) { label[p.s] = 1; });
+    var dots = '', lbls = '';
+    pts.forEach(function (p, i) {
+      var cx = sx(p.x), cy = sy(p.y);
+      dots += '<circle class="pt ' + (CLS[p.p] || 'none') + '" cx="' + cx + '" cy="' + cy + '" r="4.5" data-i="' + i + '"></circle>';
+      if (label[p.s]) lbls += '<text class="lbl" x="' + (cx > W * 0.82 ? cx - 7 : cx + 6) + '" y="' + (cy + 3.5) + '"' + (cx > W * 0.82 ? ' text-anchor="end"' : '') + '>' + p.s + '</text>';
+    });
+    var body = box.querySelector('.sf-rot-body');
+    body.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '">' + g + tk + q + dots + lbls + '</svg><div class="sf-rot-tip"></div>';
+    var tip = body.querySelector('.sf-rot-tip'), svg = body.querySelector('svg');
+    svg.addEventListener('mousemove', function (e) {
+      var t = e.target.closest('.pt'); if (!t) { tip.style.opacity = 0; return; }
+      var p = pts[+t.dataset.i], r = body.getBoundingClientRect();
+      tip.innerHTML = '<b>' + p.s + '</b>' + (p.p ? ' · ' + p.p : '') + '<br>5 日 ' + fmt(p.n5, 1) + ' 億（' + fmt(p.y, 2) + '%）· 20 日 ' + fmt(p.n20, 1) + ' 億（' + fmt(p.x, 2) + '%）<br>漲跌 5 日 ' + fmt(p.r5, 2) + '% · 20 日 ' + fmt(p.r20, 2) + '%';
+      var x = e.clientX - r.left + 12, y = e.clientY - r.top + 12;
+      if (x + tip.offsetWidth > r.width - 6) x = e.clientX - r.left - tip.offsetWidth - 12;
+      tip.style.left = x + 'px'; tip.style.top = y + 'px'; tip.style.opacity = 1;
+    });
+    svg.addEventListener('mouseleave', function () { tip.style.opacity = 0; });
+  });
   document.querySelectorAll('.sf-table').forEach(function (table) {
     window.sfSortable(table);
     var tbody = table.querySelector('tbody');

@@ -280,6 +280,13 @@ def build(target_date: date) -> "bool | str":
 
     sections["sector_flow"] = _safe(sector_flow.build, actual_date)
     sections["sector_breadth"] = _safe(sector_breadth.build, actual_date)
+    # 漲跌幅前 100 補脈絡欄 + 52 週新高低清單（吃上面兩個 section；哪個沒好就少哪幾欄）
+    if sections["movers"]["ok"]:
+        movers.enrich(
+            sections["movers"]["data"],
+            sections["sector_breadth"]["data"].get("stocks") if sections["sector_breadth"]["ok"] else None,
+            sections["sector_flow"]["data"].get("by_code") if sections["sector_flow"]["ok"] else None,
+        )
 
     # AI summary last so its prompt can draw on every other section
     sections["ai_summary"] = _safe(

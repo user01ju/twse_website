@@ -34,7 +34,8 @@
     窗口 <strong>{{ d.start }} ~ {{ d.end }}</strong>（{{ d.days }} 個交易日）　
     {{ d.stock_universe }} 檔有進出，列出「今日」與「{{ d.short }} 日」買賣超各前 {{ d.stock_top }} 的聯集，預設按今日淨額排
     <span class="sf-note">　σ = 今日淨額 ÷ 前 {{ d.long }} 日淨額標準差（該股自己的常態；|今日| &lt; 0.3 億不給）；
-      連續欄的 ↺ = 今日翻向且翻向前已連續 ≥ 3 天。子類股欄只是標籤，不做分組。市值 = 報告日收盤 × 發行股數（股數只有最新快照，
+      連續欄的 ↺ = 今日翻向且翻向前已連續 ≥ 3 天。型態旁的「近高」= 距 52 週高 &lt; 10%、「跌深」= &gt; 25%：
+      同一型態在兩端是相反的東西（跌深 × 低接轉買 vs 近高 × 主流延續），型態本身是描述不是方向。子類股欄只是標籤，不做分組。市值 = 報告日收盤 × 發行股數（股數只有最新快照，
       整個窗口共用今天的值，所以市值比是近似值）。位階 = 現價相對 52 週高點（還原權息）；
       vs成本 = 現價相對法人 {{ d.long }} 日加權平均成本（用 (H+L+C)/3 近似成交均價，
       淨額佔總進出量低於 20% 的視為買賣互抵、不給值）；一致 = 外資與投信 {{ d.short }} 日方向</span>
@@ -122,8 +123,11 @@
         <td class="si-yi {{ 'pos' if (r.ret20 or 0) >= 0 else 'neg' }}" data-order="{{ r.ret20 if r.ret20 is not none else 0 }}">
           {%- if r.ret20 is not none %}{{ "{:+.2f}".format(r.ret20) }}%{% else %}–{% endif -%}
         </td>
-        <td class="si-yi sf-pattern" data-order="{{ d.pattern_order.get(r.pattern, 0) }}">
-          {%- if r.pattern %}<span class="sf-pat {{ pat_cls[r.pattern] }}">{{ r.pattern }}</span>{% else %}–{% endif -%}
+        {# 位階修飾：回測（llm_wiki inst-flow-pattern-forward-returns）顯示同一型態在近高與跌深是相反的東西，
+           所以標籤旁邊帶一個位階 chip：近高 = 距 52 週高 < 10%、跌深 = > 25% #}
+        {% set tier = '近高' if r.pos52 is not none and r.pos52 > -10 else ('跌深' if r.pos52 is not none and r.pos52 <= -25 else '') %}
+        <td class="si-yi sf-pattern" data-order="{{ d.pattern_order.get(r.pattern, 0) * 10 + (2 if tier == '近高' else (1 if tier == '' else 0)) }}">
+          {%- if r.pattern %}<span class="sf-pat {{ pat_cls[r.pattern] }}">{{ r.pattern }}</span>{% if tier %}<span class="stf-tier stf-tier-{{ 'hi' if tier == '近高' else 'lo' }}">{{ tier }}</span>{% endif %}{% else %}–{% endif -%}
         </td>
       </tr>
       {% endfor %}
@@ -153,6 +157,9 @@
 .stf-prev { font-size: 11px; color: var(--text-muted); margin-left: 3px; }
 .stf-z { color: var(--text-muted); font-weight: 500; }
 .stf-z-hot { color: var(--text-primary); font-weight: 700; }
+.stf-tier { font-size: 10px; margin-left: 3px; padding: 0 4px; border-radius: 3px; border: 1px solid rgba(127,127,127,.35); color: var(--text-muted); vertical-align: 1px; }
+.stf-tier-hi { border-color: var(--pos); color: var(--pos); }
+.stf-tier-lo { border-color: var(--neg); color: var(--neg); }
 /* 型態標籤：跟子類股資金流向那塊同一套色（該 partial 也定義了，誰先載入都行） */
 .sf-pat { font-size: 12px; padding: 1px 6px; border-radius: 4px; white-space: nowrap; background: var(--surface-2, rgba(127,127,127,.12)); }
 .sf-pat-bull { color: var(--pos); background: var(--pos-glow); }

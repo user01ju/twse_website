@@ -412,6 +412,7 @@ def build(today: date) -> dict:
                 "parent": sector_parent.get(sec, ""),
                 "mcap":   round(smc) if smc else None,
                 "net5_pct": round(net5 / smc * 100, 2) if smc else None,
+                "net20_pct": round(net20 / smc * 100, 2) if smc else None,   # 輪動圖 x 軸
                 "net1":   round(series[-1], 2),
                 "z1":     z1,
                 "flip":   flip,
@@ -493,6 +494,9 @@ def build(today: date) -> dict:
 
     return {
         "four_dim": _four_dim(full_rows),
+        # 給漲跌幅前 100 / 52 週新高低清單標型態與今日淨額用（三大法人）
+        "by_code": {r["code"]: {"pattern": r["pattern"], "net1": r["net1"], "streak": r["streak"]}
+                    for r in full_rows.get("c", ())},
         "days":     days,
         "ret_days": ret_days.get(_SHORT, 0),
         "ret_days_long": ret_days.get(_DAYS, 0),
