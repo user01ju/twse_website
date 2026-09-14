@@ -1,7 +1,7 @@
 {
   "date": "2026-09-14",
-  "generated_at": "2026-09-14 16:01:06",
-  "complete": false,
+  "generated_at": "2026-09-14 17:12:46",
+  "complete": true,
   "taiex": {
     "close": 45862.52,
     "change_pts": -322.33,
@@ -11,30 +11,30 @@
   },
   "breadth": {
     "twse": {
-      "up": 449,
-      "down": 811,
-      "flat": 104,
+      "up": 450,
+      "down": 812,
+      "flat": 102,
       "limit_up": 11,
       "limit_down": 6,
       "total": 1364,
-      "up_pct": 32.9,
+      "up_pct": 33.0,
       "down_pct": 59.5,
-      "flat_pct": 7.6,
+      "flat_pct": 7.5,
       "limit_up_pct": 0.8,
       "limit_down_pct": 0.4
     },
     "tpex": {
-      "up": 0,
-      "down": 0,
-      "flat": 0,
-      "limit_up": 0,
-      "limit_down": 0,
-      "total": 0,
-      "up_pct": 0.0,
-      "down_pct": 0.0,
-      "flat_pct": 0.0,
-      "limit_up_pct": 0.0,
-      "limit_down_pct": 0.0
+      "up": 335,
+      "down": 431,
+      "flat": 100,
+      "limit_up": 14,
+      "limit_down": 3,
+      "total": 891,
+      "up_pct": 37.6,
+      "down_pct": 48.4,
+      "flat_pct": 11.2,
+      "limit_up_pct": 1.6,
+      "limit_down_pct": 0.3
     }
   },
   "top_gainers": [
@@ -44,6 +44,20 @@
       "close": 33.0,
       "change_pct": 10.0,
       "market": "上市"
+    },
+    {
+      "code": "1591",
+      "name": "駿吉-KY",
+      "close": 41.25,
+      "change_pct": 10.0,
+      "market": "上櫃"
+    },
+    {
+      "code": "6148",
+      "name": "驊宏資",
+      "close": 34.1,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
       "code": "2305",
@@ -58,23 +72,16 @@
       "close": 70.5,
       "change_pct": 9.984399375975041,
       "market": "上市"
-    },
-    {
-      "code": "2468",
-      "name": "華經",
-      "close": 39.35,
-      "change_pct": 9.916201117318433,
-      "market": "上市"
-    },
-    {
-      "code": "1528",
-      "name": "恩德",
-      "close": 23.3,
-      "change_pct": 9.90566037735849,
-      "market": "上市"
     }
   ],
   "top_losers": [
+    {
+      "code": "7825",
+      "name": "和亞智慧",
+      "close": 92.4,
+      "change_pct": -14.046511627906977,
+      "market": "上櫃"
+    },
     {
       "code": "3406",
       "name": "玉晶光",
@@ -97,18 +104,11 @@
       "market": "上市"
     },
     {
-      "code": "2049",
-      "name": "上銀",
-      "close": 323.5,
-      "change_pct": -9.88857938718663,
-      "market": "上市"
-    },
-    {
-      "code": "6225",
-      "name": "天瀚",
-      "close": 67.5,
-      "change_pct": -9.879839786381842,
-      "market": "上市"
+      "code": "5314",
+      "name": "世紀*",
+      "close": 37.95,
+      "change_pct": -9.964412811387898,
+      "market": "上櫃"
     }
   ]
 }
