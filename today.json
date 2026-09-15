@@ -1,7 +1,7 @@
 {
   "date": "2026-09-15",
-  "generated_at": "2026-09-15 16:02:00",
-  "complete": false,
+  "generated_at": "2026-09-15 17:02:28",
+  "complete": true,
   "taiex": {
     "close": 45511.49,
     "change_pts": -351.03,
@@ -12,8 +12,8 @@
   "breadth": {
     "twse": {
       "up": 284,
-      "down": 974,
-      "flat": 107,
+      "down": 975,
+      "flat": 106,
       "limit_up": 5,
       "limit_down": 1,
       "total": 1365,
