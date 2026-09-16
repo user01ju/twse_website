@@ -1,114 +1,114 @@
 {
-  "date": "2026-09-15",
-  "generated_at": "2026-09-15 17:02:28",
-  "complete": true,
+  "date": "2026-09-16",
+  "generated_at": "2026-09-16 15:02:26",
+  "complete": false,
   "taiex": {
-    "close": 45511.49,
-    "change_pts": -351.03,
-    "change_pct": -0.77,
-    "trading_amount_yi": 6299.05201529,
-    "transaction_count": 3947215
+    "close": 45848.9,
+    "change_pts": 337.41,
+    "change_pct": 0.74,
+    "trading_amount_yi": 6702.51886161,
+    "transaction_count": 3400620
   },
   "breadth": {
     "twse": {
-      "up": 284,
-      "down": 975,
-      "flat": 106,
-      "limit_up": 5,
-      "limit_down": 1,
-      "total": 1365,
-      "up_pct": 20.8,
-      "down_pct": 71.4,
-      "flat_pct": 7.8,
-      "limit_up_pct": 0.4,
-      "limit_down_pct": 0.1
+      "up": 889,
+      "down": 294,
+      "flat": 179,
+      "limit_up": 24,
+      "limit_down": 0,
+      "total": 1362,
+      "up_pct": 65.3,
+      "down_pct": 21.6,
+      "flat_pct": 13.1,
+      "limit_up_pct": 1.8,
+      "limit_down_pct": 0.0
     },
     "tpex": {
-      "up": 229,
-      "down": 555,
-      "flat": 84,
-      "limit_up": 18,
-      "limit_down": 2,
-      "total": 891,
-      "up_pct": 25.7,
-      "down_pct": 62.3,
-      "flat_pct": 9.4,
-      "limit_up_pct": 2.0,
-      "limit_down_pct": 0.2
+      "up": 0,
+      "down": 0,
+      "flat": 0,
+      "limit_up": 0,
+      "limit_down": 0,
+      "total": 0,
+      "up_pct": 0.0,
+      "down_pct": 0.0,
+      "flat_pct": 0.0,
+      "limit_up_pct": 0.0,
+      "limit_down_pct": 0.0
     }
   },
   "top_gainers": [
     {
-      "code": "4807",
-      "name": "日成-KY",
-      "close": 30.8,
+      "code": "1709",
+      "name": "和益",
+      "close": 39.05,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "6226",
-      "name": "光鼎",
-      "close": 36.3,
+      "code": "2033",
+      "name": "佳大",
+      "close": 28.05,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "5251",
-      "name": "天鉞電",
-      "close": 29.15,
+      "code": "2489",
+      "name": "瑞軒",
+      "close": 41.25,
       "change_pct": 10.0,
-      "market": "上櫃"
+      "market": "上市"
     },
     {
-      "code": "8038",
-      "name": "長園科",
-      "close": 33.0,
+      "code": "6426",
+      "name": "統新",
+      "close": 330.0,
       "change_pct": 10.0,
-      "market": "上櫃"
+      "market": "上市"
     },
     {
-      "code": "3434",
-      "name": "哲固",
-      "close": 32.5,
-      "change_pct": 9.983079526226735,
-      "market": "上櫃"
+      "code": "7799",
+      "name": "禾榮科",
+      "close": 457.0,
+      "change_pct": 9.987966305655837,
+      "market": "上市"
     }
   ],
   "top_losers": [
     {
-      "code": "7825",
-      "name": "和亞智慧",
-      "close": 81.0,
-      "change_pct": -12.337662337662337,
-      "market": "上櫃"
-    },
-    {
-      "code": "4304",
-      "name": "勝昱",
-      "close": 15.5,
-      "change_pct": -9.883720930232558,
-      "market": "上櫃"
-    },
-    {
-      "code": "5314",
-      "name": "世紀*",
-      "close": 34.2,
-      "change_pct": -9.881422924901186,
-      "market": "上櫃"
-    },
-    {
-      "code": "3229",
-      "name": "晟鈦",
-      "close": 60.3,
-      "change_pct": -9.865470852017937,
+      "code": "6669",
+      "name": "緯穎",
+      "close": 2165.0,
+      "change_pct": -6.479481641468683,
       "market": "上市"
     },
     {
-      "code": "3498",
-      "name": "陽程",
-      "close": 173.5,
-      "change_pct": -8.923884514435695,
-      "market": "上櫃"
+      "code": "2351",
+      "name": "順德",
+      "close": 236.0,
+      "change_pct": -6.163021868787276,
+      "market": "上市"
+    },
+    {
+      "code": "6225",
+      "name": "天瀚",
+      "close": 60.4,
+      "change_pct": -4.881889763779528,
+      "market": "上市"
+    },
+    {
+      "code": "2314",
+      "name": "台揚",
+      "close": 10.5,
+      "change_pct": -4.545454545454546,
+      "market": "上市"
+    },
+    {
+      "code": "3296",
+      "name": "勝德",
+      "close": 26.05,
+      "change_pct": -3.518518518518518,
+      "market": "上市"
     }
   ]
 }
