@@ -1,7 +1,7 @@
 {
   "date": "2026-09-16",
-  "generated_at": "2026-09-16 16:01:40",
-  "complete": false,
+  "generated_at": "2026-09-16 17:02:48",
+  "complete": true,
   "taiex": {
     "close": 45848.9,
     "change_pts": 337.41,
@@ -11,15 +11,15 @@
   },
   "breadth": {
     "twse": {
-      "up": 889,
-      "down": 294,
-      "flat": 179,
+      "up": 892,
+      "down": 295,
+      "flat": 175,
       "limit_up": 24,
       "limit_down": 0,
       "total": 1362,
-      "up_pct": 65.3,
-      "down_pct": 21.6,
-      "flat_pct": 13.1,
+      "up_pct": 65.5,
+      "down_pct": 21.7,
+      "flat_pct": 12.8,
       "limit_up_pct": 1.8,
       "limit_down_pct": 0.0
     },
