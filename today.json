@@ -1,113 +1,113 @@
 {
-  "date": "2026-09-16",
-  "generated_at": "2026-09-16 17:02:48",
-  "complete": true,
+  "date": "2026-09-17",
+  "generated_at": "2026-09-17 15:06:11",
+  "complete": false,
   "taiex": {
-    "close": 45848.9,
-    "change_pts": 337.41,
-    "change_pct": 0.74,
-    "trading_amount_yi": 6702.51886161,
-    "transaction_count": 3400620
+    "close": 46288.0,
+    "change_pts": 439.1,
+    "change_pct": 0.96,
+    "trading_amount_yi": 8503.94080435,
+    "transaction_count": 4233511
   },
   "breadth": {
     "twse": {
-      "up": 892,
-      "down": 295,
-      "flat": 175,
-      "limit_up": 24,
-      "limit_down": 0,
-      "total": 1362,
-      "up_pct": 65.5,
-      "down_pct": 21.7,
-      "flat_pct": 12.8,
+      "up": 949,
+      "down": 308,
+      "flat": 108,
+      "limit_up": 25,
+      "limit_down": 1,
+      "total": 1365,
+      "up_pct": 69.5,
+      "down_pct": 22.6,
+      "flat_pct": 7.9,
       "limit_up_pct": 1.8,
-      "limit_down_pct": 0.0
+      "limit_down_pct": 0.1
     },
     "tpex": {
-      "up": 581,
-      "down": 205,
-      "flat": 88,
-      "limit_up": 21,
-      "limit_down": 1,
-      "total": 892,
-      "up_pct": 65.1,
-      "down_pct": 23.0,
-      "flat_pct": 9.9,
-      "limit_up_pct": 2.4,
-      "limit_down_pct": 0.1
+      "up": 0,
+      "down": 0,
+      "flat": 0,
+      "limit_up": 0,
+      "limit_down": 0,
+      "total": 0,
+      "up_pct": 0.0,
+      "down_pct": 0.0,
+      "flat_pct": 0.0,
+      "limit_up_pct": 0.0,
+      "limit_down_pct": 0.0
     }
   },
   "top_gainers": [
     {
-      "code": "1709",
-      "name": "和益",
-      "close": 39.05,
+      "code": "3437",
+      "name": "榮創",
+      "close": 20.35,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "2033",
-      "name": "佳大",
-      "close": 28.05,
-      "change_pct": 10.0,
-      "market": "上市"
-    },
-    {
-      "code": "2489",
-      "name": "瑞軒",
-      "close": 41.25,
+      "code": "4960",
+      "name": "誠美材",
+      "close": 22.0,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
       "code": "6426",
       "name": "統新",
-      "close": 330.0,
+      "close": 363.0,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "6588",
-      "name": "東典光電",
-      "close": 110.0,
+      "code": "8103",
+      "name": "瀚荃",
+      "close": 132.0,
       "change_pct": 10.0,
-      "market": "上櫃"
+      "market": "上市"
+    },
+    {
+      "code": "1709",
+      "name": "和益",
+      "close": 42.95,
+      "change_pct": 9.987195902688859,
+      "market": "上市"
     }
   ],
   "top_losers": [
     {
-      "code": "5314",
-      "name": "世紀*",
-      "close": 30.8,
-      "change_pct": -9.941520467836257,
-      "market": "上櫃"
+      "code": "6213",
+      "name": "聯茂",
+      "close": 495.0,
+      "change_pct": -10.0,
+      "market": "上市"
     },
     {
-      "code": "4304",
-      "name": "勝昱",
-      "close": 14.3,
-      "change_pct": -7.741935483870968,
-      "market": "上櫃"
+      "code": "2424",
+      "name": "隴華",
+      "close": 7.88,
+      "change_pct": -8.372093023255815,
+      "market": "上市"
     },
     {
-      "code": "2924",
-      "name": "宏太-KY",
-      "close": 16.9,
-      "change_pct": -7.142857142857144,
-      "market": "上櫃"
+      "code": "1516",
+      "name": "川飛",
+      "close": 13.35,
+      "change_pct": -7.93103448275862,
+      "market": "上市"
     },
     {
-      "code": "3629",
-      "name": "地心引力",
-      "close": 18.2,
-      "change_pct": -7.142857142857144,
-      "market": "上櫃"
+      "code": "2383",
+      "name": "台光電",
+      "close": 4695.0,
+      "change_pct": -7.669616519174041,
+      "market": "上市"
     },
     {
-      "code": "6669",
-      "name": "緯穎",
-      "close": 2165.0,
-      "change_pct": -6.479481641468683,
+      "code": "8039",
+      "name": "台虹",
+      "close": 257.0,
+      "change_pct": -6.715063520871143,
       "market": "上市"
     }
   ]
