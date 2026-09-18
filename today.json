@@ -1,6 +1,6 @@
 {
   "date": "2026-09-18",
-  "generated_at": "2026-09-18 15:01:34",
+  "generated_at": "2026-09-18 16:01:03",
   "complete": false,
   "taiex": {
     "close": 47180.75,
@@ -24,17 +24,17 @@
       "limit_down_pct": 0.0
     },
     "tpex": {
-      "up": 0,
-      "down": 0,
-      "flat": 0,
-      "limit_up": 0,
-      "limit_down": 0,
-      "total": 0,
-      "up_pct": 0.0,
-      "down_pct": 0.0,
-      "flat_pct": 0.0,
-      "limit_up_pct": 0.0,
-      "limit_down_pct": 0.0
+      "up": 565,
+      "down": 219,
+      "flat": 84,
+      "limit_up": 34,
+      "limit_down": 1,
+      "total": 892,
+      "up_pct": 63.3,
+      "down_pct": 24.6,
+      "flat_pct": 9.4,
+      "limit_up_pct": 3.8,
+      "limit_down_pct": 0.1
     }
   },
   "top_gainers": [
@@ -76,6 +76,13 @@
   ],
   "top_losers": [
     {
+      "code": "6236",
+      "name": "中湛",
+      "close": 16.0,
+      "change_pct": -9.859154929577464,
+      "market": "上櫃"
+    },
+    {
       "code": "1709",
       "name": "和益",
       "close": 39.2,
@@ -83,32 +90,25 @@
       "market": "上市"
     },
     {
-      "code": "2493",
-      "name": "揚博",
-      "close": 192.5,
-      "change_pct": -6.779661016949152,
-      "market": "上市"
+      "code": "6179",
+      "name": "亞通",
+      "close": 37.9,
+      "change_pct": -8.56453558504222,
+      "market": "上櫃"
     },
     {
-      "code": "2601",
-      "name": "益航",
-      "close": 5.92,
-      "change_pct": -6.031746031746032,
-      "market": "上市"
+      "code": "8444",
+      "name": "綠河-KY",
+      "close": 4.59,
+      "change_pct": -8.2,
+      "market": "上櫃"
     },
     {
-      "code": "5531",
-      "name": "鄉林",
-      "close": 6.91,
-      "change_pct": -4.820936639118457,
-      "market": "上市"
-    },
-    {
-      "code": "2506",
-      "name": "太設",
-      "close": 8.2,
-      "change_pct": -4.761904761904762,
-      "market": "上市"
+      "code": "7728",
+      "name": "光焱科技",
+      "close": 584.0,
+      "change_pct": -7.59493670886076,
+      "market": "上櫃"
     }
   ]
 }
