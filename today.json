@@ -1,113 +1,113 @@
 {
-  "date": "2026-09-17",
-  "generated_at": "2026-09-17 17:03:51",
-  "complete": true,
+  "date": "2026-09-18",
+  "generated_at": "2026-09-18 15:01:34",
+  "complete": false,
   "taiex": {
-    "close": 46288.0,
-    "change_pts": 439.1,
-    "change_pct": 0.96,
-    "trading_amount_yi": 8503.94080435,
-    "transaction_count": 4233511
+    "close": 47180.75,
+    "change_pts": 892.75,
+    "change_pct": 1.93,
+    "trading_amount_yi": 11131.90785392,
+    "transaction_count": 4680456
   },
   "breadth": {
     "twse": {
-      "up": 950,
-      "down": 308,
-      "flat": 107,
-      "limit_up": 25,
-      "limit_down": 1,
-      "total": 1365,
-      "up_pct": 69.6,
-      "down_pct": 22.6,
-      "flat_pct": 7.8,
-      "limit_up_pct": 1.8,
-      "limit_down_pct": 0.1
+      "up": 956,
+      "down": 313,
+      "flat": 102,
+      "limit_up": 32,
+      "limit_down": 0,
+      "total": 1371,
+      "up_pct": 69.7,
+      "down_pct": 22.8,
+      "flat_pct": 7.4,
+      "limit_up_pct": 2.3,
+      "limit_down_pct": 0.0
     },
     "tpex": {
-      "up": 477,
-      "down": 294,
-      "flat": 96,
-      "limit_up": 16,
-      "limit_down": 1,
-      "total": 892,
-      "up_pct": 53.5,
-      "down_pct": 33.0,
-      "flat_pct": 10.8,
-      "limit_up_pct": 1.8,
-      "limit_down_pct": 0.1
+      "up": 0,
+      "down": 0,
+      "flat": 0,
+      "limit_up": 0,
+      "limit_down": 0,
+      "total": 0,
+      "up_pct": 0.0,
+      "down_pct": 0.0,
+      "flat_pct": 0.0,
+      "limit_up_pct": 0.0,
+      "limit_down_pct": 0.0
     }
   },
   "top_gainers": [
     {
-      "code": "3437",
-      "name": "榮創",
-      "close": 20.35,
+      "code": "2449",
+      "name": "京元電子",
+      "close": 291.5,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "4960",
-      "name": "誠美材",
-      "close": 22.0,
+      "code": "3094",
+      "name": "聯傑",
+      "close": 51.7,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "6426",
-      "name": "統新",
-      "close": 363.0,
+      "code": "3443",
+      "name": "創意",
+      "close": 7150.0,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "8103",
-      "name": "瀚荃",
-      "close": 132.0,
+      "code": "3605",
+      "name": "宏致",
+      "close": 154.0,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "3287",
-      "name": "廣寰科",
-      "close": 38.5,
+      "code": "4919",
+      "name": "新唐",
+      "close": 126.5,
       "change_pct": 10.0,
-      "market": "上櫃"
+      "market": "上市"
     }
   ],
   "top_losers": [
     {
-      "code": "6213",
-      "name": "聯茂",
-      "close": 495.0,
-      "change_pct": -10.0,
+      "code": "1709",
+      "name": "和益",
+      "close": 39.2,
+      "change_pct": -8.731082654249127,
       "market": "上市"
     },
     {
-      "code": "5314",
-      "name": "世紀*",
-      "close": 27.75,
-      "change_pct": -9.9025974025974,
-      "market": "上櫃"
+      "code": "2493",
+      "name": "揚博",
+      "close": 192.5,
+      "change_pct": -6.779661016949152,
+      "market": "上市"
     },
     {
-      "code": "6872",
-      "name": "浩宇生醫",
-      "close": 21.0,
-      "change_pct": -9.090909090909092,
-      "market": "上櫃"
+      "code": "2601",
+      "name": "益航",
+      "close": 5.92,
+      "change_pct": -6.031746031746032,
+      "market": "上市"
     },
     {
-      "code": "6590",
-      "name": "普鴻",
-      "close": 65.5,
-      "change_pct": -8.5195530726257,
-      "market": "上櫃"
+      "code": "5531",
+      "name": "鄉林",
+      "close": 6.91,
+      "change_pct": -4.820936639118457,
+      "market": "上市"
     },
     {
-      "code": "2424",
-      "name": "隴華",
-      "close": 7.88,
-      "change_pct": -8.372093023255815,
+      "code": "2506",
+      "name": "太設",
+      "close": 8.2,
+      "change_pct": -4.761904761904762,
       "market": "上市"
     }
   ]
