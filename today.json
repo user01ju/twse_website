@@ -1,7 +1,7 @@
 {
   "date": "2026-09-21",
-  "generated_at": "2026-09-21 16:02:35",
-  "complete": false,
+  "generated_at": "2026-09-21 17:04:10",
+  "complete": true,
   "taiex": {
     "close": 47718.84,
     "change_pts": 538.09,
@@ -11,15 +11,15 @@
   },
   "breadth": {
     "twse": {
-      "up": 669,
-      "down": 580,
-      "flat": 124,
+      "up": 671,
+      "down": 581,
+      "flat": 121,
       "limit_up": 32,
       "limit_down": 1,
       "total": 1373,
-      "up_pct": 48.7,
-      "down_pct": 42.2,
-      "flat_pct": 9.0,
+      "up_pct": 48.9,
+      "down_pct": 42.3,
+      "flat_pct": 8.8,
       "limit_up_pct": 2.3,
       "limit_down_pct": 0.1
     },
@@ -53,25 +53,25 @@
       "market": "上市"
     },
     {
-      "code": "2243",
-      "name": "宏旭-KY",
-      "close": 54.0,
-      "change_pct": 9.979633401221996,
-      "market": "上市"
+      "code": "3178",
+      "name": "公準",
+      "close": 75.9,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "4956",
-      "name": "光鋐",
-      "close": 46.85,
-      "change_pct": 9.976525821596244,
-      "market": "上市"
+      "code": "4542",
+      "name": "科嶠",
+      "close": 302.5,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "3062",
-      "name": "建漢",
-      "close": 23.15,
-      "change_pct": 9.976247030878861,
-      "market": "上市"
+      "code": "4924",
+      "name": "欣厚-KY",
+      "close": 17.05,
+      "change_pct": 10.0,
+      "market": "上櫃"
     }
   ],
   "top_losers": [
@@ -83,31 +83,31 @@
       "market": "上市"
     },
     {
+      "code": "8059",
+      "name": "凱碩",
+      "close": 20.15,
+      "change_pct": -9.843400447427294,
+      "market": "上櫃"
+    },
+    {
+      "code": "8277",
+      "name": "商丞",
+      "close": 16.85,
+      "change_pct": -9.651474530831099,
+      "market": "上櫃"
+    },
+    {
+      "code": "3710",
+      "name": "連展投控",
+      "close": 7.6,
+      "change_pct": -8.653846153846153,
+      "market": "上櫃"
+    },
+    {
       "code": "7769",
       "name": "鴻勁",
       "close": 6000.0,
       "change_pct": -8.256880733944955,
-      "market": "上市"
-    },
-    {
-      "code": "6933",
-      "name": "AMAX-KY",
-      "close": 317.5,
-      "change_pct": -7.163742690058479,
-      "market": "上市"
-    },
-    {
-      "code": "3593",
-      "name": "力銘",
-      "close": 9.07,
-      "change_pct": -6.974358974358975,
-      "market": "上市"
-    },
-    {
-      "code": "3229",
-      "name": "晟鈦",
-      "close": 60.2,
-      "change_pct": -6.521739130434782,
       "market": "上市"
     }
   ]
