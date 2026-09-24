@@ -1,25 +1,25 @@
 {
   "date": "2026-09-24",
-  "generated_at": "2026-09-24 17:02:57",
-  "complete": false,
+  "generated_at": "2026-09-24 18:02:58",
+  "complete": true,
   "taiex": {
     "close": 48024.6,
     "change_pts": -132.69,
     "change_pct": -0.28,
-    "trading_amount_yi": 7688.94905051,
-    "transaction_count": 3880691
+    "trading_amount_yi": 7755.91428171,
+    "transaction_count": 3880761
   },
   "breadth": {
     "twse": {
       "up": 464,
-      "down": 728,
-      "flat": 172,
+      "down": 729,
+      "flat": 171,
       "limit_up": 11,
       "limit_down": 1,
       "total": 1364,
       "up_pct": 34.0,
       "down_pct": 53.4,
-      "flat_pct": 12.6,
+      "flat_pct": 12.5,
       "limit_up_pct": 0.8,
       "limit_down_pct": 0.1
     },
@@ -53,25 +53,25 @@
       "market": "上市"
     },
     {
-      "code": "6213",
-      "name": "聯茂",
-      "close": 595.0,
-      "change_pct": 9.981515711645102,
-      "market": "上市"
+      "code": "6228",
+      "name": "全譜",
+      "close": 18.7,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "3016",
-      "name": "嘉晶",
-      "close": 160.0,
-      "change_pct": 9.965635738831615,
-      "market": "上市"
+      "code": "6925",
+      "name": "意藍",
+      "close": 68.2,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "6533",
-      "name": "晶心科",
-      "close": 276.0,
-      "change_pct": 9.9601593625498,
-      "market": "上市"
+      "code": "7547",
+      "name": "碩網",
+      "close": 59.4,
+      "change_pct": 10.0,
+      "market": "上櫃"
     }
   ],
   "top_losers": [
@@ -83,31 +83,31 @@
       "market": "上市"
     },
     {
+      "code": "8084",
+      "name": "巨虹",
+      "close": 33.1,
+      "change_pct": -9.931972789115646,
+      "market": "上櫃"
+    },
+    {
+      "code": "1235",
+      "name": "興泰",
+      "close": 35.5,
+      "change_pct": -8.292430896409199,
+      "market": "上市"
+    },
+    {
+      "code": "4183",
+      "name": "福永生技",
+      "close": 13.3,
+      "change_pct": -6.666666666666667,
+      "market": "上櫃"
+    },
+    {
       "code": "7799",
       "name": "禾榮科",
       "close": 498.0,
       "change_pct": -6.214689265536723,
-      "market": "上市"
-    },
-    {
-      "code": "2923",
-      "name": "鼎固-KY",
-      "close": 24.3,
-      "change_pct": -5.447470817120623,
-      "market": "上市"
-    },
-    {
-      "code": "7769",
-      "name": "鴻勁",
-      "close": 5670.0,
-      "change_pct": -5.104602510460251,
-      "market": "上市"
-    },
-    {
-      "code": "6589",
-      "name": "台康生技",
-      "close": 51.4,
-      "change_pct": -4.63821892393321,
       "market": "上市"
     }
   ]
