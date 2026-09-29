@@ -1,6 +1,6 @@
 {
   "date": "2026-09-29",
-  "generated_at": "2026-09-29 15:01:21",
+  "generated_at": "2026-09-29 16:02:17",
   "complete": false,
   "taiex": {
     "close": 47631.96,
@@ -24,17 +24,17 @@
       "limit_down_pct": 0.0
     },
     "tpex": {
-      "up": 0,
-      "down": 0,
-      "flat": 0,
-      "limit_up": 0,
-      "limit_down": 0,
-      "total": 0,
-      "up_pct": 0.0,
-      "down_pct": 0.0,
-      "flat_pct": 0.0,
-      "limit_up_pct": 0.0,
-      "limit_down_pct": 0.0
+      "up": 389,
+      "down": 399,
+      "flat": 80,
+      "limit_up": 21,
+      "limit_down": 2,
+      "total": 893,
+      "up_pct": 43.6,
+      "down_pct": 44.7,
+      "flat_pct": 9.0,
+      "limit_up_pct": 2.4,
+      "limit_down_pct": 0.2
     }
   },
   "top_gainers": [
@@ -46,35 +46,49 @@
       "market": "上市"
     },
     {
-      "code": "2340",
-      "name": "台亞",
-      "close": 38.0,
-      "change_pct": 9.985528219971057,
-      "market": "上市"
+      "code": "2061",
+      "name": "風青",
+      "close": 59.4,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "6533",
-      "name": "晶心科",
-      "close": 303.5,
-      "change_pct": 9.96376811594203,
-      "market": "上市"
+      "code": "4768",
+      "name": "晶呈科技",
+      "close": 357.5,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "6456",
-      "name": "GIS-KY",
-      "close": 89.4,
-      "change_pct": 9.963099630996307,
-      "market": "上市"
+      "code": "5220",
+      "name": "萬達光電",
+      "close": 22.0,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "2020",
-      "name": "美亞",
-      "close": 24.3,
-      "change_pct": 9.95475113122172,
-      "market": "上市"
+      "code": "6207",
+      "name": "雷科",
+      "close": 137.5,
+      "change_pct": 10.0,
+      "market": "上櫃"
     }
   ],
   "top_losers": [
+    {
+      "code": "8084",
+      "name": "巨虹",
+      "close": 29.8,
+      "change_pct": -9.969788519637461,
+      "market": "上櫃"
+    },
+    {
+      "code": "6538",
+      "name": "倉和",
+      "close": 358.5,
+      "change_pct": -9.924623115577889,
+      "market": "上櫃"
+    },
     {
       "code": "6908",
       "name": "宏碁遊戲-創",
@@ -90,25 +104,11 @@
       "market": "上市"
     },
     {
-      "code": "6902",
-      "name": "GOGOLOOK",
-      "close": 162.5,
-      "change_pct": -7.932011331444759,
-      "market": "上市"
-    },
-    {
-      "code": "1235",
-      "name": "興泰",
-      "close": 32.85,
-      "change_pct": -7.464788732394366,
-      "market": "上市"
-    },
-    {
-      "code": "2454",
-      "name": "聯發科",
-      "close": 4910.0,
-      "change_pct": -7.095553453169347,
-      "market": "上市"
+      "code": "8155",
+      "name": "博智",
+      "close": 306.0,
+      "change_pct": -8.928571428571429,
+      "market": "上櫃"
     }
   ]
 }
