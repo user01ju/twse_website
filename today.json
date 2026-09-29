@@ -1,113 +1,113 @@
 {
-  "date": "2026-09-24",
-  "generated_at": "2026-09-24 18:02:58",
-  "complete": true,
+  "date": "2026-09-29",
+  "generated_at": "2026-09-29 15:01:21",
+  "complete": false,
   "taiex": {
-    "close": 48024.6,
-    "change_pts": -132.69,
-    "change_pct": -0.28,
-    "trading_amount_yi": 7755.91428171,
-    "transaction_count": 3880761
+    "close": 47631.96,
+    "change_pts": -392.64,
+    "change_pct": -0.82,
+    "trading_amount_yi": 8246.92107481,
+    "transaction_count": 4340289
   },
   "breadth": {
     "twse": {
-      "up": 464,
-      "down": 729,
-      "flat": 171,
-      "limit_up": 11,
-      "limit_down": 1,
-      "total": 1364,
-      "up_pct": 34.0,
-      "down_pct": 53.4,
-      "flat_pct": 12.5,
-      "limit_up_pct": 0.8,
-      "limit_down_pct": 0.1
+      "up": 433,
+      "down": 800,
+      "flat": 136,
+      "limit_up": 24,
+      "limit_down": 0,
+      "total": 1369,
+      "up_pct": 31.6,
+      "down_pct": 58.4,
+      "flat_pct": 9.9,
+      "limit_up_pct": 1.8,
+      "limit_down_pct": 0.0
     },
     "tpex": {
-      "up": 389,
-      "down": 380,
-      "flat": 101,
-      "limit_up": 12,
-      "limit_down": 1,
-      "total": 893,
-      "up_pct": 43.6,
-      "down_pct": 42.6,
-      "flat_pct": 11.3,
-      "limit_up_pct": 1.3,
-      "limit_down_pct": 0.1
+      "up": 0,
+      "down": 0,
+      "flat": 0,
+      "limit_up": 0,
+      "limit_down": 0,
+      "total": 0,
+      "up_pct": 0.0,
+      "down_pct": 0.0,
+      "flat_pct": 0.0,
+      "limit_up_pct": 0.0,
+      "limit_down_pct": 0.0
     }
   },
   "top_gainers": [
     {
-      "code": "3021",
-      "name": "鴻名",
-      "close": 26.95,
+      "code": "3518",
+      "name": "柏騰",
+      "close": 37.4,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "6933",
-      "name": "AMAX-KY",
-      "close": 385.0,
-      "change_pct": 10.0,
+      "code": "2340",
+      "name": "台亞",
+      "close": 38.0,
+      "change_pct": 9.985528219971057,
       "market": "上市"
     },
     {
-      "code": "6228",
-      "name": "全譜",
-      "close": 18.7,
-      "change_pct": 10.0,
-      "market": "上櫃"
+      "code": "6533",
+      "name": "晶心科",
+      "close": 303.5,
+      "change_pct": 9.96376811594203,
+      "market": "上市"
     },
     {
-      "code": "6925",
-      "name": "意藍",
-      "close": 68.2,
-      "change_pct": 10.0,
-      "market": "上櫃"
+      "code": "6456",
+      "name": "GIS-KY",
+      "close": 89.4,
+      "change_pct": 9.963099630996307,
+      "market": "上市"
     },
     {
-      "code": "7547",
-      "name": "碩網",
-      "close": 59.4,
-      "change_pct": 10.0,
-      "market": "上櫃"
+      "code": "2020",
+      "name": "美亞",
+      "close": 24.3,
+      "change_pct": 9.95475113122172,
+      "market": "上市"
     }
   ],
   "top_losers": [
     {
-      "code": "1709",
-      "name": "和益",
-      "close": 43.5,
-      "change_pct": -9.937888198757765,
+      "code": "6908",
+      "name": "宏碁遊戲-創",
+      "close": 27.05,
+      "change_pct": -9.833333333333334,
       "market": "上市"
     },
     {
-      "code": "8084",
-      "name": "巨虹",
-      "close": 33.1,
-      "change_pct": -9.931972789115646,
-      "market": "上櫃"
+      "code": "6426",
+      "name": "統新",
+      "close": 354.0,
+      "change_pct": -8.997429305912597,
+      "market": "上市"
+    },
+    {
+      "code": "6902",
+      "name": "GOGOLOOK",
+      "close": 162.5,
+      "change_pct": -7.932011331444759,
+      "market": "上市"
     },
     {
       "code": "1235",
       "name": "興泰",
-      "close": 35.5,
-      "change_pct": -8.292430896409199,
+      "close": 32.85,
+      "change_pct": -7.464788732394366,
       "market": "上市"
     },
     {
-      "code": "4183",
-      "name": "福永生技",
-      "close": 13.3,
-      "change_pct": -6.666666666666667,
-      "market": "上櫃"
-    },
-    {
-      "code": "7799",
-      "name": "禾榮科",
-      "close": 498.0,
-      "change_pct": -6.214689265536723,
+      "code": "2454",
+      "name": "聯發科",
+      "close": 4910.0,
+      "change_pct": -7.095553453169347,
       "market": "上市"
     }
   ]
