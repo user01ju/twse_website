@@ -1,114 +1,114 @@
 {
-  "date": "2026-09-29",
-  "generated_at": "2026-09-29 17:03:40",
-  "complete": true,
+  "date": "2026-09-30",
+  "generated_at": "2026-09-30 15:02:54",
+  "complete": false,
   "taiex": {
-    "close": 47631.96,
-    "change_pts": -392.64,
-    "change_pct": -0.82,
-    "trading_amount_yi": 8246.92107481,
-    "transaction_count": 4340289
+    "close": 47940.13,
+    "change_pts": 308.17,
+    "change_pct": 0.65,
+    "trading_amount_yi": 9091.6181556,
+    "transaction_count": 4253809
   },
   "breadth": {
     "twse": {
-      "up": 434,
-      "down": 803,
-      "flat": 132,
-      "limit_up": 24,
+      "up": 1035,
+      "down": 239,
+      "flat": 99,
+      "limit_up": 32,
       "limit_down": 0,
-      "total": 1369,
-      "up_pct": 31.7,
-      "down_pct": 58.7,
-      "flat_pct": 9.6,
-      "limit_up_pct": 1.8,
+      "total": 1373,
+      "up_pct": 75.4,
+      "down_pct": 17.4,
+      "flat_pct": 7.2,
+      "limit_up_pct": 2.3,
       "limit_down_pct": 0.0
     },
     "tpex": {
-      "up": 389,
-      "down": 399,
-      "flat": 80,
-      "limit_up": 21,
-      "limit_down": 2,
-      "total": 893,
-      "up_pct": 43.6,
-      "down_pct": 44.7,
-      "flat_pct": 9.0,
-      "limit_up_pct": 2.4,
-      "limit_down_pct": 0.2
+      "up": 0,
+      "down": 0,
+      "flat": 0,
+      "limit_up": 0,
+      "limit_down": 0,
+      "total": 0,
+      "up_pct": 0.0,
+      "down_pct": 0.0,
+      "flat_pct": 0.0,
+      "limit_up_pct": 0.0,
+      "limit_down_pct": 0.0
     }
   },
   "top_gainers": [
     {
-      "code": "3518",
-      "name": "柏騰",
-      "close": 37.4,
+      "code": "1709",
+      "name": "和益",
+      "close": 48.4,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "2061",
-      "name": "風青",
-      "close": 59.4,
+      "code": "2033",
+      "name": "佳大",
+      "close": 42.35,
       "change_pct": 10.0,
-      "market": "上櫃"
+      "market": "上市"
     },
     {
-      "code": "4768",
-      "name": "晶呈科技",
-      "close": 357.5,
+      "code": "2483",
+      "name": "百容",
+      "close": 35.75,
       "change_pct": 10.0,
-      "market": "上櫃"
+      "market": "上市"
     },
     {
-      "code": "5220",
-      "name": "萬達光電",
-      "close": 22.0,
+      "code": "6861",
+      "name": "睿生光電",
+      "close": 313.5,
       "change_pct": 10.0,
-      "market": "上櫃"
+      "market": "上市"
     },
     {
-      "code": "6207",
-      "name": "雷科",
-      "close": 137.5,
-      "change_pct": 10.0,
-      "market": "上櫃"
+      "code": "6405",
+      "name": "悅城",
+      "close": 50.1,
+      "change_pct": 9.989023051591655,
+      "market": "上市"
     }
   ],
   "top_losers": [
     {
-      "code": "8084",
-      "name": "巨虹",
-      "close": 29.8,
-      "change_pct": -9.969788519637461,
-      "market": "上櫃"
-    },
-    {
-      "code": "6538",
-      "name": "倉和",
-      "close": 358.5,
-      "change_pct": -9.924623115577889,
-      "market": "上櫃"
-    },
-    {
-      "code": "6908",
-      "name": "宏碁遊戲-創",
-      "close": 27.05,
-      "change_pct": -9.833333333333334,
+      "code": "1727",
+      "name": "中華化",
+      "close": 109.0,
+      "change_pct": -8.016877637130802,
       "market": "上市"
     },
     {
-      "code": "6426",
-      "name": "統新",
-      "close": 354.0,
-      "change_pct": -8.997429305912597,
+      "code": "3605",
+      "name": "宏致",
+      "close": 170.5,
+      "change_pct": -6.575342465753424,
       "market": "上市"
     },
     {
-      "code": "8155",
-      "name": "博智",
-      "close": 306.0,
-      "change_pct": -8.928571428571429,
-      "market": "上櫃"
+      "code": "8210",
+      "name": "勤誠",
+      "close": 836.0,
+      "change_pct": -4.67502850627138,
+      "market": "上市"
+    },
+    {
+      "code": "5234",
+      "name": "達興材料",
+      "close": 308.5,
+      "change_pct": -4.192546583850932,
+      "market": "上市"
+    },
+    {
+      "code": "6831",
+      "name": "邁科",
+      "close": 471.5,
+      "change_pct": -4.166666666666666,
+      "market": "上市"
     }
   ]
 }
