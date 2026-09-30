@@ -1,7 +1,7 @@
 {
   "date": "2026-09-30",
-  "generated_at": "2026-09-30 19:01:41",
-  "complete": false,
+  "generated_at": "2026-09-30 20:01:58",
+  "complete": true,
   "taiex": {
     "close": 47940.13,
     "change_pts": 308.17,
@@ -67,14 +67,28 @@
       "market": "上市"
     },
     {
-      "code": "6405",
-      "name": "悅城",
-      "close": 50.1,
-      "change_pct": 9.989023051591655,
-      "market": "上市"
+      "code": "4577",
+      "name": "達航科技",
+      "close": 92.4,
+      "change_pct": 10.0,
+      "market": "上櫃"
     }
   ],
   "top_losers": [
+    {
+      "code": "8084",
+      "name": "巨虹",
+      "close": 26.85,
+      "change_pct": -9.899328859060404,
+      "market": "上櫃"
+    },
+    {
+      "code": "6103",
+      "name": "合邦",
+      "close": 38.3,
+      "change_pct": -8.373205741626794,
+      "market": "上櫃"
+    },
     {
       "code": "1727",
       "name": "中華化",
@@ -90,25 +104,11 @@
       "market": "上市"
     },
     {
-      "code": "8210",
-      "name": "勤誠",
-      "close": 836.0,
-      "change_pct": -4.67502850627138,
-      "market": "上市"
-    },
-    {
-      "code": "5234",
-      "name": "達興材料",
-      "close": 308.5,
-      "change_pct": -4.192546583850932,
-      "market": "上市"
-    },
-    {
-      "code": "6831",
-      "name": "邁科",
-      "close": 471.5,
-      "change_pct": -4.166666666666666,
-      "market": "上市"
+      "code": "3324",
+      "name": "雙鴻",
+      "close": 1530.0,
+      "change_pct": -6.134969325153374,
+      "market": "上櫃"
     }
   ]
 }
