@@ -1,6 +1,6 @@
 {
   "date": "2026-10-01",
-  "generated_at": "2026-10-01 15:03:46",
+  "generated_at": "2026-10-01 16:01:44",
   "complete": false,
   "taiex": {
     "close": 48353.49,
@@ -24,17 +24,17 @@
       "limit_down_pct": 0.1
     },
     "tpex": {
-      "up": 0,
-      "down": 0,
-      "flat": 0,
-      "limit_up": 0,
-      "limit_down": 0,
-      "total": 0,
-      "up_pct": 0.0,
-      "down_pct": 0.0,
-      "flat_pct": 0.0,
-      "limit_up_pct": 0.0,
-      "limit_down_pct": 0.0
+      "up": 333,
+      "down": 417,
+      "flat": 114,
+      "limit_up": 27,
+      "limit_down": 2,
+      "total": 892,
+      "up_pct": 37.3,
+      "down_pct": 46.7,
+      "flat_pct": 12.8,
+      "limit_up_pct": 3.0,
+      "limit_down_pct": 0.2
     }
   },
   "top_gainers": [
@@ -53,28 +53,35 @@
       "market": "上市"
     },
     {
+      "code": "6485",
+      "name": "點序",
+      "close": 84.7,
+      "change_pct": 10.0,
+      "market": "上櫃"
+    },
+    {
+      "code": "8121",
+      "name": "越峰",
+      "close": 34.65,
+      "change_pct": 10.0,
+      "market": "上櫃"
+    },
+    {
       "code": "3311",
       "name": "閎暉",
       "close": 45.15,
       "change_pct": 9.987819732034104,
       "market": "上市"
-    },
-    {
-      "code": "4722",
-      "name": "國精化",
-      "close": 209.5,
-      "change_pct": 9.973753280839896,
-      "market": "上市"
-    },
-    {
-      "code": "8201",
-      "name": "無敵",
-      "close": 17.65,
-      "change_pct": 9.968847352024925,
-      "market": "上市"
     }
   ],
   "top_losers": [
+    {
+      "code": "3523",
+      "name": "迎輝",
+      "close": 13.5,
+      "change_pct": -10.0,
+      "market": "上櫃"
+    },
     {
       "code": "6405",
       "name": "悅城",
@@ -90,25 +97,18 @@
       "market": "上市"
     },
     {
-      "code": "6861",
-      "name": "睿生光電",
-      "close": 292.0,
-      "change_pct": -6.8580542264752795,
-      "market": "上市"
+      "code": "8084",
+      "name": "巨虹",
+      "close": 24.2,
+      "change_pct": -9.869646182495345,
+      "market": "上櫃"
     },
     {
-      "code": "3563",
-      "name": "牧德",
-      "close": 754.0,
-      "change_pct": -6.567534076827757,
-      "market": "上市"
-    },
-    {
-      "code": "1213",
-      "name": "大飲",
-      "close": 7.0,
-      "change_pct": -6.291834002677376,
-      "market": "上市"
+      "code": "9960",
+      "name": "邁達康",
+      "close": 37.5,
+      "change_pct": -9.63855421686747,
+      "market": "上櫃"
     }
   ]
 }
