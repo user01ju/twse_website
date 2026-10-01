@@ -1,25 +1,25 @@
 {
   "date": "2026-10-01",
-  "generated_at": "2026-10-01 16:01:44",
-  "complete": false,
+  "generated_at": "2026-10-01 18:04:11",
+  "complete": true,
   "taiex": {
     "close": 48353.49,
     "change_pts": 413.36,
     "change_pct": 0.86,
-    "trading_amount_yi": 8698.74080962,
-    "transaction_count": 4715245
+    "trading_amount_yi": 8740.46252416,
+    "transaction_count": 4715278
   },
   "breadth": {
     "twse": {
       "up": 586,
-      "down": 651,
-      "flat": 133,
+      "down": 652,
+      "flat": 132,
       "limit_up": 23,
       "limit_down": 2,
       "total": 1370,
       "up_pct": 42.8,
-      "down_pct": 47.5,
-      "flat_pct": 9.7,
+      "down_pct": 47.6,
+      "flat_pct": 9.6,
       "limit_up_pct": 1.7,
       "limit_down_pct": 0.1
     },
