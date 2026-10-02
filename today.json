@@ -1,7 +1,7 @@
 {
   "date": "2026-10-02",
-  "generated_at": "2026-10-02 18:02:21",
-  "complete": false,
+  "generated_at": "2026-10-02 19:02:42",
+  "complete": true,
   "taiex": {
     "close": 48475.74,
     "change_pts": 122.25,
@@ -39,6 +39,13 @@
   },
   "top_gainers": [
     {
+      "code": "6834",
+      "name": "天二科技",
+      "close": 131.0,
+      "change_pct": 13.43955663318323,
+      "market": "上市"
+    },
+    {
       "code": "1459",
       "name": "聯發",
       "close": 18.7,
@@ -65,16 +72,16 @@
       "close": 203.5,
       "change_pct": 10.0,
       "market": "上市"
-    },
-    {
-      "code": "4958",
-      "name": "臻鼎-KY",
-      "close": 561.0,
-      "change_pct": 10.0,
-      "market": "上市"
     }
   ],
   "top_losers": [
+    {
+      "code": "4154",
+      "name": "樂威科-KY",
+      "close": 11.25,
+      "change_pct": -10.0,
+      "market": "上櫃"
+    },
     {
       "code": "6949",
       "name": "沛爾生醫*-創",
@@ -83,32 +90,25 @@
       "market": "上市"
     },
     {
-      "code": "3593",
-      "name": "力銘",
-      "close": 10.65,
-      "change_pct": -7.391304347826087,
-      "market": "上市"
+      "code": "8084",
+      "name": "巨虹",
+      "close": 21.8,
+      "change_pct": -9.917355371900827,
+      "market": "上櫃"
     },
     {
-      "code": "6405",
-      "name": "悅城",
-      "close": 42.5,
-      "change_pct": -5.764966740576496,
-      "market": "上市"
+      "code": "3629",
+      "name": "地心引力",
+      "close": 14.6,
+      "change_pct": -9.876543209876544,
+      "market": "上櫃"
     },
     {
-      "code": "2923",
-      "name": "鼎固-KY",
-      "close": 23.95,
-      "change_pct": -5.708661417322835,
-      "market": "上市"
-    },
-    {
-      "code": "3025",
-      "name": "星通",
-      "close": 55.4,
-      "change_pct": -4.647160068846816,
-      "market": "上市"
+      "code": "4806",
+      "name": "桂田文創",
+      "close": 13.4,
+      "change_pct": -9.764309764309765,
+      "market": "上櫃"
     }
   ]
 }
