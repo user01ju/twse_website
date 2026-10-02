@@ -1,114 +1,114 @@
 {
-  "date": "2026-10-01",
-  "generated_at": "2026-10-01 18:04:11",
-  "complete": true,
+  "date": "2026-10-02",
+  "generated_at": "2026-10-02 15:02:17",
+  "complete": false,
   "taiex": {
-    "close": 48353.49,
-    "change_pts": 413.36,
-    "change_pct": 0.86,
-    "trading_amount_yi": 8740.46252416,
-    "transaction_count": 4715278
+    "close": 48475.74,
+    "change_pts": 122.25,
+    "change_pct": 0.25,
+    "trading_amount_yi": 9292.64783557,
+    "transaction_count": 4498773
   },
   "breadth": {
     "twse": {
-      "up": 586,
-      "down": 652,
-      "flat": 132,
-      "limit_up": 23,
-      "limit_down": 2,
-      "total": 1370,
-      "up_pct": 42.8,
-      "down_pct": 47.6,
-      "flat_pct": 9.6,
+      "up": 600,
+      "down": 651,
+      "flat": 122,
+      "limit_up": 24,
+      "limit_down": 1,
+      "total": 1373,
+      "up_pct": 43.7,
+      "down_pct": 47.4,
+      "flat_pct": 8.9,
       "limit_up_pct": 1.7,
       "limit_down_pct": 0.1
     },
     "tpex": {
-      "up": 333,
-      "down": 417,
-      "flat": 114,
-      "limit_up": 27,
-      "limit_down": 2,
-      "total": 892,
-      "up_pct": 37.3,
-      "down_pct": 46.7,
-      "flat_pct": 12.8,
-      "limit_up_pct": 3.0,
-      "limit_down_pct": 0.2
+      "up": 0,
+      "down": 0,
+      "flat": 0,
+      "limit_up": 0,
+      "limit_down": 0,
+      "total": 0,
+      "up_pct": 0.0,
+      "down_pct": 0.0,
+      "flat_pct": 0.0,
+      "limit_up_pct": 0.0,
+      "limit_down_pct": 0.0
     }
   },
   "top_gainers": [
     {
-      "code": "6994",
-      "name": "富威電力",
-      "close": 29.15,
+      "code": "1459",
+      "name": "聯發",
+      "close": 18.7,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "7711",
-      "name": "永擎",
-      "close": 616.0,
+      "code": "2321",
+      "name": "東訊",
+      "close": 25.85,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "6485",
-      "name": "點序",
-      "close": 84.7,
+      "code": "2444",
+      "name": "兆勁",
+      "close": 16.5,
       "change_pct": 10.0,
-      "market": "上櫃"
+      "market": "上市"
     },
     {
-      "code": "8121",
-      "name": "越峰",
-      "close": 34.65,
+      "code": "4764",
+      "name": "雙鍵",
+      "close": 203.5,
       "change_pct": 10.0,
-      "market": "上櫃"
+      "market": "上市"
     },
     {
-      "code": "3311",
-      "name": "閎暉",
-      "close": 45.15,
-      "change_pct": 9.987819732034104,
+      "code": "4958",
+      "name": "臻鼎-KY",
+      "close": 561.0,
+      "change_pct": 10.0,
       "market": "上市"
     }
   ],
   "top_losers": [
     {
-      "code": "3523",
-      "name": "迎輝",
-      "close": 13.5,
-      "change_pct": -10.0,
-      "market": "上櫃"
+      "code": "6949",
+      "name": "沛爾生醫*-創",
+      "close": 44.5,
+      "change_pct": -9.919028340080972,
+      "market": "上市"
+    },
+    {
+      "code": "3593",
+      "name": "力銘",
+      "close": 10.65,
+      "change_pct": -7.391304347826087,
+      "market": "上市"
     },
     {
       "code": "6405",
       "name": "悅城",
-      "close": 45.1,
-      "change_pct": -9.980039920159681,
+      "close": 42.5,
+      "change_pct": -5.764966740576496,
       "market": "上市"
     },
     {
-      "code": "2305",
-      "name": "全友",
-      "close": 61.9,
-      "change_pct": -9.8981077147016,
+      "code": "2923",
+      "name": "鼎固-KY",
+      "close": 23.95,
+      "change_pct": -5.708661417322835,
       "market": "上市"
     },
     {
-      "code": "8084",
-      "name": "巨虹",
-      "close": 24.2,
-      "change_pct": -9.869646182495345,
-      "market": "上櫃"
-    },
-    {
-      "code": "9960",
-      "name": "邁達康",
-      "close": 37.5,
-      "change_pct": -9.63855421686747,
-      "market": "上櫃"
+      "code": "3025",
+      "name": "星通",
+      "close": 55.4,
+      "change_pct": -4.647160068846816,
+      "market": "上市"
     }
   ]
 }
