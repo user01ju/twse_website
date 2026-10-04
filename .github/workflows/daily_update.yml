@@ -1,11 +1,10 @@
 name: 每日股市行情更新
 
 on:
+  # 主排程是 cron-job.org（台北 19:00–23:00 每小時，見下方 repository_dispatch）。
+  # GitHub schedule 只留一班當保險（公開 repo 延遲常達數小時）：台北 21:00 = UTC 13:00。
   schedule:
-    # 台灣時間 15:00 開始，每 30 分鐘重試一次，直到 23:30（UTC 07:00–15:30）
-    # UTC 16:00 之後的班次一定被下面的 timecheck 跳過，所以不排。
-    # 注意：GitHub Actions schedule 在公開 repo 常有大幅延遲，請搭配外部 cron 觸發
-    - cron: '0,30 7-15 * * 1-5'
+    - cron: '0 13 * * 1-5'
   repository_dispatch:
     # 外部 cron (cron-job.org) 透過 GitHub API 觸發，可帶 force_rebuild
     # POST https://api.github.com/repos/user01ju/twse_website/dispatches
