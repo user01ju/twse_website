@@ -1,11 +1,12 @@
 """除權息/減資/面額變更參考價 — 還原權息鏈的關鍵輸入。
 
 來源（皆官方免費 JSON，無 key）：
-  TWSE TWT49U  除權息參考價        （日期區間，按月查）
+  TWSE TWT49U  減除股利參考價      （日期區間，按月查）
   TWSE TWTAUU  減資恢復買賣參考價  （日期區間）
   TWSE TWTB8U  面額變更恢復買賣參考價（日期區間，如股票分割）
-  TPEX exDailyQ 除權息參考價        （區間查詢有 100 筆上限 → 逐日查）
+  TPEX exDailyQ 減除股利參考價      （區間查詢有 100 筆上限 → 逐日查）
   TPEX revivt   減資恢復買賣參考價  （日期區間）
+  TPEX pvChgRslt 面額變更恢復買賣參考價（日期區間；上櫃面額變更不在 revivt）
 
 快取：output/data/exrights.csv（date,id,ref）— 與 price_cache 相同的
 gh-pages 持久化模式。冷啟動 fallback data/exrights_seed.csv（repo 內，
@@ -14,6 +15,7 @@ gh-pages 持久化模式。冷啟動 fallback data/exrights_seed.csv（repo 內�
 """
 import csv
 import logging
+import re
 import time
 from datetime import date, timedelta
 
@@ -34,11 +36,14 @@ _HEADERS = {
 }
 
 # (tag, url_fn(start_iso, end_iso), 日期欄, 代號欄, 參考價欄)
+# 除權息用「減除股利參考價」(= 開盤競價基準，交易所算漲停/漲跌用的那個)，不用「除權息參考價」：
+# 後者連現增認股權理論價值都扣，盤面沒有那段缺口 → 除息日漲幅與還原鏈灌假漲幅
+# (6225 天瀚 2026-08-18：除權息參考價 30.04、開盤基準 44.40、當天漲停 48.80 → +62%)。
 # TWSE 日期參數 YYYYMMDD；TPEX YYYY/MM/DD。回傳日期皆民國年（+1911）。
 _RANGE_SOURCES = [
     ("TWSE除權息",
      lambda s, e: f"https://www.twse.com.tw/rwd/zh/exRight/TWT49U?startDate={s.replace('-', '')}&endDate={e.replace('-', '')}&response=json",
-     "資料日期", "股票代號", "除權息參考價"),
+     "資料日期", "股票代號", "減除股利參考價"),
     ("TWSE減資",
      lambda s, e: f"https://www.twse.com.tw/rwd/zh/reducation/TWTAUU?startDate={s.replace('-', '')}&endDate={e.replace('-', '')}&response=json",
      "恢復買賣日期", "股票代號", "恢復買賣參考價"),
@@ -48,6 +53,9 @@ _RANGE_SOURCES = [
     ("TPEX減資",
      lambda s, e: f"https://www.tpex.org.tw/www/zh-tw/bulletin/revivt?startDate={s.replace('-', '/')}&endDate={e.replace('-', '/')}&response=json",
      "恢復買賣日期", "股票代號", "減資恢復買賣開始日參考價格"),
+    ("TPEX面額變更",
+     lambda s, e: f"https://www.tpex.org.tw/www/zh-tw/bulletin/pvChgRslt?startDate={s.replace('-', '/')}&endDate={e.replace('-', '/')}&response=json",
+     "恢復買賣日期", "證券代號", "恢復買賣開始參考價"),
 ]
 
 
@@ -64,14 +72,10 @@ def _get_json(url: str, retries: int = 2) -> dict:
 
 
 def _roc_to_iso(s: str) -> str | None:
-    """'114/09/16' → '2025-09-16'（民國年 +1911）"""
-    parts = str(s).strip().replace("年", "/").replace("月", "/").replace("日", "").split("/")
-    if len(parts) < 3:
-        return None
-    try:
-        return f"{int(parts[0]) + 1911}-{int(parts[1]):02d}-{int(parts[2]):02d}"
-    except ValueError:
-        return None
+    """'114/09/16' / '114年09月16日' / '1140916' → '2025-09-16'（民國年 +1911）
+    TPEX revivt/pvChgRslt 是無分隔的 7 碼，分隔符必須可省，否則整個來源靜默 0 筆。"""
+    m = re.match(r"(\d{2,3})[年/]?(\d{2})[月/]?(\d{2})", str(s).strip())
+    return f"{int(m[1]) + 1911}-{m[2]}-{m[3]}" if m else None
 
 
 def _num(s) -> float | None:
@@ -102,7 +106,7 @@ def _parse_table(j: dict, date_f: str, id_f: str, ref_f: str) -> list[tuple[str,
 
 
 def _fetch_range_sources(start: date, end: date) -> list[tuple[str, str, float]]:
-    """TWSE 三表 + TPEX 減資表，按月切塊查區間。"""
+    """TWSE 三表 + TPEX 減資/面額變更表，按月切塊查區間。"""
     rows = []
     for tag, url_fn, date_f, id_f, ref_f in _RANGE_SOURCES:
         cur = start
@@ -131,7 +135,7 @@ def _fetch_tpex_days(start: date, end: date) -> list[tuple[str, str, float]]:
             d_str = cur.strftime("%Y/%m/%d")
             try:
                 j = _get_json(f"https://www.tpex.org.tw/www/zh-tw/bulletin/exDailyQ?startDate={d_str}&endDate={d_str}&response=json")
-                got = _parse_table(j, "除權息日期", "代號", "除權息參考價")
+                got = _parse_table(j, "除權息日期", "代號", "減除股利參考價")
                 rows.extend(got)
                 if got:
                     logger.info(f"exrights TPEX除權息 {cur}: {len(got)} rows")
@@ -188,7 +192,7 @@ def update(today: date, backfill_days: int = 7) -> None:
         w.writerow(["date", "id", "ref"])
         for key in sorted(refs):
             d, code = key.split("|")
-            w.writerow([d, code, f"{refs[key]:g}"])
+            w.writerow([d, code, f"{refs[key]:.10g}"])
     logger.info(f"exrights cache saved: {len(refs)} rows ({len(refs) - before} new) -> {_CACHE_PATH}")
 
 
