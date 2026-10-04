@@ -65,6 +65,20 @@ def save(d: date, twse_stocks: list[dict], tpex_stocks: list[dict]) -> None:
     logger.info(f"Price cache saved: {p} ({len(prices)} stocks)")
 
 
+def refresh_volume(d: date, fresh: dict[str, dict]) -> int:
+    """用終版資料覆蓋既有快照的 v/a（c/h/l 不動），回傳改動檔數。"""
+    snap = load(d)
+    changed = 0
+    for code, px in snap.items():
+        f = fresh.get(code)
+        if f and (px.get("v"), px.get("a")) != (f.get("v"), f.get("a")):
+            px["v"], px["a"] = f.get("v"), f.get("a")
+            changed += 1
+    if changed:
+        _path(d).write_text(json.dumps(snap, ensure_ascii=False), encoding="utf-8")
+    return changed
+
+
 def load(d: date) -> dict[str, dict]:
     """Load price dict for a single date. Returns {} if not found."""
     p = _path(d)

@@ -1,6 +1,6 @@
 import logging
 from concurrent.futures import ThreadPoolExecutor, as_completed, TimeoutError as FuturesTimeout
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from zoneinfo import ZoneInfo
 
 _TZ = ZoneInfo("Asia/Taipei")
@@ -67,6 +67,32 @@ def _detect_data_date(twse_stocks: list | None, twse_index: list | None) -> date
                 except Exception:
                     pass
     return None
+
+
+def _refresh_prev_day(actual_date: date) -> None:
+    """15:00 那輪的 STOCK_DAY_ALL / T86 是初版：常還沒併入鉅額交易、投信欄事後會更正，
+    但 price/inst 快取只在當天第一次完整建置時寫一次（2026-10-04 稽核：14 天裡 8 天
+    量值偏差、投信市場合計單日差到 42 億）。隔天用吃日期的端點（終版）覆蓋前一交易日。"""
+    import time
+    from backfill_prices import _fetch_day, _fetch_tpex_day
+    from backfill_inst import _fetch_t86, _fetch_tpex
+
+    prev = next((d for d in (actual_date - timedelta(days=i) for i in range(1, 11))
+                 if price_cache.load(d)), None)
+    if prev is None:
+        return
+    tw = _fetch_day(prev)
+    tp = _fetch_tpex_day(prev)
+    if tw and tp:
+        n = price_cache.refresh_volume(prev, {**tw, **tp})
+        logger.info(f"{prev} price v/a 終版覆蓋 {n} 檔")
+    time.sleep(2)
+    t86 = _fetch_t86(prev)
+    tpex = _fetch_tpex(prev)
+    if t86 and tpex:
+        prices = {c: px["c"] for c, px in price_cache.load(prev).items()}
+        if inst_flow_cache.save(prev, t86, tpex, prices, prices):
+            logger.info(f"{prev} 法人快取終版覆蓋")
 
 
 def build(target_date: date) -> "bool | str":
@@ -255,6 +281,11 @@ def build(target_date: date) -> "bool | str":
     )
     # 單日法人買賣超個股/子類股（foreign/trust/combined/dealer/sector_merged）2026-09-13 起
     # 不再算：那兩個區塊已併進 sector_flow 的「今日」欄。
+    try:
+        _refresh_prev_day(actual_date)
+    except Exception as e:
+        logger.warning(f"前一交易日終版覆蓋失敗（沿用初版）: {e}")
+
     # ── Price cache: save today → compute trend metrics ─────────────────────
     try:
         price_cache.save(actual_date, raw.get("twse_stocks") or [], raw.get("tpex_daily") or [])
