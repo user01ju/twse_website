@@ -62,6 +62,34 @@ def _four_dim_lines(fd: dict, short: int, long: int) -> list[str]:
     return lines
 
 
+def _sector_lines(sb: dict) -> list[str]:
+    """族群廣度（全成分股、還原權息）餵 prompt：今日中位數最強 / 最弱各 6 個族群 + 全市場對照。"""
+    d = sb.get("data") or {}
+    rows = d.get("rows") or []
+    if not sb.get("ok") or d.get("degraded") or len(rows) < 12:
+        return []
+
+    def fmt(r: dict, movers: list[dict]) -> str:
+        bits = [f"{r['sector']}（{r['n']}檔）中位數 今日{r['med1']:+.2f}%"]
+        if r.get("med5") is not None and r.get("med20") is not None:
+            bits.append(f"5日{r['med5']:+.1f}%/20日{r['med20']:+.1f}%")
+        bits.append(f"漲{r['up']}跌{r['down']}平{r['flat']}")
+        if r.get("ma20_pct") is not None:
+            bits.append(f"站上20MA {r['ma20_pct']}%")
+        if r.get("nh") or r.get("nl"):
+            bits.append(f"52週新高{r['nh']}/新低{r['nl']}")
+        bits.append("、".join(f"{m['name']}({m['code']}){m['pct']:+.1f}%" for m in movers))
+        return " ".join(bits)
+
+    m = d.get("market") or {}
+    lines = [f"（以下是 CMoney 子類股的族群廣度：每個族群看全部成分股，漲跌走還原權息。"
+             f"全市場對照：{m.get('n', 0)} 檔，漲{m.get('up', 0)}跌{m.get('down', 0)}，"
+             f"今日漲跌中位數 {m.get('med1') or 0:+.2f}%，站上20MA {m.get('ma20_pct', 0)}%）"]
+    lines.append("【今日族群最強 6（依中位數，附領漲股）】" + "；".join(fmt(r, r["leaders"]) for r in rows[:6]))
+    lines.append("【今日族群最弱 6（依中位數，附領跌股）】" + "；".join(fmt(r, r["laggards"]) for r in rows[::-1][:6]))
+    return lines
+
+
 def _build_prompt(sections: dict, date_str: str) -> str:
     lines = [f"以下是台灣股市 {date_str} 的完整收盤資料：\n"]
 
@@ -117,6 +145,9 @@ def _build_prompt(sections: dict, date_str: str) -> str:
                     + (f"（{' / '.join(details)}）" if details else "")
                 )
 
+    sector_lines = _sector_lines(sections.get("sector_breadth", {}))
+    lines.extend(sector_lines)
+
     # 個股層四維分析（5/20 日窗口）— 帶時間維度的資料，上面每一段都只有當日。
     # degraded（快取缺天）時整段不進 prompt，規則跟 market_trend 一致：窗口沒湊滿時
     # 5/20 日累計會安靜偏小，錯的數字會污染摘要敘事。
@@ -127,11 +158,23 @@ def _build_prompt(sections: dict, date_str: str) -> str:
         fd_lines = _four_dim_lines(d.get("four_dim") or {}, d.get("short", 5), d.get("long", 20))
     lines.extend(fd_lines)
 
+    overview = (
+        "【大盤概況】\n"
+        "一段話說明指數漲跌、成交量、市場廣度（漲跌家數、漲跌停家數）、法人合計。\n\n"
+    )
+    if sector_lines:
+        overview += (
+            "【族群強弱】\n"
+            "• 今日漲幅明顯最強的 2-3 個族群：是全族群齊漲（漲跌家數、中位數）還是少數個股拉抬，"
+            "對照 5/20 日是延續還是剛啟動，點名領漲股（附代號）\n"
+            "• 明顯弱勢的族群：同樣看廣度與 5/20 日、點名領跌股；沒有族群明顯弱於大盤就直說沒有\n\n"
+        )
+    n_blocks = overview.count("【")
+
     if fd_lines:
         fmt = (
-            "必須嚴格使用以下格式輸出，共五個區塊，每個區塊之間空一行：\n\n"
-            "【大盤概況】\n"
-            "一段話說明指數漲跌、成交量、市場廣度（漲跌家數、漲跌停家數）、法人合計。\n\n"
+            f"必須嚴格使用以下格式輸出，共 {n_blocks + 4} 個區塊，每個區塊之間空一行：\n\n"
+            + overview +
             "【主流與集中度】\n"
             "• 主流延續/拉回續買裡「錢＋價＋位階」三合一的是誰（附代號、5/20 日金額、距 52 週高），外資投信是否同買\n"
             "• 多頭型態的檔數與金額佔比，多頭是分散還是集中在少數幾檔\n\n"
@@ -149,11 +192,12 @@ def _build_prompt(sections: dict, date_str: str) -> str:
         )
     else:
         fmt = (
-            "必須嚴格使用以下格式輸出，只有一個區塊：\n\n"
-            "【大盤概況】\n"
-            "一段話說明指數漲跌、成交量、市場廣度（漲跌家數、漲跌停家數）、法人合計。\n\n"
+            f"必須嚴格使用以下格式輸出，共 {n_blocks} 個區塊：\n\n"
+            + overview +
             "注意：語氣客觀專業，不提供投資建議，不加任何額外說明文字。"
         )
+    # 輸出直接切【】區塊、• 行渲染成網頁並跳脫 HTML：markdown 記號會原樣顯示（Opus 5.5 會主動用粗體/巢狀清單）
+    fmt += "\n輸出是純文字，會直接放進網頁：不要用 markdown 粗體、標題或巢狀清單，每個 • 自成一行。"
     lines.append("\n請根據以上數據，用繁體中文撰寫「今日盤勢總覽」。\n" + fmt)
 
     return "\n".join(lines)
@@ -169,13 +213,15 @@ def build(sections: dict, date_str: str) -> dict:
 
     prompt = _build_prompt(sections, date_str)
     client = anthropic.Anthropic(api_key=api_key)
-    msg = client.messages.create(
-        model="claude-opus-5",
-        # Opus 5 預設開 adaptive thinking，max_tokens 是 thinking + 正文的共用上限。
-        # 沿用舊的 1500 會讓摘要靜默截斷在區塊中間（不報錯，殘缺 HTML 直接上線）。
-        # 不改成 thinking disabled：Opus 5 關思考時有 <thinking> 標籤洩漏進可見輸出的已知問題。
-        max_tokens=5000,
+    msg = client.beta.messages.create(
+        model="claude-opus-5-5",
+        # Opus 5.5 思考恆開，max_tokens 是 thinking + 正文的共用上限；給太緊會讓摘要
+        # 靜默截斷在區塊中間（不報錯，殘缺 HTML 直接上線）。
+        max_tokens=16000,
         output_config={"effort": "medium"},
+        # 安全分類器誤擋時由伺服器改用建議的備援模型重跑，不讓摘要整塊消失
+        betas=["server-side-fallback-2026-07-01"],
+        extra_body={"fallbacks": "default"},
         messages=[{"role": "user", "content": prompt}],
     )
     # 安全分類器擋下時是 HTTP 200 + content: []，不是 exception → 沒 guard 會 IndexError
