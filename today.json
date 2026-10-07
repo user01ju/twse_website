@@ -1,114 +1,114 @@
 {
-  "date": "2026-10-06",
-  "generated_at": "2026-10-06 20:03:26",
-  "complete": true,
+  "date": "2026-10-07",
+  "generated_at": "2026-10-07 19:03:01",
+  "complete": false,
   "taiex": {
-    "close": 49822.55,
-    "change_pts": 110.51,
-    "change_pct": 0.22,
-    "trading_amount_yi": 10262.04771139,
-    "transaction_count": 4923225
+    "close": 49806.37,
+    "change_pts": -16.18,
+    "change_pct": -0.03,
+    "trading_amount_yi": 9862.80041197,
+    "transaction_count": 4929172
   },
   "breadth": {
     "twse": {
-      "up": 626,
-      "down": 615,
-      "flat": 130,
-      "limit_up": 11,
-      "limit_down": 2,
-      "total": 1371,
-      "up_pct": 45.7,
-      "down_pct": 44.9,
-      "flat_pct": 9.5,
-      "limit_up_pct": 0.8,
-      "limit_down_pct": 0.1
+      "up": 709,
+      "down": 513,
+      "flat": 144,
+      "limit_up": 12,
+      "limit_down": 4,
+      "total": 1366,
+      "up_pct": 51.9,
+      "down_pct": 37.6,
+      "flat_pct": 10.5,
+      "limit_up_pct": 0.9,
+      "limit_down_pct": 0.3
     },
     "tpex": {
-      "up": 300,
-      "down": 475,
-      "flat": 90,
-      "limit_up": 20,
-      "limit_down": 4,
+      "up": 419,
+      "down": 357,
+      "flat": 97,
+      "limit_up": 23,
+      "limit_down": 3,
       "total": 893,
-      "up_pct": 33.6,
-      "down_pct": 53.2,
-      "flat_pct": 10.1,
-      "limit_up_pct": 2.2,
-      "limit_down_pct": 0.4
+      "up_pct": 46.9,
+      "down_pct": 40.0,
+      "flat_pct": 10.9,
+      "limit_up_pct": 2.6,
+      "limit_down_pct": 0.3
     }
   },
   "top_gainers": [
     {
-      "code": "2466",
-      "name": "冠西電",
-      "close": 170.5,
+      "code": "6442",
+      "name": "光聖",
+      "close": 1815.0,
       "change_pct": 10.0,
+      "market": "上市"
+    },
+    {
+      "code": "6944",
+      "name": "兆聯實業",
+      "close": 908.0,
+      "change_pct": 9.927360774818402,
+      "market": "上市"
+    },
+    {
+      "code": "1301",
+      "name": "台塑",
+      "close": 75.4,
+      "change_pct": 9.912536443148687,
+      "market": "上市"
+    },
+    {
+      "code": "8213",
+      "name": "志超",
+      "close": 37.7,
+      "change_pct": 9.912536443148687,
+      "market": "上市"
+    },
+    {
+      "code": "6672",
+      "name": "騰輝電子-KY",
+      "close": 505.0,
+      "change_pct": 9.902067464635474,
+      "market": "上市"
+    }
+  ],
+  "top_losers": [
+    {
+      "code": "2059",
+      "name": "川湖",
+      "close": 11790.0,
+      "change_pct": -10.0,
+      "market": "上市"
+    },
+    {
+      "code": "7788",
+      "name": "松川精密",
+      "close": 329.0,
+      "change_pct": -9.986320109439124,
+      "market": "上市"
+    },
+    {
+      "code": "6515",
+      "name": "穎崴",
+      "close": 5520.0,
+      "change_pct": -9.9510603588907,
+      "market": "上市"
+    },
+    {
+      "code": "2254",
+      "name": "巨鎧精密-創",
+      "close": 91.4,
+      "change_pct": -9.950738916256158,
       "market": "上市"
     },
     {
       "code": "4720",
       "name": "德淵",
-      "close": 25.3,
-      "change_pct": 10.0,
+      "close": 23.25,
+      "change_pct": -8.10276679841897,
       "market": "上市"
-    },
-    {
-      "code": "6257",
-      "name": "矽格",
-      "close": 286.0,
-      "change_pct": 10.0,
-      "market": "上市"
-    },
-    {
-      "code": "5205",
-      "name": "中茂",
-      "close": 27.55,
-      "change_pct": 9.980039920159681,
-      "market": "上櫃"
-    },
-    {
-      "code": "4716",
-      "name": "大立",
-      "close": 20.95,
-      "change_pct": 9.973753280839894,
-      "market": "上櫃"
-    }
-  ],
-  "top_losers": [
-    {
-      "code": "2236",
-      "name": "百達-KY",
-      "close": 88.2,
-      "change_pct": -10.0,
-      "market": "上市"
-    },
-    {
-      "code": "6538",
-      "name": "倉和",
-      "close": 302.0,
-      "change_pct": -9.985096870342772,
-      "market": "上櫃"
-    },
-    {
-      "code": "8084",
-      "name": "巨虹",
-      "close": 17.7,
-      "change_pct": -9.923664122137405,
-      "market": "上櫃"
-    },
-    {
-      "code": "6174",
-      "name": "安碁",
-      "close": 54.5,
-      "change_pct": -9.917355371900827,
-      "market": "上櫃"
-    },
-    {
-      "code": "7772",
-      "name": "耀穎",
-      "close": 151.0,
-      "change_pct": -9.850746268656717,
-      "market": "上櫃"
     }
   ]
 }
