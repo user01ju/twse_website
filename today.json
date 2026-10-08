@@ -1,7 +1,7 @@
 {
   "date": "2026-10-08",
-  "generated_at": "2026-10-08 19:02:12",
-  "complete": false,
+  "generated_at": "2026-10-08 20:03:28",
+  "complete": true,
   "taiex": {
     "close": 49313.44,
     "change_pts": -492.93,
@@ -53,25 +53,25 @@
       "market": "上市"
     },
     {
-      "code": "2466",
-      "name": "冠西電",
-      "close": 198.5,
-      "change_pct": 9.97229916897507,
-      "market": "上市"
+      "code": "3287",
+      "name": "廣寰科",
+      "close": 43.45,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "4934",
-      "name": "太極",
-      "close": 17.1,
-      "change_pct": 9.967845659163988,
-      "market": "上市"
+      "code": "3713",
+      "name": "新晶投控",
+      "close": 14.85,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "9103",
-      "name": "美德醫療-DR",
-      "close": 5.88,
-      "change_pct": 9.906542056074768,
-      "market": "上市"
+      "code": "8086",
+      "name": "宏捷科",
+      "close": 154.0,
+      "change_pct": 10.0,
+      "market": "上櫃"
     }
   ],
   "top_losers": [
@@ -90,25 +90,25 @@
       "market": "上市"
     },
     {
-      "code": "7788",
-      "name": "松川精密",
-      "close": 305.0,
-      "change_pct": -7.29483282674772,
-      "market": "上市"
+      "code": "8227",
+      "name": "巨有科技",
+      "close": 335.0,
+      "change_pct": -9.946236559139784,
+      "market": "上櫃"
     },
     {
-      "code": "7749",
-      "name": "意騰-KY",
-      "close": 364.0,
-      "change_pct": -6.905370843989769,
-      "market": "上市"
+      "code": "6716",
+      "name": "應廣",
+      "close": 138.5,
+      "change_pct": -9.77198697068404,
+      "market": "上櫃"
     },
     {
-      "code": "3016",
-      "name": "嘉晶",
-      "close": 183.5,
-      "change_pct": -5.897435897435897,
-      "market": "上市"
+      "code": "8084",
+      "name": "巨虹",
+      "close": 14.4,
+      "change_pct": -9.717868338557993,
+      "market": "上櫃"
     }
   ]
 }
