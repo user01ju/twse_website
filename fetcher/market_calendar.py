@@ -7,9 +7,14 @@ from zoneinfo import ZoneInfo
 
 import requests
 
-from config import ENDPOINTS, CACHE_DIR
+from config import ENDPOINTS, OUTPUT_DIR
 
 logger = logging.getLogger(__name__)
+
+# 放 output/data/ 而不是 .cache/：output/ 走 gh-pages 持久化，CI 每輪從線上還原。
+# holidaySchedule 只回當年度，跨年後去年的表就再也抓不到了 —— 而 price_cache
+# 的 coverage 分母要扣掉窗口內（約 13 個月）每一年的假日。
+HOLIDAY_DIR = OUTPUT_DIR / "data"
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
@@ -42,16 +47,11 @@ def _load_holidays(year: int) -> set[str]:
         那些是有交易的，不能算休市。
       - 解出 0 筆視為失敗，不寫 cache，免得空集合永久化。
     """
-    CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    cache_file = CACHE_DIR / f"holidays_{year}.json"
-
-    if cache_file.exists():
-        try:
-            cached = set(json.loads(cache_file.read_text(encoding="utf-8")))
-            if cached:
-                return cached
-        except Exception:
-            pass
+    cached = cached_holidays(year)
+    if cached:
+        return cached
+    cache_file = HOLIDAY_DIR / f"holidays_{year}.json"
+    HOLIDAY_DIR.mkdir(parents=True, exist_ok=True)
 
     try:
         resp = requests.get(
@@ -83,6 +83,15 @@ def _load_holidays(year: int) -> set[str]:
         return holidays
     except Exception as e:
         logger.warning(f"Failed to fetch holidays for {year}: {e}")
+        return set()
+
+
+def cached_holidays(year: int) -> set[str]:
+    """只讀 cache、不打網路（verify Tier A 用）。沒有或空 → 空集合。"""
+    try:
+        return set(json.loads(
+            (HOLIDAY_DIR / f"holidays_{year}.json").read_text(encoding="utf-8")))
+    except Exception:
         return set()
 
 

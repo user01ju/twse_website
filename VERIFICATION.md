@@ -79,7 +79,7 @@ gh workflow run --repo user01ju/twse_website daily_update.yml -f skip_verify=tru
 | `today-json-structure` | 上市/上櫃家數自洽（漲+跌+平 = 總數）、指數存在 |
 | `today-json-not-stale-partial` | `complete` 旗標不得是 partial |
 | `report-html-present` | 當日 HTML 產出存在且被 index 收錄 |
-| `price-window-coverage` | price cache 覆蓋率（全窗 / 近 20 日門檻 90%） |
+| `price-window-coverage` | price cache 覆蓋率（全窗 / 近 20 日門檻 95%，分母扣假日） |
 | `exrights-cache-fresh` | exrights.csv 最新日期距報告日 ≤30 天 |
 
 `today-date-expected-trading-day` 用本 repo 的 `market_calendar`（2026-08-01 修好後才可靠）。本 repo 是四個 repo 裡唯一有真正假日表的。

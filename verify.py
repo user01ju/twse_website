@@ -36,7 +36,7 @@ from fetcher.tls import verify_for
 BASE_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(BASE_DIR))
 
-from config import CACHE_DIR, OUTPUT_DIR, REPORTS_DIR          # noqa: E402
+from config import OUTPUT_DIR, REPORTS_DIR                     # noqa: E402
 from fetcher import inst_flow_cache, market_calendar, price_cache  # noqa: E402
 from processor.market_trend import _MIN_COVERAGE               # noqa: E402
 from processor.utils import is_stock_code, is_warrant, parse_num  # noqa: E402
@@ -185,18 +185,9 @@ class Ctx:
         return self._ex_refs
 
     def holidays_ready(self, *years: int) -> bool:
-        """假日 cache 在本機/CI 都在 .cache/（gitignore）。沒有就別碰
+        """假日 cache 在 output/data/（走 gh-pages）。沒有就別碰
         market_calendar — 它會去打網路，Tier A 必須零外部呼叫。"""
-        for y in years:
-            p = CACHE_DIR / f"holidays_{y}.json"
-            if not p.exists():
-                return False
-            try:
-                if not json.loads(p.read_text(encoding="utf-8")):
-                    return False
-            except Exception:
-                return False
-        return True
+        return all(market_calendar.cached_holidays(y) for y in years)
 
     # ── 外部呼叫（Tier B 專用，共用預算 + 快取） ──────────────────────────
     def _budgeted_get(self, url: str, params: dict, label: str) -> dict:
@@ -307,7 +298,7 @@ def check_today_date_expected_trading_day(ctx: Ctx):
         return _missing(str(TODAY_JSON))
     rd = ctx.report_date
     if not ctx.holidays_ready(rd.year, ctx.today.year):
-        return SKIP, (f"假日表 cache 缺 .cache/holidays_{rd.year}.json 或 "
+        return SKIP, (f"假日表 cache 缺 output/data/holidays_{rd.year}.json 或 "
                       f"holidays_{ctx.today.year}.json — Tier A 不打網路，跳過")
 
     expected = market_calendar.get_latest_trading_day()

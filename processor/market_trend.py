@@ -24,7 +24,7 @@ _WEEK52_DAYS = 252  # approx trading days in 52 weeks
 _HALF_YEAR = 126    # 上市/資料滿半年才計新高低(對齊 sector_gainer)
 _CHART_DAYS = 30    # trend chart length
 _WILD = 1.12        # 單日 ±12% 限制外跳動 = 未知資本事件，視為價值中性
-_MIN_COVERAGE = 90.0  # 窗口完整度低於此 → 標 degraded(完整 cache 約 93~97%)
+_MIN_COVERAGE = 95.0  # 窗口完整度低於此 → 標 degraded(分母已扣假日，完整 cache ≈ 98~100%)
 
 
 class _Chain:

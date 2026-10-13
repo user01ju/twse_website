@@ -10,6 +10,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 from config import OUTPUT_DIR
+from fetcher.market_calendar import cached_holidays
 from processor.utils import parse_num, is_warrant, is_stock_code
 
 logger = logging.getLogger(__name__)
@@ -94,18 +95,24 @@ def load(d: date) -> dict[str, dict]:
 def window_coverage(window: list[tuple[date, dict]], end: date) -> dict:
     """窗口完整度：實得快照數 / 期望交易日數 → {got, expected, pct}。
 
-    期望值用「工作日數」近似（不扣國定假日），所以**完整**的 cache 大約落在
-    93~97% 而不是 100%。存在的意義：cache 缺一大塊時 load_window 會安靜地
-    往更早的日期湊滿天數，算出來的 20MA / 52 週新高低看起來合理但是錯的
-    （拿今天的價比兩個月前的均價）。用這個比率把它變成可見的訊號。
+    期望值 = 工作日扣掉假日表（只讀 cache、不打網路；某年沒 cache 就退回只數
+    工作日）。颱風假不在表裡，靠門檻容忍。存在的意義：cache 缺一大塊時
+    load_window 會安靜地往更早的日期湊滿天數，算出來的 20MA / 52 週新高低
+    看起來合理但是錯的（拿今天的價比兩個月前的均價）。用這個比率把它變成
+    可見的訊號。
+
+    以前不扣假日，健康值只有 93~97%：2026-10-12 近 20 日碰到中秋/教師節/
+    國慶補假三個休市日 → 20/23 = 87% 誤報 degraded。
     """
     if not window:
         return {"got": 0, "expected": 0, "pct": 0.0}
     start = window[0][0]
-    expected = sum(
-        1 for i in range((end - start).days + 1)
-        if (start + timedelta(days=i)).weekday() < 5
-    )
+    holidays = set().union(*(cached_holidays(y) for y in range(start.year, end.year + 1)))
+    expected = 0
+    for i in range((end - start).days + 1):
+        d = start + timedelta(days=i)
+        if d.weekday() < 5 and d.isoformat() not in holidays:
+            expected += 1
     got = len(window)
     return {
         "got":      got,
