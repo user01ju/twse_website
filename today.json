@@ -1,114 +1,114 @@
 {
-  "date": "2026-10-12",
-  "generated_at": "2026-10-12 19:03:08",
-  "complete": true,
+  "date": "2026-10-13",
+  "generated_at": "2026-10-13 19:03:38",
+  "complete": false,
   "taiex": {
-    "close": 49301.96,
-    "change_pts": -11.48,
-    "change_pct": -0.02,
-    "trading_amount_yi": 8945.21928358,
-    "transaction_count": 4759498
+    "close": 48341.31,
+    "change_pts": -960.65,
+    "change_pct": -1.95,
+    "trading_amount_yi": 12018.61264942,
+    "transaction_count": 7269103
   },
   "breadth": {
     "twse": {
-      "up": 689,
-      "down": 559,
-      "flat": 123,
-      "limit_up": 26,
-      "limit_down": 3,
-      "total": 1371,
-      "up_pct": 50.3,
-      "down_pct": 40.8,
-      "flat_pct": 9.0,
-      "limit_up_pct": 1.9,
-      "limit_down_pct": 0.2
+      "up": 361,
+      "down": 902,
+      "flat": 106,
+      "limit_up": 13,
+      "limit_down": 5,
+      "total": 1369,
+      "up_pct": 26.4,
+      "down_pct": 65.9,
+      "flat_pct": 7.7,
+      "limit_up_pct": 0.9,
+      "limit_down_pct": 0.4
     },
     "tpex": {
-      "up": 330,
-      "down": 467,
-      "flat": 71,
-      "limit_up": 28,
-      "limit_down": 10,
+      "up": 175,
+      "down": 610,
+      "flat": 83,
+      "limit_up": 11,
+      "limit_down": 8,
       "total": 893,
-      "up_pct": 37.0,
-      "down_pct": 52.3,
-      "flat_pct": 8.0,
-      "limit_up_pct": 3.1,
-      "limit_down_pct": 1.1
+      "up_pct": 19.6,
+      "down_pct": 68.3,
+      "flat_pct": 9.3,
+      "limit_up_pct": 1.2,
+      "limit_down_pct": 0.9
     }
   },
   "top_gainers": [
     {
-      "code": "1516",
-      "name": "川飛",
-      "close": 15.4,
+      "code": "6645",
+      "name": "金萬林-創",
+      "close": 14.3,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "2429",
-      "name": "銘旺科",
-      "close": 33.0,
+      "code": "6668",
+      "name": "中揚光",
+      "close": 60.5,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "6909",
-      "name": "創控",
-      "close": 47.85,
+      "code": "6834",
+      "name": "天二科技",
+      "close": 159.5,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "6234",
-      "name": "高僑",
-      "close": 43.45,
-      "change_pct": 10.0,
-      "market": "上櫃"
+      "code": "1312",
+      "name": "國喬",
+      "close": 17.65,
+      "change_pct": 9.968847352024925,
+      "market": "上市"
     },
     {
-      "code": "6640",
-      "name": "均華",
-      "close": 1155.0,
-      "change_pct": 10.0,
-      "market": "上櫃"
+      "code": "8467",
+      "name": "波力-KY",
+      "close": 101.5,
+      "change_pct": 9.967497291440953,
+      "market": "上市"
     }
   ],
   "top_losers": [
     {
-      "code": "3577",
-      "name": "泓格",
-      "close": 95.4,
-      "change_pct": -10.0,
-      "market": "上櫃"
-    },
-    {
-      "code": "4706",
-      "name": "大恭",
-      "close": 40.5,
-      "change_pct": -10.0,
-      "market": "上櫃"
-    },
-    {
-      "code": "5013",
-      "name": "強新",
-      "close": 47.7,
-      "change_pct": -10.0,
-      "market": "上櫃"
-    },
-    {
-      "code": "2030",
-      "name": "彰源",
-      "close": 32.0,
-      "change_pct": -9.985935302390999,
+      "code": "6949",
+      "name": "沛爾生醫*-創",
+      "close": 42.05,
+      "change_pct": -9.957173447537475,
       "market": "上市"
     },
     {
-      "code": "7856",
-      "name": "漢測",
-      "close": 3835.0,
-      "change_pct": -9.976525821596244,
-      "market": "上櫃"
+      "code": "3167",
+      "name": "大量",
+      "close": 977.0,
+      "change_pct": -9.953917050691244,
+      "market": "上市"
+    },
+    {
+      "code": "3055",
+      "name": "蔚華科",
+      "close": 181.0,
+      "change_pct": -9.950248756218906,
+      "market": "上市"
+    },
+    {
+      "code": "2455",
+      "name": "全新",
+      "close": 508.0,
+      "change_pct": -9.929078014184398,
+      "market": "上市"
+    },
+    {
+      "code": "6672",
+      "name": "騰輝電子-KY",
+      "close": 539.0,
+      "change_pct": -9.866220735785953,
+      "market": "上市"
     }
   ]
 }
