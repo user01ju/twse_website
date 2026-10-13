@@ -1,7 +1,7 @@
 {
   "date": "2026-10-13",
-  "generated_at": "2026-10-13 19:03:38",
-  "complete": false,
+  "generated_at": "2026-10-13 20:03:46",
+  "complete": true,
   "taiex": {
     "close": 48341.31,
     "change_pts": -960.65,
@@ -12,13 +12,13 @@
   "breadth": {
     "twse": {
       "up": 361,
-      "down": 902,
-      "flat": 106,
+      "down": 903,
+      "flat": 105,
       "limit_up": 13,
       "limit_down": 5,
       "total": 1369,
       "up_pct": 26.4,
-      "down_pct": 65.9,
+      "down_pct": 66.0,
       "flat_pct": 7.7,
       "limit_up_pct": 0.9,
       "limit_down_pct": 0.4
@@ -60,21 +60,35 @@
       "market": "上市"
     },
     {
-      "code": "1312",
-      "name": "國喬",
-      "close": 17.65,
-      "change_pct": 9.968847352024925,
-      "market": "上市"
+      "code": "6517",
+      "name": "保勝光學",
+      "close": 71.5,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "8467",
-      "name": "波力-KY",
-      "close": 101.5,
-      "change_pct": 9.967497291440953,
-      "market": "上市"
+      "code": "6021",
+      "name": "美好證",
+      "close": 52.3,
+      "change_pct": 9.989484752891693,
+      "market": "上櫃"
     }
   ],
   "top_losers": [
+    {
+      "code": "6716",
+      "name": "應廣",
+      "close": 112.5,
+      "change_pct": -10.0,
+      "market": "上櫃"
+    },
+    {
+      "code": "5013",
+      "name": "強新",
+      "close": 42.95,
+      "change_pct": -9.958071278825994,
+      "market": "上櫃"
+    },
     {
       "code": "6949",
       "name": "沛爾生醫*-創",
@@ -94,20 +108,6 @@
       "name": "蔚華科",
       "close": 181.0,
       "change_pct": -9.950248756218906,
-      "market": "上市"
-    },
-    {
-      "code": "2455",
-      "name": "全新",
-      "close": 508.0,
-      "change_pct": -9.929078014184398,
-      "market": "上市"
-    },
-    {
-      "code": "6672",
-      "name": "騰輝電子-KY",
-      "close": 539.0,
-      "change_pct": -9.866220735785953,
       "market": "上市"
     }
   ]
