@@ -1,113 +1,113 @@
 {
-  "date": "2026-10-13",
-  "generated_at": "2026-10-13 20:03:46",
+  "date": "2026-10-14",
+  "generated_at": "2026-10-14 19:03:04",
   "complete": true,
   "taiex": {
-    "close": 48341.31,
-    "change_pts": -960.65,
-    "change_pct": -1.95,
-    "trading_amount_yi": 12018.61264942,
-    "transaction_count": 7269103
+    "close": 48625.83,
+    "change_pts": 284.52,
+    "change_pct": 0.59,
+    "trading_amount_yi": 9781.37416296,
+    "transaction_count": 4535347
   },
   "breadth": {
     "twse": {
-      "up": 361,
-      "down": 903,
-      "flat": 105,
-      "limit_up": 13,
-      "limit_down": 5,
+      "up": 951,
+      "down": 292,
+      "flat": 126,
+      "limit_up": 26,
+      "limit_down": 3,
       "total": 1369,
-      "up_pct": 26.4,
-      "down_pct": 66.0,
-      "flat_pct": 7.7,
-      "limit_up_pct": 0.9,
-      "limit_down_pct": 0.4
+      "up_pct": 69.5,
+      "down_pct": 21.3,
+      "flat_pct": 9.2,
+      "limit_up_pct": 1.9,
+      "limit_down_pct": 0.2
     },
     "tpex": {
-      "up": 175,
-      "down": 610,
-      "flat": 83,
-      "limit_up": 11,
-      "limit_down": 8,
+      "up": 557,
+      "down": 222,
+      "flat": 89,
+      "limit_up": 23,
+      "limit_down": 3,
       "total": 893,
-      "up_pct": 19.6,
-      "down_pct": 68.3,
-      "flat_pct": 9.3,
-      "limit_up_pct": 1.2,
-      "limit_down_pct": 0.9
+      "up_pct": 62.4,
+      "down_pct": 24.9,
+      "flat_pct": 10.0,
+      "limit_up_pct": 2.6,
+      "limit_down_pct": 0.3
     }
   },
   "top_gainers": [
     {
-      "code": "6645",
-      "name": "金萬林-創",
-      "close": 14.3,
+      "code": "2033",
+      "name": "佳大",
+      "close": 49.5,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "6668",
-      "name": "中揚光",
-      "close": 60.5,
+      "code": "2478",
+      "name": "大毅",
+      "close": 137.5,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "6834",
-      "name": "天二科技",
-      "close": 159.5,
+      "code": "6885",
+      "name": "全福生技",
+      "close": 31.9,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "6517",
-      "name": "保勝光學",
-      "close": 71.5,
+      "code": "3485",
+      "name": "敘豐",
+      "close": 225.5,
       "change_pct": 10.0,
       "market": "上櫃"
     },
     {
-      "code": "6021",
-      "name": "美好證",
-      "close": 52.3,
-      "change_pct": 9.989484752891693,
+      "code": "6590",
+      "name": "普鴻",
+      "close": 71.5,
+      "change_pct": 10.0,
       "market": "上櫃"
     }
   ],
   "top_losers": [
     {
-      "code": "6716",
-      "name": "應廣",
-      "close": 112.5,
-      "change_pct": -10.0,
+      "code": "5205",
+      "name": "中茂",
+      "close": 34.7,
+      "change_pct": -9.987029831387808,
       "market": "上櫃"
     },
     {
-      "code": "5013",
-      "name": "強新",
-      "close": 42.95,
-      "change_pct": -9.958071278825994,
-      "market": "上櫃"
-    },
-    {
-      "code": "6949",
-      "name": "沛爾生醫*-創",
-      "close": 42.05,
-      "change_pct": -9.957173447537475,
-      "market": "上市"
-    },
-    {
-      "code": "3167",
-      "name": "大量",
-      "close": 977.0,
-      "change_pct": -9.953917050691244,
+      "code": "9103",
+      "name": "美德醫療-DR",
+      "close": 6.32,
+      "change_pct": -9.97150997150997,
       "market": "上市"
     },
     {
       "code": "3055",
       "name": "蔚華科",
-      "close": 181.0,
-      "change_pct": -9.950248756218906,
+      "close": 163.0,
+      "change_pct": -9.94475138121547,
+      "market": "上市"
+    },
+    {
+      "code": "2221",
+      "name": "大甲",
+      "close": 140.5,
+      "change_pct": -9.935897435897436,
+      "market": "上櫃"
+    },
+    {
+      "code": "2466",
+      "name": "冠西電",
+      "close": 213.5,
+      "change_pct": -9.915611814345992,
       "market": "上市"
     }
   ]
