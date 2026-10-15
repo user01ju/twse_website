@@ -1,113 +1,113 @@
 {
-  "date": "2026-10-14",
-  "generated_at": "2026-10-14 19:03:04",
+  "date": "2026-10-15",
+  "generated_at": "2026-10-15 19:04:17",
   "complete": true,
   "taiex": {
-    "close": 48625.83,
-    "change_pts": 284.52,
-    "change_pct": 0.59,
-    "trading_amount_yi": 9781.37416296,
-    "transaction_count": 4535347
+    "close": 46969.87,
+    "change_pts": -1655.96,
+    "change_pct": -3.41,
+    "trading_amount_yi": 14357.55219704,
+    "transaction_count": 9846504
   },
   "breadth": {
     "twse": {
-      "up": 951,
-      "down": 292,
-      "flat": 126,
-      "limit_up": 26,
-      "limit_down": 3,
-      "total": 1369,
-      "up_pct": 69.5,
-      "down_pct": 21.3,
-      "flat_pct": 9.2,
-      "limit_up_pct": 1.9,
-      "limit_down_pct": 0.2
+      "up": 250,
+      "down": 1019,
+      "flat": 98,
+      "limit_up": 4,
+      "limit_down": 21,
+      "total": 1367,
+      "up_pct": 18.3,
+      "down_pct": 74.5,
+      "flat_pct": 7.2,
+      "limit_up_pct": 0.3,
+      "limit_down_pct": 1.5
     },
     "tpex": {
-      "up": 557,
-      "down": 222,
-      "flat": 89,
-      "limit_up": 23,
-      "limit_down": 3,
-      "total": 893,
-      "up_pct": 62.4,
-      "down_pct": 24.9,
-      "flat_pct": 10.0,
-      "limit_up_pct": 2.6,
-      "limit_down_pct": 0.3
+      "up": 104,
+      "down": 709,
+      "flat": 59,
+      "limit_up": 5,
+      "limit_down": 14,
+      "total": 894,
+      "up_pct": 11.6,
+      "down_pct": 79.3,
+      "flat_pct": 6.6,
+      "limit_up_pct": 0.6,
+      "limit_down_pct": 1.6
     }
   },
   "top_gainers": [
     {
-      "code": "2033",
-      "name": "佳大",
-      "close": 49.5,
-      "change_pct": 10.0,
-      "market": "上市"
-    },
-    {
-      "code": "2478",
-      "name": "大毅",
-      "close": 137.5,
-      "change_pct": 10.0,
-      "market": "上市"
-    },
-    {
-      "code": "6885",
-      "name": "全福生技",
-      "close": 31.9,
-      "change_pct": 10.0,
-      "market": "上市"
+      "code": "3354",
+      "name": "律勝",
+      "close": 38.0,
+      "change_pct": 9.985528219971057,
+      "market": "上櫃"
     },
     {
       "code": "3485",
       "name": "敘豐",
-      "close": 225.5,
-      "change_pct": 10.0,
+      "close": 248.0,
+      "change_pct": 9.977827050997783,
       "market": "上櫃"
     },
     {
-      "code": "6590",
-      "name": "普鴻",
-      "close": 71.5,
-      "change_pct": 10.0,
+      "code": "2380",
+      "name": "虹光",
+      "close": 17.15,
+      "change_pct": 9.935897435897438,
+      "market": "上市"
+    },
+    {
+      "code": "2033",
+      "name": "佳大",
+      "close": 54.4,
+      "change_pct": 9.8989898989899,
+      "market": "上市"
+    },
+    {
+      "code": "6925",
+      "name": "意藍",
+      "close": 82.3,
+      "change_pct": 9.879839786381844,
       "market": "上櫃"
     }
   ],
   "top_losers": [
     {
-      "code": "5205",
-      "name": "中茂",
-      "close": 34.7,
-      "change_pct": -9.987029831387808,
-      "market": "上櫃"
-    },
-    {
-      "code": "9103",
-      "name": "美德醫療-DR",
-      "close": 6.32,
-      "change_pct": -9.97150997150997,
+      "code": "1710",
+      "name": "東聯",
+      "close": 18.0,
+      "change_pct": -10.0,
       "market": "上市"
     },
     {
-      "code": "3055",
-      "name": "蔚華科",
-      "close": 163.0,
-      "change_pct": -9.94475138121547,
+      "code": "2360",
+      "name": "致茂",
+      "close": 2025.0,
+      "change_pct": -10.0,
       "market": "上市"
     },
     {
-      "code": "2221",
-      "name": "大甲",
-      "close": 140.5,
-      "change_pct": -9.935897435897436,
+      "code": "3259",
+      "name": "鑫創",
+      "close": 10.35,
+      "change_pct": -10.0,
       "market": "上櫃"
     },
     {
-      "code": "2466",
-      "name": "冠西電",
-      "close": 213.5,
-      "change_pct": -9.915611814345992,
+      "code": "7734",
+      "name": "印能科技",
+      "close": 2430.0,
+      "change_pct": -10.0,
+      "market": "上櫃"
+    },
+    {
+      "code": "3518",
+      "name": "柏騰",
+      "close": 41.45,
+      "change_pct": -9.989142236699239,
       "market": "上市"
     }
   ]
