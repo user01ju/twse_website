@@ -1,7 +1,7 @@
 {
   "date": "2026-10-16",
-  "generated_at": "2026-10-16 19:02:54",
-  "complete": false,
+  "generated_at": "2026-10-16 20:03:41",
+  "complete": true,
   "taiex": {
     "close": 47111.26,
     "change_pts": 141.39,
@@ -46,6 +46,20 @@
       "market": "上市"
     },
     {
+      "code": "3354",
+      "name": "律勝",
+      "close": 41.8,
+      "change_pct": 10.0,
+      "market": "上櫃"
+    },
+    {
+      "code": "6517",
+      "name": "保勝光學",
+      "close": 77.0,
+      "change_pct": 10.0,
+      "market": "上櫃"
+    },
+    {
       "code": "6933",
       "name": "AMAX-KY",
       "close": 451.5,
@@ -53,61 +67,47 @@
       "market": "上市"
     },
     {
-      "code": "6689",
-      "name": "伊雲谷",
-      "close": 70.5,
-      "change_pct": 9.984399375975041,
-      "market": "上市"
-    },
-    {
-      "code": "6668",
-      "name": "中揚光",
-      "close": 68.3,
-      "change_pct": 9.983896940418681,
-      "market": "上市"
-    },
-    {
-      "code": "3701",
-      "name": "大眾控",
-      "close": 66.1,
-      "change_pct": 9.983361064891847,
-      "market": "上市"
+      "code": "4542",
+      "name": "科嶠",
+      "close": 358.0,
+      "change_pct": 9.984639016897082,
+      "market": "上櫃"
     }
   ],
   "top_losers": [
+    {
+      "code": "5205",
+      "name": "中茂",
+      "close": 28.15,
+      "change_pct": -9.92,
+      "market": "上櫃"
+    },
+    {
+      "code": "3230",
+      "name": "錦明",
+      "close": 23.7,
+      "change_pct": -9.885931558935361,
+      "market": "上櫃"
+    },
+    {
+      "code": "6240",
+      "name": "松崗",
+      "close": 27.4,
+      "change_pct": -8.970099667774088,
+      "market": "上櫃"
+    },
+    {
+      "code": "3629",
+      "name": "地心引力",
+      "close": 13.95,
+      "change_pct": -8.823529411764707,
+      "market": "上櫃"
+    },
     {
       "code": "2851",
       "name": "中再保",
       "close": 49.05,
       "change_pct": -7.800751879699249,
-      "market": "上市"
-    },
-    {
-      "code": "1709",
-      "name": "和益",
-      "close": 54.9,
-      "change_pct": -6.63265306122449,
-      "market": "上市"
-    },
-    {
-      "code": "2478",
-      "name": "大毅",
-      "close": 133.0,
-      "change_pct": -6.338028169014084,
-      "market": "上市"
-    },
-    {
-      "code": "7795",
-      "name": "長廣",
-      "close": 456.0,
-      "change_pct": -6.269270298047276,
-      "market": "上市"
-    },
-    {
-      "code": "6715",
-      "name": "嘉基",
-      "close": 500.0,
-      "change_pct": -6.191369606003752,
       "market": "上市"
     }
   ]
