@@ -1,113 +1,113 @@
 {
-  "date": "2026-10-15",
-  "generated_at": "2026-10-15 19:04:17",
-  "complete": true,
+  "date": "2026-10-16",
+  "generated_at": "2026-10-16 19:02:54",
+  "complete": false,
   "taiex": {
-    "close": 46969.87,
-    "change_pts": -1655.96,
-    "change_pct": -3.41,
-    "trading_amount_yi": 14357.55219704,
-    "transaction_count": 9846504
+    "close": 47111.26,
+    "change_pts": 141.39,
+    "change_pct": 0.3,
+    "trading_amount_yi": 9938.1483009,
+    "transaction_count": 4986590
   },
   "breadth": {
     "twse": {
-      "up": 250,
-      "down": 1019,
-      "flat": 98,
-      "limit_up": 4,
-      "limit_down": 21,
-      "total": 1367,
-      "up_pct": 18.3,
-      "down_pct": 74.5,
-      "flat_pct": 7.2,
-      "limit_up_pct": 0.3,
-      "limit_down_pct": 1.5
+      "up": 903,
+      "down": 327,
+      "flat": 139,
+      "limit_up": 19,
+      "limit_down": 0,
+      "total": 1369,
+      "up_pct": 66.0,
+      "down_pct": 23.9,
+      "flat_pct": 10.2,
+      "limit_up_pct": 1.4,
+      "limit_down_pct": 0.0
     },
     "tpex": {
-      "up": 104,
-      "down": 709,
-      "flat": 59,
-      "limit_up": 5,
-      "limit_down": 14,
-      "total": 894,
-      "up_pct": 11.6,
-      "down_pct": 79.3,
-      "flat_pct": 6.6,
-      "limit_up_pct": 0.6,
-      "limit_down_pct": 1.6
+      "up": 542,
+      "down": 247,
+      "flat": 76,
+      "limit_up": 21,
+      "limit_down": 2,
+      "total": 893,
+      "up_pct": 60.7,
+      "down_pct": 27.7,
+      "flat_pct": 8.5,
+      "limit_up_pct": 2.4,
+      "limit_down_pct": 0.2
     }
   },
   "top_gainers": [
     {
-      "code": "3354",
-      "name": "律勝",
-      "close": 38.0,
-      "change_pct": 9.985528219971057,
-      "market": "上櫃"
-    },
-    {
-      "code": "3485",
-      "name": "敘豐",
-      "close": 248.0,
-      "change_pct": 9.977827050997783,
-      "market": "上櫃"
-    },
-    {
-      "code": "2380",
-      "name": "虹光",
-      "close": 17.15,
-      "change_pct": 9.935897435897438,
+      "code": "6756",
+      "name": "威鋒電子",
+      "close": 110.0,
+      "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "2033",
-      "name": "佳大",
-      "close": 54.4,
-      "change_pct": 9.8989898989899,
+      "code": "6933",
+      "name": "AMAX-KY",
+      "close": 451.5,
+      "change_pct": 9.987819732034104,
       "market": "上市"
     },
     {
-      "code": "6925",
-      "name": "意藍",
-      "close": 82.3,
-      "change_pct": 9.879839786381844,
-      "market": "上櫃"
+      "code": "6689",
+      "name": "伊雲谷",
+      "close": 70.5,
+      "change_pct": 9.984399375975041,
+      "market": "上市"
+    },
+    {
+      "code": "6668",
+      "name": "中揚光",
+      "close": 68.3,
+      "change_pct": 9.983896940418681,
+      "market": "上市"
+    },
+    {
+      "code": "3701",
+      "name": "大眾控",
+      "close": 66.1,
+      "change_pct": 9.983361064891847,
+      "market": "上市"
     }
   ],
   "top_losers": [
     {
-      "code": "1710",
-      "name": "東聯",
-      "close": 18.0,
-      "change_pct": -10.0,
+      "code": "2851",
+      "name": "中再保",
+      "close": 49.05,
+      "change_pct": -7.800751879699249,
       "market": "上市"
     },
     {
-      "code": "2360",
-      "name": "致茂",
-      "close": 2025.0,
-      "change_pct": -10.0,
+      "code": "1709",
+      "name": "和益",
+      "close": 54.9,
+      "change_pct": -6.63265306122449,
       "market": "上市"
     },
     {
-      "code": "3259",
-      "name": "鑫創",
-      "close": 10.35,
-      "change_pct": -10.0,
-      "market": "上櫃"
+      "code": "2478",
+      "name": "大毅",
+      "close": 133.0,
+      "change_pct": -6.338028169014084,
+      "market": "上市"
     },
     {
-      "code": "7734",
-      "name": "印能科技",
-      "close": 2430.0,
-      "change_pct": -10.0,
-      "market": "上櫃"
+      "code": "7795",
+      "name": "長廣",
+      "close": 456.0,
+      "change_pct": -6.269270298047276,
+      "market": "上市"
     },
     {
-      "code": "3518",
-      "name": "柏騰",
-      "close": 41.45,
-      "change_pct": -9.989142236699239,
+      "code": "6715",
+      "name": "嘉基",
+      "close": 500.0,
+      "change_pct": -6.191369606003752,
       "market": "上市"
     }
   ]
