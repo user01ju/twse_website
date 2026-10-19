@@ -1,7 +1,7 @@
 {
   "date": "2026-10-19",
-  "generated_at": "2026-10-19 20:02:57",
-  "complete": false,
+  "generated_at": "2026-10-19 21:03:47",
+  "complete": true,
   "taiex": {
     "close": 46822.08,
     "change_pts": -289.18,
@@ -53,24 +53,24 @@
       "market": "上市"
     },
     {
+      "code": "1815",
+      "name": "富喬",
+      "close": 154.0,
+      "change_pct": 10.0,
+      "market": "上櫃"
+    },
+    {
+      "code": "6708",
+      "name": "天擎",
+      "close": 60.5,
+      "change_pct": 10.0,
+      "market": "上櫃"
+    },
+    {
       "code": "6141",
       "name": "柏承",
       "close": 58.4,
       "change_pct": 9.981167608286253,
-      "market": "上市"
-    },
-    {
-      "code": "4960",
-      "name": "誠美材",
-      "close": 27.8,
-      "change_pct": 9.881422924901186,
-      "market": "上市"
-    },
-    {
-      "code": "2033",
-      "name": "佳大",
-      "close": 65.7,
-      "change_pct": 9.866220735785953,
       "market": "上市"
     }
   ],
@@ -83,6 +83,13 @@
       "market": "上市"
     },
     {
+      "code": "3597",
+      "name": "映興",
+      "close": 46.1,
+      "change_pct": -9.960937499999998,
+      "market": "上櫃"
+    },
+    {
       "code": "6668",
       "name": "中揚光",
       "close": 61.5,
@@ -90,25 +97,18 @@
       "market": "上市"
     },
     {
-      "code": "7835",
-      "name": "永悅健康-創",
-      "close": 19.4,
-      "change_pct": -9.767441860465116,
-      "market": "上市"
+      "code": "6173",
+      "name": "信昌電",
+      "close": 271.5,
+      "change_pct": -9.947261932402403,
+      "market": "上櫃"
     },
     {
-      "code": "3026",
-      "name": "禾伸堂",
-      "close": 735.0,
-      "change_pct": -8.808933002481389,
-      "market": "上市"
-    },
-    {
-      "code": "6994",
-      "name": "富威電力",
-      "close": 24.6,
-      "change_pct": -8.719851576994433,
-      "market": "上市"
+      "code": "5205",
+      "name": "中茂",
+      "close": 25.35,
+      "change_pct": -9.94671403197158,
+      "market": "上櫃"
     }
   ]
 }
