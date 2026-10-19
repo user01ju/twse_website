@@ -1,113 +1,113 @@
 {
-  "date": "2026-10-16",
-  "generated_at": "2026-10-16 20:03:41",
-  "complete": true,
+  "date": "2026-10-19",
+  "generated_at": "2026-10-19 19:04:46",
+  "complete": false,
   "taiex": {
-    "close": 47111.26,
-    "change_pts": 141.39,
-    "change_pct": 0.3,
-    "trading_amount_yi": 9938.1483009,
-    "transaction_count": 4986590
+    "close": 46822.08,
+    "change_pts": -289.18,
+    "change_pct": -0.61,
+    "trading_amount_yi": 8667.11859964,
+    "transaction_count": 5507146
   },
   "breadth": {
     "twse": {
-      "up": 903,
-      "down": 327,
-      "flat": 139,
-      "limit_up": 19,
-      "limit_down": 0,
-      "total": 1369,
-      "up_pct": 66.0,
-      "down_pct": 23.9,
-      "flat_pct": 10.2,
-      "limit_up_pct": 1.4,
-      "limit_down_pct": 0.0
+      "up": 212,
+      "down": 1042,
+      "flat": 112,
+      "limit_up": 7,
+      "limit_down": 2,
+      "total": 1366,
+      "up_pct": 15.5,
+      "down_pct": 76.3,
+      "flat_pct": 8.2,
+      "limit_up_pct": 0.5,
+      "limit_down_pct": 0.1
     },
     "tpex": {
-      "up": 542,
-      "down": 247,
-      "flat": 76,
-      "limit_up": 21,
-      "limit_down": 2,
+      "up": 161,
+      "down": 647,
+      "flat": 62,
+      "limit_up": 13,
+      "limit_down": 5,
       "total": 893,
-      "up_pct": 60.7,
-      "down_pct": 27.7,
-      "flat_pct": 8.5,
-      "limit_up_pct": 2.4,
-      "limit_down_pct": 0.2
+      "up_pct": 18.0,
+      "down_pct": 72.5,
+      "flat_pct": 6.9,
+      "limit_up_pct": 1.5,
+      "limit_down_pct": 0.6
     }
   },
   "top_gainers": [
     {
+      "code": "1526",
+      "name": "日馳",
+      "close": 16.5,
+      "change_pct": 10.0,
+      "market": "上市"
+    },
+    {
       "code": "6756",
       "name": "威鋒電子",
-      "close": 110.0,
+      "close": 121.0,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "3354",
-      "name": "律勝",
-      "close": 41.8,
-      "change_pct": 10.0,
-      "market": "上櫃"
-    },
-    {
-      "code": "6517",
-      "name": "保勝光學",
-      "close": 77.0,
-      "change_pct": 10.0,
-      "market": "上櫃"
-    },
-    {
-      "code": "6933",
-      "name": "AMAX-KY",
-      "close": 451.5,
-      "change_pct": 9.987819732034104,
+      "code": "6141",
+      "name": "柏承",
+      "close": 58.4,
+      "change_pct": 9.981167608286253,
       "market": "上市"
     },
     {
-      "code": "4542",
-      "name": "科嶠",
-      "close": 358.0,
-      "change_pct": 9.984639016897082,
-      "market": "上櫃"
+      "code": "4960",
+      "name": "誠美材",
+      "close": 27.8,
+      "change_pct": 9.881422924901186,
+      "market": "上市"
+    },
+    {
+      "code": "2033",
+      "name": "佳大",
+      "close": 65.7,
+      "change_pct": 9.866220735785953,
+      "market": "上市"
     }
   ],
   "top_losers": [
     {
-      "code": "5205",
-      "name": "中茂",
-      "close": 28.15,
-      "change_pct": -9.92,
-      "market": "上櫃"
+      "code": "6933",
+      "name": "AMAX-KY",
+      "close": 406.5,
+      "change_pct": -9.966777408637874,
+      "market": "上市"
     },
     {
-      "code": "3230",
-      "name": "錦明",
-      "close": 23.7,
-      "change_pct": -9.885931558935361,
-      "market": "上櫃"
+      "code": "6668",
+      "name": "中揚光",
+      "close": 61.5,
+      "change_pct": -9.956076134699854,
+      "market": "上市"
     },
     {
-      "code": "6240",
-      "name": "松崗",
-      "close": 27.4,
-      "change_pct": -8.970099667774088,
-      "market": "上櫃"
+      "code": "7835",
+      "name": "永悅健康-創",
+      "close": 19.4,
+      "change_pct": -9.767441860465116,
+      "market": "上市"
     },
     {
-      "code": "3629",
-      "name": "地心引力",
-      "close": 13.95,
-      "change_pct": -8.823529411764707,
-      "market": "上櫃"
+      "code": "3026",
+      "name": "禾伸堂",
+      "close": 735.0,
+      "change_pct": -8.808933002481389,
+      "market": "上市"
     },
     {
-      "code": "2851",
-      "name": "中再保",
-      "close": 49.05,
-      "change_pct": -7.800751879699249,
+      "code": "6994",
+      "name": "富威電力",
+      "close": 24.6,
+      "change_pct": -8.719851576994433,
       "market": "上市"
     }
   ]
