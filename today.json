@@ -1,7 +1,7 @@
 {
   "date": "2026-10-20",
-  "generated_at": "2026-10-20 19:02:45",
-  "complete": false,
+  "generated_at": "2026-10-20 20:03:10",
+  "complete": true,
   "taiex": {
     "close": 46292.93,
     "change_pts": -529.15,
@@ -11,15 +11,15 @@
   },
   "breadth": {
     "twse": {
-      "up": 316,
+      "up": 318,
       "down": 913,
-      "flat": 140,
+      "flat": 138,
       "limit_up": 8,
       "limit_down": 0,
       "total": 1369,
-      "up_pct": 23.1,
+      "up_pct": 23.2,
       "down_pct": 66.7,
-      "flat_pct": 10.2,
+      "flat_pct": 10.1,
       "limit_up_pct": 0.6,
       "limit_down_pct": 0.0
     },
@@ -46,32 +46,32 @@
       "market": "上市"
     },
     {
-      "code": "6269",
-      "name": "台郡",
-      "close": 88.3,
-      "change_pct": 9.962640099626402,
-      "market": "上市"
+      "code": "3625",
+      "name": "西勝",
+      "close": 22.0,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "6994",
-      "name": "富威電力",
-      "close": 27.05,
-      "change_pct": 9.959349593495935,
-      "market": "上市"
+      "code": "4741",
+      "name": "泓瀚",
+      "close": 44.0,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "1709",
-      "name": "和益",
-      "close": 56.5,
-      "change_pct": 9.922178988326849,
-      "market": "上市"
+      "code": "6418",
+      "name": "詠昇",
+      "close": 44.0,
+      "change_pct": 10.0,
+      "market": "上櫃"
     },
     {
-      "code": "4720",
-      "name": "德淵",
-      "close": 26.6,
-      "change_pct": 9.917355371900825,
-      "market": "上市"
+      "code": "5013",
+      "name": "強新",
+      "close": 49.6,
+      "change_pct": 9.977827050997783,
+      "market": "上櫃"
     }
   ],
   "top_losers": [
@@ -83,31 +83,31 @@
       "market": "上市"
     },
     {
+      "code": "4706",
+      "name": "大恭",
+      "close": 43.0,
+      "change_pct": -9.378292939936776,
+      "market": "上櫃"
+    },
+    {
+      "code": "5205",
+      "name": "中茂",
+      "close": 23.2,
+      "change_pct": -8.481262327416173,
+      "market": "上櫃"
+    },
+    {
+      "code": "3629",
+      "name": "地心引力",
+      "close": 12.75,
+      "change_pct": -8.273381294964027,
+      "market": "上櫃"
+    },
+    {
       "code": "6505",
       "name": "台塑化",
       "close": 106.5,
       "change_pct": -8.189655172413794,
-      "market": "上市"
-    },
-    {
-      "code": "2923",
-      "name": "鼎固-KY",
-      "close": 24.55,
-      "change_pct": -7.7067669172932325,
-      "market": "上市"
-    },
-    {
-      "code": "3701",
-      "name": "大眾控",
-      "close": 58.4,
-      "change_pct": -7.59493670886076,
-      "market": "上市"
-    },
-    {
-      "code": "6957",
-      "name": "裕慶-KY",
-      "close": 465.0,
-      "change_pct": -7.18562874251497,
       "market": "上市"
     }
   ]
