@@ -1,114 +1,114 @@
 {
-  "date": "2026-10-19",
-  "generated_at": "2026-10-19 21:03:47",
-  "complete": true,
+  "date": "2026-10-20",
+  "generated_at": "2026-10-20 19:02:45",
+  "complete": false,
   "taiex": {
-    "close": 46822.08,
-    "change_pts": -289.18,
-    "change_pct": -0.61,
-    "trading_amount_yi": 8667.11859964,
-    "transaction_count": 5507146
+    "close": 46292.93,
+    "change_pts": -529.15,
+    "change_pct": -1.13,
+    "trading_amount_yi": 8029.47441658,
+    "transaction_count": 5155199
   },
   "breadth": {
     "twse": {
-      "up": 212,
-      "down": 1042,
-      "flat": 112,
-      "limit_up": 7,
-      "limit_down": 2,
-      "total": 1366,
-      "up_pct": 15.5,
-      "down_pct": 76.3,
-      "flat_pct": 8.2,
-      "limit_up_pct": 0.5,
-      "limit_down_pct": 0.1
+      "up": 316,
+      "down": 913,
+      "flat": 140,
+      "limit_up": 8,
+      "limit_down": 0,
+      "total": 1369,
+      "up_pct": 23.1,
+      "down_pct": 66.7,
+      "flat_pct": 10.2,
+      "limit_up_pct": 0.6,
+      "limit_down_pct": 0.0
     },
     "tpex": {
-      "up": 161,
-      "down": 647,
-      "flat": 62,
-      "limit_up": 13,
-      "limit_down": 5,
+      "up": 316,
+      "down": 451,
+      "flat": 102,
+      "limit_up": 24,
+      "limit_down": 0,
       "total": 893,
-      "up_pct": 18.0,
-      "down_pct": 72.5,
-      "flat_pct": 6.9,
-      "limit_up_pct": 1.5,
-      "limit_down_pct": 0.6
+      "up_pct": 35.4,
+      "down_pct": 50.5,
+      "flat_pct": 11.4,
+      "limit_up_pct": 2.7,
+      "limit_down_pct": 0.0
     }
   },
   "top_gainers": [
     {
-      "code": "1526",
-      "name": "日馳",
-      "close": 16.5,
+      "code": "6695",
+      "name": "芯鼎",
+      "close": 56.1,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "6756",
-      "name": "威鋒電子",
-      "close": 121.0,
-      "change_pct": 10.0,
+      "code": "6269",
+      "name": "台郡",
+      "close": 88.3,
+      "change_pct": 9.962640099626402,
       "market": "上市"
     },
     {
-      "code": "1815",
-      "name": "富喬",
-      "close": 154.0,
-      "change_pct": 10.0,
-      "market": "上櫃"
+      "code": "6994",
+      "name": "富威電力",
+      "close": 27.05,
+      "change_pct": 9.959349593495935,
+      "market": "上市"
     },
     {
-      "code": "6708",
-      "name": "天擎",
-      "close": 60.5,
-      "change_pct": 10.0,
-      "market": "上櫃"
+      "code": "1709",
+      "name": "和益",
+      "close": 56.5,
+      "change_pct": 9.922178988326849,
+      "market": "上市"
     },
     {
-      "code": "6141",
-      "name": "柏承",
-      "close": 58.4,
-      "change_pct": 9.981167608286253,
+      "code": "4720",
+      "name": "德淵",
+      "close": 26.6,
+      "change_pct": 9.917355371900825,
       "market": "上市"
     }
   ],
   "top_losers": [
     {
-      "code": "6933",
-      "name": "AMAX-KY",
-      "close": 406.5,
-      "change_pct": -9.966777408637874,
+      "code": "7835",
+      "name": "永悅健康-創",
+      "close": 17.55,
+      "change_pct": -9.536082474226804,
       "market": "上市"
     },
     {
-      "code": "3597",
-      "name": "映興",
-      "close": 46.1,
-      "change_pct": -9.960937499999998,
-      "market": "上櫃"
-    },
-    {
-      "code": "6668",
-      "name": "中揚光",
-      "close": 61.5,
-      "change_pct": -9.956076134699854,
+      "code": "6505",
+      "name": "台塑化",
+      "close": 106.5,
+      "change_pct": -8.189655172413794,
       "market": "上市"
     },
     {
-      "code": "6173",
-      "name": "信昌電",
-      "close": 271.5,
-      "change_pct": -9.947261932402403,
-      "market": "上櫃"
+      "code": "2923",
+      "name": "鼎固-KY",
+      "close": 24.55,
+      "change_pct": -7.7067669172932325,
+      "market": "上市"
     },
     {
-      "code": "5205",
-      "name": "中茂",
-      "close": 25.35,
-      "change_pct": -9.94671403197158,
-      "market": "上櫃"
+      "code": "3701",
+      "name": "大眾控",
+      "close": 58.4,
+      "change_pct": -7.59493670886076,
+      "market": "上市"
+    },
+    {
+      "code": "6957",
+      "name": "裕慶-KY",
+      "close": 465.0,
+      "change_pct": -7.18562874251497,
+      "market": "上市"
     }
   ]
 }
