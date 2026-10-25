@@ -14,10 +14,12 @@
   <div class="stat-card">
     <div class="label">成交金額</div>
     <div class="value">{{ "{:,.0f}".format(d.trading_amount_yi) }}<span style="font-size:16px;color:var(--text-muted)"> 億</span></div>
+    {% if d.avg20_amount_yi %}<div class="sub flat">20日均 {{ "{:,.0f}".format(d.avg20_amount_yi) }} 億</div>{% endif %}
   </div>
   <div class="stat-card">
     <div class="label">成交筆數</div>
     <div class="value">{{ "{:,}".format(d.transaction_count) }}</div>
+    {% if d.avg20_txn %}<div class="sub flat">20日均 {{ "{:,.0f}".format(d.avg20_txn) }}</div>{% endif %}
   </div>
 </div>
 {% else %}

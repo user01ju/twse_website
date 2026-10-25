@@ -5,7 +5,8 @@ from .utils import parse_num, nt_to_yi
 def build(taiex_index: list[dict], stock_day_all: list[dict], fmtqik: dict = None) -> dict:
     """
     Returns:
-      close, sign (+/-), change_pts, change_pct, trading_amount_yi, transaction_count
+      close, sign (+/-), change_pts, change_pct, trading_amount_yi, transaction_count,
+      avg20_amount_yi, avg20_txn (FMTQIK 20 日均，含當日；拿不到為 None)
 
     fmtqik: optional FMTQIK dict with official market totals (trade_value, transaction).
             When present, overrides STOCK_DAY_ALL sums which exclude ETFs/warrants.
@@ -38,7 +39,10 @@ def build(taiex_index: list[dict], stock_day_all: list[dict], fmtqik: dict = Non
     if fmtqik and fmtqik.get("trade_value"):
         trading_amount_yi = nt_to_yi(fmtqik["trade_value"])
         transaction_count = int(fmtqik.get("transaction", 0))
+        avg20_amount_yi   = nt_to_yi(fmtqik["avg20_trade_value"]) if fmtqik.get("avg20_trade_value") else None
+        avg20_txn         = fmtqik.get("avg20_transaction")
     else:
+        avg20_amount_yi = avg20_txn = None
         total_value = sum(parse_num(s.get("TradeValue", 0)) for s in stock_day_all)
         total_txn   = sum(int(parse_num(s.get("Transaction", 0))) for s in stock_day_all)
         trading_amount_yi = nt_to_yi(total_value)
@@ -50,4 +54,6 @@ def build(taiex_index: list[dict], stock_day_all: list[dict], fmtqik: dict = Non
         "change_pct":         change_pct,
         "trading_amount_yi":  trading_amount_yi,
         "transaction_count":  transaction_count,
+        "avg20_amount_yi":    avg20_amount_yi,
+        "avg20_txn":          avg20_txn,
     }

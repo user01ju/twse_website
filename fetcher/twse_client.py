@@ -266,6 +266,20 @@ def fetch_fmtqik(date_str: str = None) -> dict:
         except (ValueError, TypeError):
             return 0.0
 
+    # 20 日均（含當日）：月表不足 20 列就補抓上個月；補抓失敗 → None
+    window = rows[:rows.index(row) + 1]
+    if len(window) < 20:
+        y, m, _ = (int(x) for x in row[0].split("/"))
+        py, pm = (y, m - 1) if m > 1 else (y - 1, 12)
+        try:
+            prev = _get("https://www.twse.com.tw/rwd/zh/afterTrading/FMTQIK",
+                        params={"response": "json", "date": f"{py + 1911}{pm:02d}01"})
+            window = (prev.get("data") or []) + window
+        except Exception as e:
+            logger.warning(f"FMTQIK prev month fetch failed: {e}")
+    window = window[-20:]
+    has_avg = len(window) == 20
+
     return {
         "date":          row[0],
         "trade_volume":  pn(row[1]),
@@ -273,4 +287,6 @@ def fetch_fmtqik(date_str: str = None) -> dict:
         "transaction":   int(pn(row[3])),
         "close":         pn(row[4]),
         "change_pts":    pn(row[5]),
+        "avg20_trade_value":  sum(pn(r[2]) for r in window) / 20 if has_avg else None,
+        "avg20_transaction":  sum(pn(r[3]) for r in window) / 20 if has_avg else None,
     }
