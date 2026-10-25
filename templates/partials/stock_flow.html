@@ -173,6 +173,15 @@
 .stf-th-cons { width: 84px; text-align: right; }
 .stf-cons { white-space: nowrap; }
 .stf-wrap { overflow-x: auto; }
+/* 共用的 .si-table 是 width:100% + table-layout:fixed：19 欄的欄寬加總超過表格寬，
+   超出的欄位落在捲軸範圍外、又被 .section 的 overflow:hidden 裁掉 → 改成依內容撐寬，讓 .stf-wrap 能捲到最後一欄 */
+.stf-wrap .stf-table { table-layout: auto; width: max-content; min-width: 100%; }
+/* 代號、名稱固定在左側，橫捲到後面欄位時還看得到是哪檔。代號欄寫死寬度，名稱的 left 才對得上 */
+.stf-table .stf-th-code, .stf-table .stf-code { position: sticky; left: 0; width: 60px; min-width: 60px; max-width: 60px; box-sizing: border-box; }
+.stf-table .stf-th-name, .stf-table .stf-name { position: sticky; left: 60px; box-shadow: 1px 0 0 var(--border-strong); }
+.stf-table th.stf-th-code, .stf-table th.stf-th-name { z-index: 2; }
+.stf-table td.stf-code, .stf-table td.stf-name { z-index: 1; background: var(--bg-secondary); }
+.stf-table .si-alt td.stf-code, .stf-table .si-alt td.stf-name { background: var(--bg-card); }
 .stf-code { font-family: var(--font-mono); color: var(--text-muted); }
 .stf-name { font-weight: 700; color: var(--text-primary); }
 .stf-sector { font-size: 11px; color: var(--text-muted); }
