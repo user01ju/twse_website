@@ -8,7 +8,7 @@ _TZ = ZoneInfo("Asia/Taipei")
 from config import REPORTS_DIR, FORCE_REBUILD
 from fetcher import twse_client, tpex_client
 from fetcher.market_calendar import roc_to_date, is_trading_day
-from processor import index_stats, market_breadth, movers, institutional, ai_summary, market_trend, sector_flow, sector_breadth
+from processor import index_stats, market_breadth, movers, institutional, ai_summary, market_trend, sector_flow, sector_breadth, summary_viz
 from fetcher import price_cache, exrights, inst_flow_cache, shares
 from generator import renderer, index_builder, today_builder
 
@@ -319,6 +319,8 @@ def build(target_date: date) -> "bool | str":
             sections["sector_flow"]["data"].get("by_code") if sections["sector_flow"]["ok"] else None,
         )
 
+    # 盤勢總覽：圖表吃結構化資料，AI 只寫結論
+    sections["summary_viz"] = _safe(summary_viz.build, sections)
     # AI summary last so its prompt can draw on every other section
     sections["ai_summary"] = _safe(
         ai_summary.build,

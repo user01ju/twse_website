@@ -1,4 +1,5 @@
 """AI-generated 今日盤勢總覽 using Claude API."""
+import json
 import logging
 import os
 
@@ -158,54 +159,45 @@ def _build_prompt(sections: dict, date_str: str) -> str:
         fd_lines = _four_dim_lines(d.get("four_dim") or {}, d.get("short", 5), d.get("long", 20))
     lines.extend(fd_lines)
 
-    overview = (
-        "【大盤概況】\n"
-        "一段話說明指數漲跌、成交量、市場廣度（漲跌家數、漲跌停家數）、法人合計。\n\n"
-    )
+    # 數字已經由 summary_viz 畫成圖，AI 只寫結論 —— 長文轉述數字既難讀又可能抄錯
+    blocks = "market 大盤概況"
     if sector_lines:
-        overview += (
-            "【族群強弱】\n"
-            "• 今日漲幅明顯最強的 2-3 個族群：是全族群齊漲（漲跌家數、中位數）還是少數個股拉抬，"
-            "對照 5/20 日是延續還是剛啟動，點名領漲股（附代號）\n"
-            "• 明顯弱勢的族群：同樣看廣度與 5/20 日、點名領跌股；沒有族群明顯弱於大盤就直說沒有\n\n"
-        )
-    n_blocks = overview.count("【")
-
+        blocks += "；sector 族群強弱（最強/最弱族群是全族群齊漲跌還是少數拉抬，對照 5/20 日是延續還是剛啟動）"
     if fd_lines:
-        fmt = (
-            f"必須嚴格使用以下格式輸出，共 {n_blocks + 4} 個區塊，每個區塊之間空一行：\n\n"
-            + overview +
-            "【主流與集中度】\n"
-            "• 主流延續/拉回續買裡「錢＋價＋位階」三合一的是誰（附代號、5/20 日金額、距 52 週高），外資投信是否同買\n"
-            "• 多頭型態的檔數與金額佔比，多頭是分散還是集中在少數幾檔\n\n"
-            "【錢價背離】\n"
-            "• 買不漲：法人續進但 20 日跌的，點名最大的 2-3 檔（附代號），現價 vs 法人成本\n"
-            "• 漲多轉賣/拉高調節：錢在出但價還撐著的，點名 2-3 檔，說明是獲利了結還是出貨結構\n\n"
-            "【賣壓主體】\n"
-            "• 棄守組：哪些族群/個股（附代號與金額）、5 日是否仍在加速、法人成本相對現價 → 是認賠還是獲利了結\n"
-            "• 連賣最久的個股\n\n"
-            "【翻轉與分歧】\n"
-            "• 低接轉買/追漲回補：20 日賣、5 日翻買的是誰（附代號），是族群級還是個股級\n"
-            "• 外資投信對作最大的 2-3 檔，誰接誰倒\n\n"
-            "注意：每個區塊就是上面列的那幾個 •，不要拆成更多；每個 • 精簡到讀者一眼掃完——先講結論、再附關鍵數字與代號，"
-            "多個族群/個股就併在同一個 • 裡；只用上面提供的數據與型態詞，沒有的不要編；"
-            "語氣客觀專業，不提供投資建議，不加任何額外說明文字。"
-        )
-    else:
-        fmt = (
-            f"必須嚴格使用以下格式輸出，共 {n_blocks} 個區塊：\n\n"
-            + overview +
-            "注意：語氣客觀專業，不提供投資建議，不加任何額外說明文字。"
-        )
-    # 輸出直接切【】區塊、• 行渲染成網頁並跳脫 HTML：markdown 記號會原樣顯示（Opus 5.5 會主動用粗體/巢狀清單）
-    fmt += "\n輸出是純文字，會直接放進網頁：不要用 markdown 粗體、標題或巢狀清單，每個 • 自成一行。"
-    lines.append("\n請根據以上數據，用繁體中文撰寫「今日盤勢總覽」。\n" + fmt)
+        blocks += ("；main 主流與集中度（三合一的是誰、多頭分散還是集中）；div 錢價背離（買不漲、漲多轉賣/拉高調節）"
+                   "；sell 賣壓主體（棄守組是認賠還是獲利了結、是否加速）；flip 翻轉與分歧（20 日賣 5 日翻買、外資投信對作）")
+    lines.append(
+        "\n請根據以上數據，用繁體中文寫「今日盤勢總覽」的圖說。網頁上每個區塊的數字已經畫成圖表，"
+        "你只負責寫讀者看圖前要先知道的結論：\n"
+        "• tldr：恰好 3 則，讓讀者 3 秒看懂今天。k 是 2~4 字分類（例如：大盤、資金去向、要盯的），"
+        "title 是 14 字內的結論，sub 是 32 字內的補充，附 1~2 個關鍵數字或個股名稱\n"
+        f"• heads：每個區塊一句 26 字內的結論，講「代表什麼」而不是把數字重念一遍。區塊：{blocks}。"
+        "沒列到的區塊給空字串\n"
+        "只用上面提供的數據與型態詞，沒有的不要編；語氣客觀專業，不提供投資建議；純文字，不要 markdown 記號。"
+    )
 
     return "\n".join(lines)
 
 
+_HEAD_KEYS = ("market", "sector", "main", "div", "sell", "flip")
+_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "tldr": {"type": "array", "items": {
+            "type": "object",
+            "properties": {k: {"type": "string"} for k in ("k", "title", "sub")},
+            "required": ["k", "title", "sub"], "additionalProperties": False}},
+        "heads": {"type": "object",
+                  "properties": {k: {"type": "string"} for k in _HEAD_KEYS},
+                  "required": list(_HEAD_KEYS), "additionalProperties": False},
+    },
+    "required": ["tldr", "heads"],
+    "additionalProperties": False,
+}
+
+
 def build(sections: dict, date_str: str) -> dict:
-    """Call Claude API and return {summary, model, prompt_tokens, output_tokens}."""
+    """Call Claude API and return {tldr, heads, model, input_tokens, output_tokens}."""
     api_key = os.environ.get("ANTHROPIC_API_KEY", "")
     if not api_key:
         raise RuntimeError("ANTHROPIC_API_KEY environment variable not set")
@@ -219,7 +211,7 @@ def build(sections: dict, date_str: str) -> dict:
         # Opus 5.5 思考恆開，max_tokens 是 thinking + 正文的共用上限；給太緊會讓摘要
         # 靜默截斷在區塊中間（不報錯，殘缺 HTML 直接上線）。
         max_tokens=16000,
-        output_config={"effort": "medium"},
+        output_config={"effort": "medium", "format": {"type": "json_schema", "schema": _SCHEMA}},
         # 安全分類器誤擋時由伺服器改用建議的備援模型重跑，不讓摘要整塊消失
         betas=["server-side-fallback-2026-07-01"],
         extra_body={"fallbacks": "default"},
@@ -235,16 +227,14 @@ def build(sections: dict, date_str: str) -> dict:
     if text is None:
         kinds = [getattr(b, "type", "?") for b in msg.content]
         raise RuntimeError(f"AI summary 回應裡沒有 text block（收到 {kinds}）")
-    text = text.strip()
-    # Strip any markdown heading Claude might prepend
-    import re as _re
-    text = _re.sub(r'^#+\s*今日盤勢總覽\s*\n+', '', text).strip()
+    out = json.loads(text)
 
     logger.info(
         f"AI summary generated ({msg.usage.input_tokens} in / {msg.usage.output_tokens} out tokens)"
     )
     return {
-        "summary":       text,
+        "tldr":          out["tldr"][:3],
+        "heads":         out["heads"],
         "model":         msg.model,
         "input_tokens":  msg.usage.input_tokens,
         "output_tokens": msg.usage.output_tokens,

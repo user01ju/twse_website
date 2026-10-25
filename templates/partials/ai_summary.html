@@ -1,13 +1,205 @@
+{# 4. 今日盤勢總覽：圖表吃 summary_viz（結構化資料），AI 只給三則重點 + 每塊一句結論 #}
 {% set s = sections.ai_summary %}
-{% if s.ok %}
-<div class="ai-summary-body">
-  {{ s.data.summary | ai_summary_html }}
+{% set v = sections.summary_viz.data if sections.summary_viz and sections.summary_viz.ok else {} %}
+{% set h = s.data.heads if s.ok else {} %}
+{% macro tone(x) %}{{ 'pos' if x > 0 else ('neg' if x < 0 else 'flat') }}{% endmacro %}
+{% macro sg(x, d=0) %}{{ "0" if x == 0 else ("{:+,.%df}" % d).format(x) }}{% endmacro %}
+{% macro dv(x, w) %}<div class="sv-dv"><div class="sv-dv-n">{% if x < 0 %}<i style="width:{{ w }}%"></i>{% endif %}</div><div class="sv-dv-p">{% if x > 0 %}<i style="width:{{ w }}%"></i>{% endif %}</div></div>{% endmacro %}
+{% macro head(title, key) %}<div class="sv-head"><span class="sv-t">{{ title }}</span>{% if h.get(key) %}<span class="sv-s">{{ h[key] }}</span>{% endif %}</div>{% endmacro %}
+
+{% if s.ok and s.data.tldr %}
+<div class="sv-tldr">
+  {% for t in s.data.tldr %}
+  <div class="sv-tl"><span class="sv-k">{{ t.k }}</span><b>{{ t.title }}</b><span>{{ t.sub }}</span></div>
+  {% endfor %}
 </div>
+{% elif not s.ok %}
+<div class="error-box">AI 結論生成失敗（圖表照常）：{{ s.error }}</div>
+{% endif %}
+
+<div class="sv-grid">
+{# ── 大盤概況 ── #}
+{% set m = v.market %}
+{% if m %}
+<div class="sv-blk sv-wide">
+  {{ head("大盤概況", "market") }}
+  <div class="sv-tiles">
+    <div class="sv-tile"><span class="sv-l">加權指數</span><span class="sv-v">{{ "{:,.0f}".format(m.close) }}</span>
+      <span class="sv-x {{ tone(m.chg) }}">{{ sg(m.chg, 2) }}（{{ sg(m.pct, 2) }}%）</span></div>
+    {% if m.avg %}
+    <div class="sv-tile" title="20 日均 {{ '{:,.0f}'.format(m.avg) }} 億"><span class="sv-l">成交金額 vs 20 日均</span>
+      <span class="sv-v">{{ "{:,.0f}".format(m.amt) }}<small> 億</small></span>
+      <div class="sv-meter"><i style="width:{{ m.amt_w }}%;background:var(--accent)"></i><span class="sv-mark" style="left:{{ m.avg_w }}%"></span></div>
+      <span class="sv-x">均 {{ "{:,.0f}".format(m.avg) }} · 量 <span class="{{ tone(m.amt_vs) }}">{{ sg(m.amt_vs, 1) }}%</span></span></div>
+    {% endif %}
+    {% if m.breadth %}
+    <div class="sv-tile"><span class="sv-l">漲跌家數（{{ m.breadth | map(attribute='label') | join(' / ') }}）</span>
+      {% for b in m.breadth %}
+      <div class="sv-stack" title="{{ b.label }} 漲 {{ b.up }} 平 {{ b.flat }} 跌 {{ b.down }}"><i style="width:{{ b.up_w }}%;background:var(--pos)"></i><i style="width:{{ b.flat_w }}%;background:var(--flat)"></i><i style="flex:1;background:var(--neg)"></i></div>
+      {% endfor %}
+      <span class="sv-x"><span class="pos">{{ m.breadth | sum(attribute='up') }}</span> 漲 · <span class="neg">{{ m.breadth | sum(attribute='down') }}</span> 跌 · 漲停 {{ m.limit_up }} / 跌停 {{ m.limit_down }}</span></div>
+    {% endif %}
+    {% if m.ma20 is defined %}
+    <div class="sv-tile"><span class="sv-l">站上 20MA 比例</span><span class="sv-v">{{ m.ma20 }}%</span>
+      <div class="sv-meter"><i style="width:{{ m.ma20 }}%;background:var({{ '--pos' if m.ma20 >= 50 else '--neg' }})"></i><span class="sv-mark" style="left:50%"></span></div>
+      <span class="sv-x">刻度線 = 50%</span></div>
+    <div class="sv-tile"><span class="sv-l">52 週新高 / 新低</span><span class="sv-v"><span class="pos">{{ m.nhl.hi }}</span> / <span class="neg">{{ m.nhl.lo }}</span></span>
+      <div class="sv-stack"><i style="width:{{ m.nhl.hi_w }}%;background:var(--pos)"></i><i style="flex:1;background:var(--neg)"></i></div>
+      <span class="sv-x">淨 <span class="{{ tone(m.nhl.net) }}">{{ sg(m.nhl.net) }}</span></span></div>
+    {% endif %}
+  </div>
+  {% if m.inst %}
+  <div class="sv-sub">三大法人買賣超（億元）</div>
+  <div class="sv-rows">
+    {% for r in m.inst %}
+    <div class="sv-row" title="{{ r.name }} {{ sg(r.v, 1) }} 億"><span class="sv-n">{{ r.name }}</span>{{ dv(r.v, r.w) }}<span class="sv-val {{ tone(r.v) }}">{{ sg(r.v, 1) }}</span></div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+{# ── 族群強弱 ── #}
+{% if v.sectors %}
+<div class="sv-blk sv-wide">
+  {{ head("族群強弱", "sector") }}
+  <div class="sv-legend"><span><i style="background:var(--pos)"></i>漲家數</span><span><i style="background:var(--flat)"></i>平</span><span><i style="background:var(--neg)"></i>跌家數</span><span>長條 = 族群今日漲跌中位數（還原權息）</span></div>
+  <div>
+    {% for r in v.sectors %}
+    <div class="sv-sec">
+      <span class="sv-n">{{ r.sector }}</span>{{ dv(r.med1, r.w) }}<span class="sv-val {{ tone(r.med1) }}">{{ sg(r.med1, 2) }}%</span>
+      <div class="sv-sec-sub">
+        <span class="sv-chip sv-{{ r.tone }}">{{ r.tag }}</span>
+        <span class="sv-mini" title="漲 {{ r.up }} 平 {{ r.flat }} 跌 {{ r.down }}">{% if r.up %}<i style="flex:{{ r.up }};background:var(--pos)"></i>{% endif %}{% if r.flat %}<i style="flex:{{ r.flat }};background:var(--flat)"></i>{% endif %}{% if r.down %}<i style="flex:{{ r.down }};background:var(--neg)"></i>{% endif %}</span>
+        <span class="sv-num">{{ r.up }}/{{ r.n }} 漲</span>
+        {% if r.med5 is not none and r.med20 is not none %}<span class="sv-num">5日 {{ sg(r.med5, 1) }}% · 20日 {{ sg(r.med20, 1) }}%</span>{% endif %}
+        <span>{% for x in r.movers %}{{ x.name }} <span class="{{ tone(x.pct) }}">{{ sg(x.pct, 1) }}</span>{{ "、" if not loop.last }}{% endfor %}</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{% set f = v.flows %}
+{% if f %}
+{# ── 主流與集中度 ── #}
+<div class="sv-blk">
+  {{ head("主流與集中度", "main") }}
+  <div class="sv-rows">
+    {% for key, label, sub in [("bull", "多頭組", "主流延續＋拉回續買"), ("bear", "棄守組", "續出且雙窗口跌")] %}
+    {% set g = f.main[key] %}
+    <div class="sv-hrow" title="{{ label }} {{ g.n }} 檔，5 日 {{ sg(g.f5) }} 億"><span>{{ label }} {{ g.n }} 檔<br><small>{{ sub }}</small></span>
+      <div><div class="sv-bar" style="width:{{ g.w }}%;background:var({{ '--pos' if g.f5 > 0 else '--neg' }})"></div></div>
+      <span class="sv-val {{ tone(g.f5) }}">{{ sg(g.f5) }} 億</span></div>
+    {% endfor %}
+  </div>
+  {% if f.main.top8_pct is not none %}
+  <div class="sv-note">多頭組前 8 大佔 5 日金額 <b>{{ f.main.top8_pct }}%</b>{% if f.main.top1 %}，最大 {{ f.main.top1.name }}({{ f.main.top1.code }}) <span class="pos">{{ sg(f.main.top1.net5) }} 億</span>{% endif %}</div>
+  {% endif %}
+  {% if f.main.lead %}
+  <div class="sv-sub">錢＋價＋位階三合一（距 52 週高 3% 內）</div>
+  <div class="sv-cards">
+    {% for r in f.main.lead %}
+    <div class="sv-card"><div class="sv-card-top"><b>{{ r.name }} <small>{{ r.code }}</small></b><span class="sv-chip sv-{{ 'pos' if r.who == '外資投信同買' else 'warn' }}">{{ r.who }}</span></div>
+      <span class="sv-num">5日 <span class="{{ tone(r.net5) }}">{{ sg(r.net5) }}</span> · 20日 <span class="{{ tone(r.net20) }}">{{ sg(r.net20) }}</span> 億 · 距高 {{ sg(r.pos52) }}%{% if r.streak and r.streak >= 5 %} · 連買 {{ r.streak }} 天{% endif %}</span></div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+
+{# ── 錢價背離 ── #}
+{% set d = f.div %}
+{% if d %}
+<div class="sv-blk">
+  {{ head("錢價背離", "div") }}
+  <div class="sv-chart">
+    <svg viewBox="0 0 {{ d.w }} {{ d.h }}" role="img" aria-label="錢價背離散佈圖">
+      <rect x="{{ d.l }}" y="{{ d.t }}" width="{{ d.x0 - d.l }}" height="{{ d.y0 - d.t }}" class="sv-q"/>
+      <rect x="{{ d.x0 }}" y="{{ d.y0 }}" width="{{ d.r - d.x0 }}" height="{{ d.b - d.y0 }}" class="sv-q"/>
+      {% for t in d.xt %}<line class="{{ 'sv-zero' if t.v == 0 else 'sv-ax' }}" x1="{{ t.x }}" x2="{{ t.x }}" y1="{{ d.t }}" y2="{{ d.b }}"/><text x="{{ t.x }}" y="{{ d.b + 16 }}" text-anchor="middle">{{ sg(t.v) }}%</text>{% endfor %}
+      {% for t in d.yt %}<line class="{{ 'sv-zero' if t.v == 0 else 'sv-ax' }}" x1="{{ d.l }}" x2="{{ d.r }}" y1="{{ t.y }}" y2="{{ t.y }}"/><text x="{{ d.l - 6 }}" y="{{ t.y + 4 }}" text-anchor="end">{{ sg(t.v) }}</text>{% endfor %}
+      <text x="{{ d.l + 8 }}" y="{{ d.t + 16 }}" class="sv-lbl sv-b">買不漲</text>
+      <text x="{{ d.r - 8 }}" y="{{ d.y0 + 16 }}" text-anchor="end" class="sv-lbl sv-b">漲多轉賣 / 拉高調節</text>
+      <text x="{{ (d.w + d.l) / 2 }}" y="{{ d.h - 4 }}" text-anchor="middle">20 日漲跌幅 →</text>
+      <text x="4" y="{{ d.t - 6 }}">5 日淨額（億）</text>
+      {% for p in d.pts %}
+      <g><title>{{ p.name }}({{ p.code }}) {{ p.pattern }}：20 日 {{ sg(p.ret20, 1) }}%，5 日 {{ sg(p.net5) }} 億{% if p.vs_cost is not none %}，現價 vs 法人成本 {{ sg(p.vs_cost) }}%{% endif %}</title>
+        {% if p.pattern == "拉高調節" %}<rect x="{{ p.x - p.rad * 0.8 }}" y="{{ p.y - p.rad * 0.8 }}" width="{{ p.rad * 1.6 }}" height="{{ p.rad * 1.6 }}" transform="rotate(45 {{ p.x }} {{ p.y }})" class="sv-dot-n"/>
+        {% else %}<circle cx="{{ p.x }}" cy="{{ p.y }}" r="{{ p.rad }}" class="{{ 'sv-dot-p' if p.net5 > 0 else 'sv-dot-n' }}"/>{% endif %}
+        <text class="sv-lbl" x="{{ p.x + p.rad + 4 }}" y="{{ p.y + 4 }}">{{ p.name }}</text></g>
+      {% endfor %}
+    </svg>
+  </div>
+  <div class="sv-note">● 買不漲 / 漲多轉賣　◆ 拉高調節（現價高於法人成本最多者優先）　點越大 = 現價離法人成本越遠，滑過看數字</div>
+</div>
+{% endif %}
+
+{# ── 賣壓主體 ── #}
+{% if f.sell %}
+<div class="sv-blk">
+  {{ head("賣壓主體", "sell") }}
+  <div class="sv-rows">
+    {% for r in f.sell %}
+    <div class="sv-hrow" title="{{ r.name }} 5 日 {{ sg(r.net5) }} 億">
+      <span>{{ r.name }} <small>{{ r.code }}</small>{% if r.vs_cost is not none %}<br><small class="{{ 'pos' if r.vs_cost >= 0 else '' }}">成本差 {{ sg(r.vs_cost) }}% {{ '獲利了結' if r.vs_cost >= 0 else '認賠' }}</small>{% endif %}</span>
+      <div class="sv-barwrap"><div class="sv-bar" style="width:{{ r.w }}%;background:var(--neg)"></div>{% if r.accel_tag == "加速" %}<span class="sv-chip sv-warn">加速</span>{% endif %}</div>
+      <span class="sv-val neg">{{ sg(r.net5) }} 億</span></div>
+    {% endfor %}
+  </div>
+  {% if f.streaks %}
+  <div class="sv-sub">連續賣超天數（≥ 8 天）</div>
+  <div class="sv-days">
+    {% for r in f.streaks %}
+    <div><span>{{ r.name }} <b class="{{ tone(r.streak) }}">連{{ '買' if r.streak > 0 else '賣' }} {{ r.streak | abs }}</b> 天</span>
+      <span class="sv-dots">{% for _ in range(r.streak | abs) %}<i class="{{ 'sv-dot-p' if r.streak > 0 else 'sv-dot-n' }}"></i>{% endfor %}</span></div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+{# ── 翻轉與分歧 ── #}
+{% if f.flip or f.duel %}
+<div class="sv-blk">
+  {{ head("翻轉與分歧", "flip") }}
+  {% set fl = f.flip %}
+  {% if fl %}
+  <div class="sv-sub">20 日淨額 ○ → 5 日淨額 ●（億元）</div>
+  <div class="sv-chart">
+    <svg viewBox="0 0 {{ fl.w }} {{ fl.h }}" role="img" aria-label="20 日轉 5 日翻買">
+      {% for t in fl.xt %}<line class="{{ 'sv-zero' if t.v == 0 else 'sv-ax' }}" x1="{{ t.x }}" x2="{{ t.x }}" y1="{{ fl.t }}" y2="{{ fl.b }}"/><text x="{{ t.x }}" y="{{ fl.b + 16 }}" text-anchor="middle">{{ sg(t.v) }}</text>{% endfor %}
+      {% for r in fl.rows %}
+      <g><title>{{ r.name }}({{ r.code }}) {{ r.pattern }}：20 日 {{ sg(r.net20) }} 億 → 5 日 {{ sg(r.net5) }} 億</title>
+        <text class="sv-lbl" x="{{ fl.l - 8 }}" y="{{ r.y + 4 }}" text-anchor="end">{{ r.name }}</text>
+        <line x1="{{ r.xa }}" x2="{{ r.xb }}" y1="{{ r.y }}" y2="{{ r.y }}" class="sv-link"/>
+        <circle cx="{{ r.xa }}" cy="{{ r.y }}" r="5" class="sv-ring"/>
+        <circle cx="{{ r.xb }}" cy="{{ r.y }}" r="6" class="sv-dot-p"/></g>
+      {% endfor %}
+    </svg>
+  </div>
+  {% endif %}
+  {% if f.duel %}
+  <div class="sv-sub">外資 vs 投信對作（5 日，億元）</div>
+  <div class="sv-cards">
+    {% for r in f.duel %}
+    <div class="sv-card"><div class="sv-card-top"><b>{{ r.name }} <small>{{ r.code }}</small></b><small>{{ '外資接、投信倒' if r.f5 > 0 else '投信接、外資倒' }}</small></div>
+      <div class="sv-row"><span class="sv-n">外資</span>{{ dv(r.f5, r.fw) }}<span class="sv-val {{ tone(r.f5) }}">{{ sg(r.f5) }}</span></div>
+      <div class="sv-row"><span class="sv-n">投信</span>{{ dv(r.t5, r.tw) }}<span class="sv-val {{ tone(r.t5) }}">{{ sg(r.t5) }}</span></div></div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+{% endif %}
+</div>
+
+{% if s.ok %}
 <div class="ai-footer">
   <span>🤖 {{ s.data.model }}</span>
   <span class="ai-footer-dot"></span>
   <span>{{ s.data.input_tokens }} in / {{ s.data.output_tokens }} out tokens</span>
+  <span class="ai-footer-dot"></span>
+  <span>圖表數字直接取自上方各區塊，AI 只寫結論</span>
 </div>
-{% else %}
-<div class="error-box">AI 摘要生成失敗：{{ s.error }}</div>
 {% endif %}

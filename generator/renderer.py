@@ -1,69 +1,10 @@
-import re
 import shutil
 from datetime import date
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-from markupsafe import Markup, escape
 
 from config import TEMPLATES_DIR, STATIC_SRC, STATIC_OUT
-
-
-def _ai_summary_html(text: str) -> Markup:
-    """Convert structured AI summary text to HTML sections.
-
-    Expected input format:
-        【大盤概況】
-        一段話 ...
-
-        【主流與集中度】
-        • 主流延續裡三合一的是誰：...
-        • 多頭是分散還是集中：...
-
-    Output: one <div class="ai-section"> per 【block】, arranged in a 2-col grid.
-    """
-    # Split on 【...】 boundaries while keeping the header
-    blocks = re.split(r'(?=【)', text.strip())
-    sections = []
-
-    for block in blocks:
-        block = block.strip()
-        if not block:
-            continue
-
-        lines = block.splitlines()
-        header_match = re.match(r'^【(.+?)】', lines[0].strip())
-        title = escape(header_match.group(1)) if header_match else None
-        body_lines = lines[1:] if header_match else lines
-
-        inner = []
-        bullet_buf = []
-
-        def flush_bullets():
-            if bullet_buf:
-                _strip_bullet = re.compile(r"^\s*[•\-\*]\s*")
-                items = "".join(
-                    f"<li>{escape(_strip_bullet.sub('', l))}</li>"
-                    for l in bullet_buf
-                )
-                inner.append(f"<ul>{items}</ul>")
-                bullet_buf.clear()
-
-        for line in body_lines:
-            line = line.strip()
-            if not line:
-                continue
-            if re.match(r'^[•\-\*]', line):
-                bullet_buf.append(line)
-            else:
-                flush_bullets()
-                inner.append(f"<p>{escape(line)}</p>")
-        flush_bullets()
-
-        head_html = f'<div class="ai-section-head">{title}</div>' if title else ""
-        sections.append(f'<div class="ai-section">{head_html}{"".join(inner)}</div>')
-
-    return Markup("\n".join(sections))
 
 
 def _make_env() -> Environment:
@@ -72,7 +13,6 @@ def _make_env() -> Environment:
         autoescape=select_autoescape(["html", "j2"]),
     )
     env.globals["enumerate"] = enumerate
-    env.filters["ai_summary_html"] = _ai_summary_html
     return env
 
 
