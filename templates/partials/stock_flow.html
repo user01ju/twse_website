@@ -146,16 +146,16 @@
 .stf-table th.si-sort.desc .si-sort-ind::after { content: "▼"; }
 .stf-table th.si-sort.asc  .si-sort-ind,
 .stf-table th.si-sort.desc .si-sort-ind { opacity: 1; }
-.stf-th-code { width: 60px; }
-.stf-th-name { width: 96px; }
-.stf-th-sector { width: 104px; }
-.stf-th-yi { width: 76px; text-align: right; }
-.stf-th-z { width: 48px; text-align: right; }
-/* 加速度標籤 127px、型態標籤+位階 chip 103px：table-layout: fixed 的欄寬要給足，不然溢到右邊/被切 */
-.stf-th-accel { width: 140px; text-align: right; }
-.stf-th-pat { width: 124px; text-align: right; }
-.stf-th-pct { width: 68px; text-align: right; }
-.stf-th-streak { width: 128px; text-align: right; }
+.stf-th-name { min-width: 96px; }
+.stf-th-sector { min-width: 104px; }
+.stf-th-yi { min-width: 76px; text-align: right; }
+.stf-th-z { min-width: 48px; text-align: right; }
+/* 欄寬用 min-width：table-layout:auto 下 width 只是建議值，空間不夠會被壓到內容最小寬（名稱/子產業折行、表格不捲）。
+   加速度標籤 127px、型態標籤+位階 chip 103px，欄寬要給足 */
+.stf-th-accel { min-width: 140px; text-align: right; }
+.stf-th-pat { min-width: 124px; text-align: right; }
+.stf-th-pct { min-width: 68px; text-align: right; }
+.stf-th-streak { min-width: 128px; text-align: right; }
 .stf-streak { white-space: nowrap; }
 .stf-prev { font-size: 11px; color: var(--text-muted); margin-left: 3px; }
 .stf-z { color: var(--text-muted); font-weight: 500; }
@@ -170,18 +170,28 @@
 .sf-pat-warn { color: var(--warning); background: rgba(245,158,11,.14); }
 .stf-mcap { color: var(--text-muted); font-weight: 500; }
 .stf-pos52 { color: var(--text-muted); font-weight: 500; }
-.stf-th-cons { width: 84px; text-align: right; }
+.stf-th-cons { min-width: 84px; text-align: right; }
 .stf-cons { white-space: nowrap; }
 .stf-wrap { overflow-x: auto; }
 /* 共用的 .si-table 是 width:100% + table-layout:fixed：19 欄的欄寬加總超過表格寬，
-   超出的欄位落在捲軸範圍外、又被 .section 的 overflow:hidden 裁掉 → 改成依內容撐寬，讓 .stf-wrap 能捲到最後一欄 */
-.stf-wrap .stf-table { table-layout: auto; width: max-content; min-width: 100%; }
-/* 代號、名稱固定在左側，橫捲到後面欄位時還看得到是哪檔。代號欄寫死寬度，名稱的 left 才對得上 */
-.stf-table .stf-th-code, .stf-table .stf-code { position: sticky; left: 0; width: 60px; min-width: 60px; max-width: 60px; box-sizing: border-box; }
-.stf-table .stf-th-name, .stf-table .stf-name { position: sticky; left: 60px; box-shadow: 1px 0 0 var(--border-strong); }
-.stf-table th.stf-th-code, .stf-table th.stf-th-name { z-index: 2; }
-.stf-table td.stf-code, .stf-table td.stf-name { z-index: 1; background: var(--bg-secondary); }
-.stf-table .si-alt td.stf-code, .stf-table .si-alt td.stf-name { background: var(--bg-card); }
+   超出的欄位落在捲軸範圍外、又被 .section 的 overflow:hidden 裁掉 → 改 auto：表格至少撐到各欄最小內容寬，.stf-wrap 才能捲到最後一欄。
+   別用 width:max-content，那會讓每格都攤成一行、表格多寬好幾百 px */
+.stf-wrap .stf-table { table-layout: auto; }
+/* #、代號、名稱固定在左側，橫捲到後面欄位時還看得到是哪檔、排第幾。
+   sticky 格配 border-collapse:collapse 時格線是表格畫的、不跟著格子走 → 改 separate。
+   前兩欄寫死寬度，後面欄的 left 才對得上；代號 68px = 6 碼 ETF（00631L）mono 12px ≈ 43px + padding 20px 再留餘裕 */
+.stf-table { --stf-rank-w: 34px; --stf-code-w: 68px; border-collapse: separate; border-spacing: 0; }
+.stf-table .si-th-rank, .stf-table .si-rank,
+.stf-table .stf-th-code, .stf-table .stf-code,
+.stf-table .stf-th-name, .stf-table .stf-name { position: sticky; box-sizing: border-box; }
+.stf-table .si-th-rank, .stf-table .si-rank { left: 0; width: var(--stf-rank-w); min-width: var(--stf-rank-w); padding-left: 4px; padding-right: 4px; }
+.stf-table .stf-th-code, .stf-table .stf-code { left: var(--stf-rank-w); width: var(--stf-code-w); min-width: var(--stf-code-w); }
+.stf-table .stf-th-name, .stf-table .stf-name { left: calc(var(--stf-rank-w) + var(--stf-code-w)); box-shadow: 1px 0 0 var(--border-strong); }
+/* 手機上三欄凍結會吃掉快半個畫面 → 只凍名稱 */
+@media (max-width: 640px) {
+  .stf-table .si-th-rank, .stf-table .si-rank, .stf-table .stf-th-code, .stf-table .stf-code { position: static; }
+  .stf-table .stf-th-name, .stf-table .stf-name { left: 0; }
+}
 .stf-code { font-family: var(--font-mono); color: var(--text-muted); }
 .stf-name { font-weight: 700; color: var(--text-primary); }
 .stf-sector { font-size: 11px; color: var(--text-muted); }

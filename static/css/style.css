@@ -689,7 +689,8 @@ table.inst-compact th:nth-child(n+3) { text-align: right; }
 .si-th-yi     { width: 90px; text-align: right; }
 .si-th-pct    { width: 165px; }
 
-.si-row td    { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+/* 明確給底色（= .section 底色，視覺不變），sticky 欄才不會透出底下捲過去的格子 */
+.si-row td    { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; background: var(--bg-secondary); }
 .si-alt td    { background: var(--bg-card); }
 .si-row:hover td { background: var(--bg-hover) !important; }
 
