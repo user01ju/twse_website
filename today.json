@@ -1,115 +1,115 @@
 {
-  "date": "2026-11-02",
-  "generated_at": "2026-11-02 19:02:40",
-  "complete": true,
+  "date": "2026-11-03",
+  "generated_at": "2026-11-03 19:01:53",
+  "complete": false,
   "taiex": {
-    "close": 44920.14,
-    "change_pts": -291.69,
-    "change_pct": -0.65,
-    "trading_amount_yi": 7996.87507911,
-    "transaction_count": 4104242,
-    "avg20_amount_yi": 9643.6174776465,
-    "avg20_txn": 5261509.2
+    "close": 43307.54,
+    "change_pts": -1612.6,
+    "change_pct": -3.59,
+    "trading_amount_yi": 10020.3566099,
+    "transaction_count": 7682883,
+    "avg20_amount_yi": 9707.6121819335,
+    "avg20_txn": 5409889.45
   },
   "breadth": {
     "twse": {
-      "up": 582,
-      "down": 642,
-      "flat": 149,
-      "limit_up": 10,
-      "limit_down": 5,
-      "total": 1373,
-      "up_pct": 42.4,
-      "down_pct": 46.8,
-      "flat_pct": 10.9,
-      "limit_up_pct": 0.7,
-      "limit_down_pct": 0.4
+      "up": 105,
+      "down": 1220,
+      "flat": 47,
+      "limit_up": 2,
+      "limit_down": 33,
+      "total": 1372,
+      "up_pct": 7.7,
+      "down_pct": 88.9,
+      "flat_pct": 3.4,
+      "limit_up_pct": 0.1,
+      "limit_down_pct": 2.4
     },
     "tpex": {
-      "up": 390,
-      "down": 389,
-      "flat": 82,
-      "limit_up": 31,
-      "limit_down": 3,
+      "up": 59,
+      "down": 782,
+      "flat": 32,
+      "limit_up": 11,
+      "limit_down": 41,
       "total": 897,
-      "up_pct": 43.5,
-      "down_pct": 43.4,
-      "flat_pct": 9.1,
-      "limit_up_pct": 3.5,
-      "limit_down_pct": 0.3
+      "up_pct": 6.6,
+      "down_pct": 87.2,
+      "flat_pct": 3.6,
+      "limit_up_pct": 1.2,
+      "limit_down_pct": 4.6
     }
   },
   "top_gainers": [
     {
-      "code": "2491",
-      "name": "吉祥全",
-      "close": 44.55,
-      "change_pct": 10.0,
+      "code": "6467",
+      "name": "泰合",
+      "close": 246.0,
+      "change_pct": 9.821428571428571,
+      "market": "上市"
+    },
+    {
+      "code": "6431",
+      "name": "光麗-KY",
+      "close": 16.4,
+      "change_pct": 9.698996655518394,
+      "market": "上市"
+    },
+    {
+      "code": "1802",
+      "name": "台玻",
+      "close": 67.7,
+      "change_pct": 6.279434850863422,
+      "market": "上市"
+    },
+    {
+      "code": "1435",
+      "name": "中福",
+      "close": 21.25,
+      "change_pct": 5.985037406483791,
       "market": "上市"
     },
     {
       "code": "4720",
       "name": "德淵",
-      "close": 29.7,
-      "change_pct": 10.0,
+      "close": 31.15,
+      "change_pct": 4.882154882154882,
       "market": "上市"
-    },
-    {
-      "code": "6756",
-      "name": "威鋒電子",
-      "close": 132.0,
-      "change_pct": 10.0,
-      "market": "上市"
-    },
-    {
-      "code": "6221",
-      "name": "晉泰",
-      "close": 41.25,
-      "change_pct": 10.0,
-      "market": "上櫃"
-    },
-    {
-      "code": "6233",
-      "name": "旺玖",
-      "close": 35.2,
-      "change_pct": 10.0,
-      "market": "上櫃"
     }
   ],
   "top_losers": [
     {
-      "code": "3581",
-      "name": "博磊",
-      "close": 97.2,
+      "code": "2466",
+      "name": "冠西電",
+      "close": 342.0,
       "change_pct": -10.0,
-      "market": "上櫃"
-    },
-    {
-      "code": "3685",
-      "name": "元創精密",
-      "close": 27.1,
-      "change_pct": -9.966777408637874,
-      "market": "上櫃"
-    },
-    {
-      "code": "6873",
-      "name": "泓德能源",
-      "close": 45.3,
-      "change_pct": -9.940357852882704,
       "market": "上市"
     },
     {
-      "code": "6925",
-      "name": "意藍",
-      "close": 113.5,
-      "change_pct": -9.920634920634921,
-      "market": "上櫃"
+      "code": "3189",
+      "name": "景碩",
+      "close": 819.0,
+      "change_pct": -10.0,
+      "market": "上市"
     },
     {
-      "code": "4737",
-      "name": "華廣",
-      "close": 59.1,
-      "change_pct": -9.908536585365853,
+      "code": "6426",
+      "name": "統新",
+      "close": 265.5,
+      "change_pct": -10.0,
+      "market": "上市"
+    },
+    {
+      "code": "6715",
+      "name": "嘉基",
+      "close": 387.0,
+      "change_pct": -10.0,
+      "market": "上市"
+    },
+    {
+      "code": "3167",
+      "name": "大量",
+      "close": 821.0,
+      "change_pct": -9.978070175438598,
       "market": "上市"
     }
   ]
