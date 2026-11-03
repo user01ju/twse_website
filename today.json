@@ -1,7 +1,7 @@
 {
   "date": "2026-11-03",
-  "generated_at": "2026-11-03 20:04:05",
-  "complete": false,
+  "generated_at": "2026-11-03 21:02:27",
+  "complete": true,
   "taiex": {
     "close": 43307.54,
     "change_pts": -1612.6,
@@ -41,39 +41,39 @@
   },
   "top_gainers": [
     {
-      "code": "6467",
-      "name": "泰合",
-      "close": 246.0,
-      "change_pct": 9.821428571428571,
-      "market": "上市"
+      "code": "6938",
+      "name": "藍新資訊",
+      "close": 87.0,
+      "change_pct": 9.987357774968396,
+      "market": "上櫃"
     },
     {
-      "code": "6431",
-      "name": "光麗-KY",
-      "close": 16.4,
-      "change_pct": 9.698996655518394,
-      "market": "上市"
+      "code": "6898",
+      "name": "程曦資訊",
+      "close": 71.6,
+      "change_pct": 9.984639016897082,
+      "market": "上櫃"
     },
     {
-      "code": "1802",
-      "name": "台玻",
-      "close": 67.7,
-      "change_pct": 6.279434850863422,
-      "market": "上市"
+      "code": "3287",
+      "name": "廣寰科",
+      "close": 65.0,
+      "change_pct": 9.983079526226735,
+      "market": "上櫃"
     },
     {
-      "code": "1435",
-      "name": "中福",
-      "close": 21.25,
-      "change_pct": 5.985037406483791,
-      "market": "上市"
+      "code": "6865",
+      "name": "偉康科技",
+      "close": 35.3,
+      "change_pct": 9.968847352024925,
+      "market": "上櫃"
     },
     {
-      "code": "4720",
-      "name": "德淵",
-      "close": 31.15,
-      "change_pct": 4.882154882154882,
-      "market": "上市"
+      "code": "7767",
+      "name": "仁大資訊",
+      "close": 53.1,
+      "change_pct": 9.937888198757763,
+      "market": "上櫃"
     }
   ],
   "top_losers": [
@@ -106,11 +106,11 @@
       "market": "上市"
     },
     {
-      "code": "3167",
-      "name": "大量",
-      "close": 821.0,
-      "change_pct": -9.978070175438598,
-      "market": "上市"
+      "code": "3332",
+      "name": "幸康",
+      "close": 68.4,
+      "change_pct": -10.0,
+      "market": "上櫃"
     }
   ]
 }
