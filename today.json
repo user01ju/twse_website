@@ -1,115 +1,115 @@
 {
-  "date": "2026-11-03",
-  "generated_at": "2026-11-03 21:02:27",
+  "date": "2026-11-04",
+  "generated_at": "2026-11-04 19:02:06",
   "complete": true,
   "taiex": {
-    "close": 43307.54,
-    "change_pts": -1612.6,
-    "change_pct": -3.59,
-    "trading_amount_yi": 10020.3566099,
-    "transaction_count": 7682883,
-    "avg20_amount_yi": 9707.6121819335,
-    "avg20_txn": 5409889.45
+    "close": 42948.91,
+    "change_pts": -358.63,
+    "change_pct": -0.83,
+    "trading_amount_yi": 11769.30442854,
+    "transaction_count": 7098597,
+    "avg20_amount_yi": 9826.966305197,
+    "avg20_txn": 5534197.65
   },
   "breadth": {
     "twse": {
-      "up": 105,
-      "down": 1220,
-      "flat": 47,
-      "limit_up": 2,
-      "limit_down": 33,
-      "total": 1372,
-      "up_pct": 7.7,
-      "down_pct": 88.9,
-      "flat_pct": 3.4,
-      "limit_up_pct": 0.1,
-      "limit_down_pct": 2.4
+      "up": 541,
+      "down": 711,
+      "flat": 131,
+      "limit_up": 20,
+      "limit_down": 2,
+      "total": 1383,
+      "up_pct": 39.1,
+      "down_pct": 51.4,
+      "flat_pct": 9.5,
+      "limit_up_pct": 1.4,
+      "limit_down_pct": 0.1
     },
     "tpex": {
-      "up": 59,
-      "down": 782,
-      "flat": 32,
-      "limit_up": 11,
-      "limit_down": 41,
+      "up": 397,
+      "down": 416,
+      "flat": 68,
+      "limit_up": 29,
+      "limit_down": 2,
       "total": 897,
-      "up_pct": 6.6,
-      "down_pct": 87.2,
-      "flat_pct": 3.6,
-      "limit_up_pct": 1.2,
-      "limit_down_pct": 4.6
+      "up_pct": 44.3,
+      "down_pct": 46.4,
+      "flat_pct": 7.6,
+      "limit_up_pct": 3.2,
+      "limit_down_pct": 0.2
     }
   },
   "top_gainers": [
     {
-      "code": "6938",
-      "name": "藍新資訊",
-      "close": 87.0,
-      "change_pct": 9.987357774968396,
-      "market": "上櫃"
+      "code": "1709",
+      "name": "和益",
+      "close": 48.4,
+      "change_pct": 10.0,
+      "market": "上市"
     },
     {
-      "code": "6898",
-      "name": "程曦資訊",
-      "close": 71.6,
-      "change_pct": 9.984639016897082,
+      "code": "6933",
+      "name": "AMAX-KY",
+      "close": 368.5,
+      "change_pct": 10.0,
+      "market": "上市"
+    },
+    {
+      "code": "2643",
+      "name": "捷迅",
+      "close": 67.1,
+      "change_pct": 10.0,
       "market": "上櫃"
     },
     {
       "code": "3287",
       "name": "廣寰科",
-      "close": 65.0,
-      "change_pct": 9.983079526226735,
+      "close": 71.5,
+      "change_pct": 10.0,
       "market": "上櫃"
     },
     {
-      "code": "6865",
-      "name": "偉康科技",
-      "close": 35.3,
-      "change_pct": 9.968847352024925,
-      "market": "上櫃"
-    },
-    {
-      "code": "7767",
-      "name": "仁大資訊",
-      "close": 53.1,
-      "change_pct": 9.937888198757763,
+      "code": "3379",
+      "name": "彬台",
+      "close": 35.75,
+      "change_pct": 10.0,
       "market": "上櫃"
     }
   ],
   "top_losers": [
     {
-      "code": "2466",
-      "name": "冠西電",
-      "close": 342.0,
+      "code": "6240",
+      "name": "松崗",
+      "close": 31.95,
       "change_pct": -10.0,
+      "market": "上櫃"
+    },
+    {
+      "code": "7750",
+      "name": "新代",
+      "close": 1490.0,
+      "change_pct": -9.969788519637463,
       "market": "上市"
     },
     {
-      "code": "3189",
-      "name": "景碩",
-      "close": 819.0,
-      "change_pct": -10.0,
+      "code": "6214",
+      "name": "精誠",
+      "close": 182.0,
+      "change_pct": -9.900990099009901,
       "market": "上市"
     },
     {
-      "code": "6426",
-      "name": "統新",
-      "close": 265.5,
-      "change_pct": -10.0,
-      "market": "上市"
+      "code": "6620",
+      "name": "漢達",
+      "close": 111.5,
+      "change_pct": -9.7165991902834,
+      "market": "上櫃"
     },
     {
-      "code": "6715",
-      "name": "嘉基",
-      "close": 387.0,
-      "change_pct": -10.0,
-      "market": "上市"
-    },
-    {
-      "code": "3332",
-      "name": "幸康",
-      "close": 68.4,
-      "change_pct": -10.0,
+      "code": "7743",
+      "name": "金利食安",
+      "close": 20.95,
+      "change_pct": -9.698275862068966,
       "market": "上櫃"
     }
   ]
