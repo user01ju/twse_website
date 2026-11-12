@@ -1,116 +1,116 @@
 {
-  "date": "2026-11-11",
-  "generated_at": "2026-11-11 19:02:33",
+  "date": "2026-11-12",
+  "generated_at": "2026-11-12 19:03:47",
   "complete": true,
   "taiex": {
-    "close": 44257.15,
-    "change_pts": 1545.23,
-    "change_pct": 3.62,
-    "trading_amount_yi": 8762.95459349,
-    "transaction_count": 3928796,
-    "avg20_amount_yi": 9853.4397178,
-    "avg20_txn": 5675022.8
+    "close": 43091.87,
+    "change_pts": -1165.28,
+    "change_pct": -2.63,
+    "trading_amount_yi": 10568.42457091,
+    "transaction_count": 5191586,
+    "avg20_amount_yi": 9780.9303138745,
+    "avg20_txn": 5571146.95
   },
   "breadth": {
     "twse": {
-      "up": 821,
-      "down": 455,
-      "flat": 100,
-      "limit_up": 34,
-      "limit_down": 3,
-      "total": 1376,
-      "up_pct": 59.7,
-      "down_pct": 33.1,
-      "flat_pct": 7.3,
-      "limit_up_pct": 2.5,
-      "limit_down_pct": 0.2
+      "up": 361,
+      "down": 909,
+      "flat": 108,
+      "limit_up": 12,
+      "limit_down": 10,
+      "total": 1378,
+      "up_pct": 26.2,
+      "down_pct": 66.0,
+      "flat_pct": 7.8,
+      "limit_up_pct": 0.9,
+      "limit_down_pct": 0.7
     },
     "tpex": {
-      "up": 520,
-      "down": 289,
-      "flat": 63,
-      "limit_up": 53,
-      "limit_down": 4,
+      "up": 241,
+      "down": 570,
+      "flat": 58,
+      "limit_up": 23,
+      "limit_down": 8,
       "total": 897,
-      "up_pct": 58.0,
-      "down_pct": 32.2,
-      "flat_pct": 7.0,
-      "limit_up_pct": 5.9,
-      "limit_down_pct": 0.4
+      "up_pct": 26.9,
+      "down_pct": 63.5,
+      "flat_pct": 6.5,
+      "limit_up_pct": 2.6,
+      "limit_down_pct": 0.9
     }
   },
   "top_gainers": [
     {
-      "code": "2316",
-      "name": "楠梓電",
-      "close": 126.5,
+      "code": "6152",
+      "name": "百一",
+      "close": 20.35,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "3026",
-      "name": "禾伸堂",
-      "close": 561.0,
+      "code": "6609",
+      "name": "瀧澤科",
+      "close": 59.4,
       "change_pct": 10.0,
-      "market": "上市"
+      "market": "上櫃"
     },
     {
-      "code": "3149",
-      "name": "正達",
-      "close": 68.2,
-      "change_pct": 10.0,
-      "market": "上市"
+      "code": "7819",
+      "name": "精誠金融",
+      "close": 39.1,
+      "change_pct": 9.985935302390997,
+      "market": "上櫃"
     },
     {
-      "code": "3311",
-      "name": "閎暉",
-      "close": 40.7,
-      "change_pct": 10.0,
-      "market": "上市"
+      "code": "6229",
+      "name": "研通",
+      "close": 24.25,
+      "change_pct": 9.977324263038549,
+      "market": "上櫃"
     },
     {
-      "code": "6108",
-      "name": "競國",
-      "close": 35.75,
-      "change_pct": 10.0,
+      "code": "6908",
+      "name": "宏碁遊戲-創",
+      "close": 22.6,
+      "change_pct": 9.97566909975669,
       "market": "上市"
     }
   ],
   "top_losers": [
     {
-      "code": "5465",
-      "name": "富驊",
-      "close": 31.05,
+      "code": "5243",
+      "name": "乙盛-KY",
+      "close": 79.2,
       "change_pct": -10.0,
-      "market": "上櫃"
-    },
-    {
-      "code": "6547",
-      "name": "高端疫苗",
-      "close": 46.35,
-      "change_pct": -10.0,
-      "market": "上櫃"
-    },
-    {
-      "code": "4747",
-      "name": "強生*",
-      "close": 15.8,
-      "change_pct": -9.971509971509972,
-      "market": "上櫃"
-    },
-    {
-      "code": "2723",
-      "name": "美食-KY",
-      "close": 73.4,
-      "change_pct": -9.938650306748466,
       "market": "上市"
     },
     {
-      "code": "6873",
-      "name": "泓德能源",
-      "close": 44.45,
-      "change_pct": -9.929078014184398,
+      "code": "6213",
+      "name": "聯茂",
+      "close": 522.0,
+      "change_pct": -10.0,
       "market": "上市"
+    },
+    {
+      "code": "6933",
+      "name": "AMAX-KY",
+      "close": 324.0,
+      "change_pct": -10.0,
+      "market": "上市"
+    },
+    {
+      "code": "8046",
+      "name": "南電",
+      "close": 972.0,
+      "change_pct": -10.0,
+      "market": "上市"
+    },
+    {
+      "code": "3324",
+      "name": "雙鴻",
+      "close": 1170.0,
+      "change_pct": -10.0,
+      "market": "上櫃"
     }
   ]
 }
