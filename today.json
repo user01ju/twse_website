@@ -1,116 +1,116 @@
 {
-  "date": "2026-11-12",
-  "generated_at": "2026-11-12 19:03:47",
+  "date": "2026-11-13",
+  "generated_at": "2026-11-13 19:02:23",
   "complete": true,
   "taiex": {
-    "close": 43091.87,
-    "change_pts": -1165.28,
-    "change_pct": -2.63,
-    "trading_amount_yi": 10568.42457091,
-    "transaction_count": 5191586,
-    "avg20_amount_yi": 9780.9303138745,
-    "avg20_txn": 5571146.95
+    "close": 43675.12,
+    "change_pts": 583.25,
+    "change_pct": 1.35,
+    "trading_amount_yi": 9515.80008082,
+    "transaction_count": 4257328,
+    "avg20_amount_yi": 9767.6516097675,
+    "avg20_txn": 5557246.0
   },
   "breadth": {
     "twse": {
-      "up": 361,
-      "down": 909,
-      "flat": 108,
-      "limit_up": 12,
-      "limit_down": 10,
-      "total": 1378,
-      "up_pct": 26.2,
-      "down_pct": 66.0,
-      "flat_pct": 7.8,
-      "limit_up_pct": 0.9,
-      "limit_down_pct": 0.7
+      "up": 986,
+      "down": 296,
+      "flat": 95,
+      "limit_up": 28,
+      "limit_down": 3,
+      "total": 1377,
+      "up_pct": 71.6,
+      "down_pct": 21.5,
+      "flat_pct": 6.9,
+      "limit_up_pct": 2.0,
+      "limit_down_pct": 0.2
     },
     "tpex": {
-      "up": 241,
-      "down": 570,
-      "flat": 58,
-      "limit_up": 23,
-      "limit_down": 8,
+      "up": 584,
+      "down": 230,
+      "flat": 62,
+      "limit_up": 41,
+      "limit_down": 1,
       "total": 897,
-      "up_pct": 26.9,
-      "down_pct": 63.5,
-      "flat_pct": 6.5,
-      "limit_up_pct": 2.6,
-      "limit_down_pct": 0.9
+      "up_pct": 65.1,
+      "down_pct": 25.6,
+      "flat_pct": 6.9,
+      "limit_up_pct": 4.6,
+      "limit_down_pct": 0.1
     }
   },
   "top_gainers": [
     {
-      "code": "6152",
-      "name": "百一",
-      "close": 20.35,
+      "code": "4956",
+      "name": "光鋐",
+      "close": 34.65,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "6609",
-      "name": "瀧澤科",
-      "close": 59.4,
+      "code": "6614",
+      "name": "資拓宏宇",
+      "close": 36.85,
+      "change_pct": 10.0,
+      "market": "上市"
+    },
+    {
+      "code": "7765",
+      "name": "中華資安",
+      "close": 269.5,
+      "change_pct": 10.0,
+      "market": "上市"
+    },
+    {
+      "code": "4905",
+      "name": "台聯電",
+      "close": 86.9,
       "change_pct": 10.0,
       "market": "上櫃"
     },
     {
-      "code": "7819",
-      "name": "精誠金融",
-      "close": 39.1,
-      "change_pct": 9.985935302390997,
+      "code": "7584",
+      "name": "樂意",
+      "close": 37.4,
+      "change_pct": 10.0,
       "market": "上櫃"
-    },
-    {
-      "code": "6229",
-      "name": "研通",
-      "close": 24.25,
-      "change_pct": 9.977324263038549,
-      "market": "上櫃"
-    },
-    {
-      "code": "6908",
-      "name": "宏碁遊戲-創",
-      "close": 22.6,
-      "change_pct": 9.97566909975669,
-      "market": "上市"
     }
   ],
   "top_losers": [
     {
-      "code": "5243",
-      "name": "乙盛-KY",
-      "close": 79.2,
+      "code": "2314",
+      "name": "台揚",
+      "close": 5.4,
       "change_pct": -10.0,
       "market": "上市"
     },
     {
-      "code": "6213",
-      "name": "聯茂",
-      "close": 522.0,
-      "change_pct": -10.0,
-      "market": "上市"
-    },
-    {
-      "code": "6933",
-      "name": "AMAX-KY",
-      "close": 324.0,
-      "change_pct": -10.0,
-      "market": "上市"
-    },
-    {
-      "code": "8046",
-      "name": "南電",
-      "close": 972.0,
-      "change_pct": -10.0,
-      "market": "上市"
-    },
-    {
-      "code": "3324",
-      "name": "雙鴻",
-      "close": 1170.0,
-      "change_pct": -10.0,
+      "code": "6538",
+      "name": "倉和",
+      "close": 293.5,
+      "change_pct": -9.969325153374232,
       "market": "上櫃"
+    },
+    {
+      "code": "2466",
+      "name": "冠西電",
+      "close": 393.0,
+      "change_pct": -9.965635738831615,
+      "market": "上市"
+    },
+    {
+      "code": "7610",
+      "name": "聯友金屬-創",
+      "close": 1090.0,
+      "change_pct": -9.917355371900827,
+      "market": "上市"
+    },
+    {
+      "code": "1795",
+      "name": "美時",
+      "close": 141.5,
+      "change_pct": -9.294871794871796,
+      "market": "上市"
     }
   ]
 }
