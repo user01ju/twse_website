@@ -1,6 +1,8 @@
 name: 資料交叉驗證 (Tier B)
 
 # Tier B = 交叉源不變量，會打外部 API（MI_INDEX / T86 / BFI82U，共 3 次呼叫）。
+# 另外兼任「停更告警」：daily_update 完全靠 cron-job.org 觸發，它掛了那邊不會有任何
+# run 可以紅；這裡走 GitHub schedule，today.json 落後已收盤的交易日就 FAIL。
 # 刻意跟 daily_update.yml 分開：這裡紅了只代表「資料對不起來」，不該擋每日更新
 # 與部署。反過來說，這個 workflow 不寫任何東西，permissions 只要 read。
 on:

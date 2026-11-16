@@ -302,6 +302,15 @@ def check_today_date_expected_trading_day(ctx: Ctx):
                       f"holidays_{ctx.today.year}.json — Tier A 不打網路，跳過")
 
     expected = market_calendar.get_latest_trading_day()
+    # 收盤前（或非交易日）跑：今天的資料不可能存在，預期值是「上一個已收盤的交易日」，
+    # 而且那天整晚的重試窗都過完了 → 落後 1 天就不是「下一班會補」，是那天整個沒出。
+    # verify.yml 的 schedule 實際常拖到台北清晨才跑，不分開的話每天都是 lag 1 的 WARN。
+    now = datetime.now(_TZ)
+    settled = not (expected == now.date() and now.hour >= 15)
+    if expected == now.date() and now.hour < 15:
+        expected -= timedelta(days=1)
+        while not market_calendar.is_trading_day(expected):
+            expected -= timedelta(days=1)
     if rd > expected:
         return FAIL, (f"today.json 日期 {rd} 晚於預期交易日 {expected} "
                       f"（未來日期 / 垃圾日期）")
@@ -318,6 +327,8 @@ def check_today_date_expected_trading_day(ctx: Ctx):
             f"（門檻 {MAX_TRADING_DAY_LAG}），complete={complete}")
     if lag == 0:
         return PASS, base
+    if settled:
+        return FAIL, base + " — 該交易日已過完仍沒有產出（排程沒觸發？cron-job.org / PAT）"
     if lag <= MAX_TRADING_DAY_LAG:
         return WARN, base + " — 資料尚未發布或該班次沒跑成功，下一班應補上"
     return FAIL, base
@@ -659,6 +670,8 @@ def check_exdiv_ref_coverage(ctx: Ctx):
     # 不用多打 API；沒快照可比就退回不剔除，寧可誤報也別靜音。
     prev = price_cache.load_window(ctx.report_date - timedelta(days=1), 1)
     prev_codes = set(prev[-1][1]) if prev else None
+    # （load_window 以前只掃 days*2 個日曆天，days=1 碰到週一就只看週日/週六 →
+    #   永遠 None → 週一一律不剔除。2026-11-09 正峰、台南-KY 因此被算成缺 ref。）
     x_stocks, no_prev = [], []
     for r in rows:
         code = str(r[0]).strip()
@@ -726,7 +739,12 @@ TIER_A = [
 ]
 
 TIER_B = [
-    ("t86-vs-bfi82u",          check_t86_vs_bfi82u),
+    # Tier A 只在 daily_update 有新產出（exit 0）時才跑，所以「根本沒有任何一班跑成功」
+    # 它看不到 —— cron-job.org 掛掉（PAT 過期）時網站會安靜停更、全部綠燈。verify.yml
+    # 走 GitHub 自己的 schedule、不依賴 cron-job.org，這條放這裡當停更告警：落後 2 個
+    # 交易日 FAIL。零外部呼叫，不佔 MAX_EXTERNAL_CALLS。
+    ("today-date-expected-trading-day", check_today_date_expected_trading_day),
+    ("t86-vs-bfi82u",         check_t86_vs_bfi82u),
     ("taiex-close-vs-official", check_taiex_close_vs_official),
     ("breadth-vs-official",    check_breadth_vs_official),
     ("exdiv-ref-coverage",     check_exdiv_ref_coverage),
@@ -761,7 +779,7 @@ def main() -> int:
     if args.tier in ("a", "all"):
         checks += TIER_A
     if args.tier in ("b", "all"):
-        checks += TIER_B
+        checks += [c for c in TIER_B if c not in checks]   # 停更告警兩邊都掛，all 時不重跑
 
     results = run(checks, ctx)
     for status, check_id, msg in results:

@@ -128,7 +128,9 @@ def load_window(end: date, days: int) -> list[tuple[date, dict]]:
     """
     result = []
     d = end
-    for _ in range(days * 2):  # scan up to 2x calendar days to cover weekends/holidays
+    # 2 倍日曆天蓋週末，+15 蓋春節封關：只乘 2 的話 days=1 遇到週一只掃得到
+    # 週日/週六（拿不到東西），20 日窗在春節 + 228 那段也會湊不滿。
+    for _ in range(days * 2 + 15):
         if len(result) >= days:
             break
         data = load(d)

@@ -1,3 +1,4 @@
+import json
 import logging
 from concurrent.futures import ThreadPoolExecutor, as_completed, TimeoutError as FuturesTimeout
 from datetime import date, datetime, timedelta
@@ -97,6 +98,18 @@ def _refresh_prev_day(actual_date: date) -> None:
 
 def build(target_date: date) -> "bool | str":
     """回傳 True（完整報告）/ "partial"（只寫了 today.json）/ False（沒東西可部署）。"""
+    # 當天報告已完成 → 不必再打 13 個 API 才發現沒事做。cron-job.org 19:00 之後每小時
+    # 一班，報告多半第一班就建好，後面幾班原本每班都白打一輪（TPEX 有請求數上限）。
+    # 兩個條件都要：報告在但 today.json 沒標 complete 代表上一輪收尾沒走完，照常重跑。
+    if not FORCE_REBUILD and (REPORTS_DIR / f"{target_date.isoformat()}.html").exists():
+        try:
+            tj = json.loads(today_builder.TODAY_JSON.read_text(encoding="utf-8"))
+        except Exception:
+            tj = {}
+        if tj.get("date") == target_date.isoformat() and tj.get("complete"):
+            logger.info(f"Report for {target_date.isoformat()} already complete — skipping fetch")
+            return False
+
     logger.info(f"Fetching market data (requested date: {target_date.isoformat()})")
 
     today_str = target_date.strftime("%Y%m%d")

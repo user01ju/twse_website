@@ -155,7 +155,7 @@ def load_window(end: date, days: int, stocks: bool = False) -> list[tuple[date, 
     """
     result = []
     d = end
-    for _ in range(days * 2):       # 掃 2 倍日曆天，蓋過週末與國定假日
+    for _ in range(days * 2 + 15):  # 2 倍蓋週末，+15 蓋春節封關（同 price_cache.load_window）
         if len(result) >= days:
             break
         data = load(d)

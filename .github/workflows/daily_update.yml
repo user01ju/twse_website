@@ -1,10 +1,12 @@
 name: 每日股市行情更新
 
 on:
-  # 主排程是 cron-job.org（台北 19:00–23:00 每小時，見下方 repository_dispatch）。
-  # GitHub schedule 只留一班當保險（公開 repo 延遲常達數小時）：台北 21:00 = UTC 13:00。
-  schedule:
-    - cron: '0 13 * * 1-5'
+  # 排程只有 cron-job.org（台北 19:00–23:00 每小時，見下方 repository_dispatch）。
+  # 原本留了一班 GitHub schedule（UTC 13:00）當保險，2026-11 查 log 發現它從沒生效：
+  # 公開 repo 的 schedule 實際延遲 7~10 小時（UTC 19:50~22:54 才啟動），一律被下面
+  # 的 timecheck（UTC ≥ 16 略過）擋掉；就算放寬，清晨跑的 target 是「今天」而資料是
+  # 昨天，也補不了昨天的報告。所以拿掉，改由 verify.yml 的
+  # today-date-expected-trading-day 當停更告警（它走 GitHub schedule，不依賴 cron-job.org）。
   repository_dispatch:
     # 外部 cron (cron-job.org) 透過 GitHub API 觸發，可帶 force_rebuild
     # POST https://api.github.com/repos/user01ju/twse_website/dispatches
@@ -122,8 +124,8 @@ jobs:
 
       # 「擋部署」與「發紅燈寄信」是兩件事，這裡刻意分開處理：
       #   擋部署 → FAIL 一律擋，透過 outputs.ok 傳給下面的部署步驟。
-      #   發紅燈 → 每天只發第一次。本 workflow 平日 15:00–23:30 每 30 分跑一輪，
-      #            上游一旦改版導致每輪都 FAIL，一天會寄出最多 17 封同樣的信；
+      #   發紅燈 → 每天只發第一次。本 workflow 平日 19:00–23:00 每小時跑一輪，
+      #            上游一旦改版導致每輪都 FAIL，一天會寄出好幾封同樣的信；
       #            第二天你就會開始無視它，這套告警等於死了。告警疲勞比沒告警更糟。
       # 刻意「不」做熔斷（今天紅過就不再跑）：盤後資料齊全時間不定，重試迴圈是
       # 本專案自我修復的機制，停掉它會讓暫時性失敗變成整天停更。
