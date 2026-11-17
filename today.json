@@ -1,7 +1,7 @@
 {
   "date": "2026-11-17",
-  "generated_at": "2026-11-17 19:03:15",
-  "complete": false,
+  "generated_at": "2026-11-17 20:03:03",
+  "complete": true,
   "taiex": {
     "close": 40092.11,
     "change_pts": -947.97,
@@ -55,24 +55,24 @@
       "market": "上市"
     },
     {
+      "code": "8415",
+      "name": "大國鋼",
+      "close": 41.35,
+      "change_pct": 9.97340425531915,
+      "market": "上櫃"
+    },
+    {
+      "code": "4174",
+      "name": "浩鼎",
+      "close": 78.4,
+      "change_pct": 9.957924263674613,
+      "market": "上櫃"
+    },
+    {
       "code": "6908",
       "name": "宏碁遊戲-創",
       "close": 23.25,
       "change_pct": 9.929078014184398,
-      "market": "上市"
-    },
-    {
-      "code": "6794",
-      "name": "向榮生技",
-      "close": 74.2,
-      "change_pct": 9.925925925925926,
-      "market": "上市"
-    },
-    {
-      "code": "2923",
-      "name": "鼎固-KY",
-      "close": 31.6,
-      "change_pct": 9.913043478260871,
       "market": "上市"
     }
   ],
