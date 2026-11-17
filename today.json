@@ -1,114 +1,114 @@
 {
-  "date": "2026-11-16",
-  "generated_at": "2026-11-16 19:03:16",
-  "complete": true,
+  "date": "2026-11-17",
+  "generated_at": "2026-11-17 19:03:15",
+  "complete": false,
   "taiex": {
-    "close": 41040.08,
-    "change_pts": -2635.04,
-    "change_pct": -6.03,
-    "trading_amount_yi": 9031.15129889,
-    "transaction_count": 6662374,
-    "avg20_amount_yi": 9501.33156486,
-    "avg20_txn": 5398039.5
+    "close": 40092.11,
+    "change_pts": -947.97,
+    "change_pct": -2.31,
+    "trading_amount_yi": 10128.67829864,
+    "transaction_count": 5860477,
+    "avg20_amount_yi": 9510.858064746999,
+    "avg20_txn": 5441733.85
   },
   "breadth": {
     "twse": {
-      "up": 142,
-      "down": 1176,
-      "flat": 58,
-      "limit_up": 8,
-      "limit_down": 84,
-      "total": 1376,
-      "up_pct": 10.3,
-      "down_pct": 85.5,
-      "flat_pct": 4.2,
-      "limit_up_pct": 0.6,
-      "limit_down_pct": 6.1
+      "up": 268,
+      "down": 1005,
+      "flat": 109,
+      "limit_up": 6,
+      "limit_down": 30,
+      "total": 1382,
+      "up_pct": 19.4,
+      "down_pct": 72.7,
+      "flat_pct": 7.9,
+      "limit_up_pct": 0.4,
+      "limit_down_pct": 2.2
     },
     "tpex": {
-      "up": 97,
-      "down": 746,
-      "flat": 35,
-      "limit_up": 24,
-      "limit_down": 85,
+      "up": 162,
+      "down": 651,
+      "flat": 54,
+      "limit_up": 5,
+      "limit_down": 43,
       "total": 898,
-      "up_pct": 10.8,
-      "down_pct": 83.1,
-      "flat_pct": 3.9,
-      "limit_up_pct": 2.7,
-      "limit_down_pct": 9.5
+      "up_pct": 18.0,
+      "down_pct": 72.5,
+      "flat_pct": 6.0,
+      "limit_up_pct": 0.6,
+      "limit_down_pct": 4.8
     }
   },
   "top_gainers": [
     {
-      "code": "1540",
-      "name": "喬福",
-      "close": 18.7,
+      "code": "3704",
+      "name": "合勤控",
+      "close": 38.5,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "6949",
-      "name": "沛爾生醫*-創",
-      "close": 49.5,
-      "change_pct": 10.0,
+      "code": "2911",
+      "name": "麗嬰房",
+      "close": 5.62,
+      "change_pct": 9.980430528375733,
       "market": "上市"
     },
     {
-      "code": "5310",
-      "name": "天剛",
-      "close": 26.4,
-      "change_pct": 10.0,
-      "market": "上櫃"
+      "code": "6908",
+      "name": "宏碁遊戲-創",
+      "close": 23.25,
+      "change_pct": 9.929078014184398,
+      "market": "上市"
     },
     {
-      "code": "6884",
-      "name": "海柏特",
-      "close": 35.2,
-      "change_pct": 10.0,
-      "market": "上櫃"
+      "code": "6794",
+      "name": "向榮生技",
+      "close": 74.2,
+      "change_pct": 9.925925925925926,
+      "market": "上市"
     },
     {
-      "code": "7819",
-      "name": "精誠金融",
-      "close": 44.0,
-      "change_pct": 10.0,
-      "market": "上櫃"
+      "code": "2923",
+      "name": "鼎固-KY",
+      "close": 31.6,
+      "change_pct": 9.913043478260871,
+      "market": "上市"
     }
   ],
   "top_losers": [
     {
-      "code": "5475",
-      "name": "德宏",
-      "close": 184.5,
-      "change_pct": -12.559241706161137,
-      "market": "上櫃"
-    },
-    {
-      "code": "2314",
-      "name": "台揚",
-      "close": 4.86,
+      "code": "3443",
+      "name": "創意",
+      "close": 6975.0,
       "change_pct": -10.0,
       "market": "上市"
     },
     {
-      "code": "2360",
-      "name": "致茂",
-      "close": 1260.0,
+      "code": "3605",
+      "name": "宏致",
+      "close": 103.5,
       "change_pct": -10.0,
       "market": "上市"
     },
     {
-      "code": "2368",
-      "name": "金像電",
-      "close": 927.0,
+      "code": "6213",
+      "name": "聯茂",
+      "close": 432.0,
       "change_pct": -10.0,
       "market": "上市"
     },
     {
-      "code": "2486",
-      "name": "一詮",
-      "close": 153.0,
+      "code": "8046",
+      "name": "南電",
+      "close": 792.0,
+      "change_pct": -10.0,
+      "market": "上市"
+    },
+    {
+      "code": "8996",
+      "name": "高力",
+      "close": 1170.0,
       "change_pct": -10.0,
       "market": "上市"
     }
