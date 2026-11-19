@@ -1,116 +1,116 @@
 {
-  "date": "2026-11-18",
-  "generated_at": "2026-11-18 21:03:33",
+  "date": "2026-11-19",
+  "generated_at": "2026-11-19 19:03:42",
   "complete": true,
   "taiex": {
-    "close": 40194.91,
-    "change_pts": 102.8,
-    "change_pct": 0.26,
-    "trading_amount_yi": 10751.74308798,
-    "transaction_count": 5047336,
-    "avg20_amount_yi": 9615.089289164,
-    "avg20_txn": 5418743.35
+    "close": 38426.89,
+    "change_pts": -1768.02,
+    "change_pct": -4.4,
+    "trading_amount_yi": 9429.88976493,
+    "transaction_count": 6310092,
+    "avg20_amount_yi": 9685.1100565815,
+    "avg20_txn": 5476488.0
   },
   "breadth": {
     "twse": {
-      "up": 608,
-      "down": 669,
-      "flat": 103,
-      "limit_up": 21,
-      "limit_down": 4,
-      "total": 1380,
-      "up_pct": 44.1,
-      "down_pct": 48.5,
-      "flat_pct": 7.5,
-      "limit_up_pct": 1.5,
-      "limit_down_pct": 0.3
+      "up": 132,
+      "down": 1206,
+      "flat": 44,
+      "limit_up": 1,
+      "limit_down": 128,
+      "total": 1382,
+      "up_pct": 9.6,
+      "down_pct": 87.3,
+      "flat_pct": 3.2,
+      "limit_up_pct": 0.1,
+      "limit_down_pct": 9.3
     },
     "tpex": {
-      "up": 352,
-      "down": 433,
-      "flat": 86,
-      "limit_up": 16,
-      "limit_down": 9,
+      "up": 51,
+      "down": 807,
+      "flat": 18,
+      "limit_up": 2,
+      "limit_down": 156,
       "total": 898,
-      "up_pct": 39.2,
-      "down_pct": 48.2,
-      "flat_pct": 9.6,
-      "limit_up_pct": 1.8,
-      "limit_down_pct": 1.0
+      "up_pct": 5.7,
+      "down_pct": 89.9,
+      "flat_pct": 2.0,
+      "limit_up_pct": 0.2,
+      "limit_down_pct": 17.4
     }
   },
   "top_gainers": [
     {
-      "code": "2321",
-      "name": "東訊",
-      "close": 34.1,
-      "change_pct": 10.0,
+      "code": "2923",
+      "name": "鼎固-KY",
+      "close": 34.95,
+      "change_pct": 9.905660377358489,
       "market": "上市"
     },
     {
-      "code": "4949",
-      "name": "有成精密",
-      "close": 64.9,
-      "change_pct": 10.0,
+      "code": "7715",
+      "name": "裕山",
+      "close": 21.65,
+      "change_pct": 9.898477157360407,
+      "market": "上櫃"
+    },
+    {
+      "code": "7584",
+      "name": "樂意",
+      "close": 44.45,
+      "change_pct": 9.88875154511743,
+      "market": "上櫃"
+    },
+    {
+      "code": "3207",
+      "name": "耀勝",
+      "close": 29.8,
+      "change_pct": 9.357798165137615,
+      "market": "上櫃"
+    },
+    {
+      "code": "6782",
+      "name": "視陽",
+      "close": 290.5,
+      "change_pct": 9.00562851782364,
       "market": "上市"
-    },
-    {
-      "code": "3086",
-      "name": "華義*",
-      "close": 20.9,
-      "change_pct": 10.0,
-      "market": "上櫃"
-    },
-    {
-      "code": "8054",
-      "name": "安國",
-      "close": 70.4,
-      "change_pct": 10.0,
-      "market": "上櫃"
-    },
-    {
-      "code": "5457",
-      "name": "宣德",
-      "close": 22.6,
-      "change_pct": 9.97566909975669,
-      "market": "上櫃"
     }
   ],
   "top_losers": [
     {
-      "code": "6751",
-      "name": "智聯服務",
-      "close": 91.8,
+      "code": "6924",
+      "name": "榮惠-KY創",
+      "close": 119.0,
+      "change_pct": -11.524163568773234,
+      "market": "上市"
+    },
+    {
+      "code": "2485",
+      "name": "兆赫",
+      "close": 26.55,
       "change_pct": -10.0,
-      "market": "上櫃"
+      "market": "上市"
     },
     {
-      "code": "2726",
-      "name": "雅茗-KY",
-      "close": 4.32,
-      "change_pct": -9.999999999999998,
-      "market": "上櫃"
+      "code": "2911",
+      "name": "麗嬰房",
+      "close": 5.22,
+      "change_pct": -10.0,
+      "market": "上市"
     },
     {
-      "code": "7767",
-      "name": "仁大資訊",
-      "close": 53.2,
-      "change_pct": -9.983079526226735,
-      "market": "上櫃"
+      "code": "3406",
+      "name": "玉晶光",
+      "close": 720.0,
+      "change_pct": -10.0,
+      "market": "上市"
     },
     {
-      "code": "7819",
-      "name": "精誠金融",
-      "close": 35.65,
-      "change_pct": -9.974747474747476,
-      "market": "上櫃"
-    },
-    {
-      "code": "8272",
-      "name": "全景軟體",
-      "close": 96.8,
-      "change_pct": -9.953488372093023,
-      "market": "上櫃"
+      "code": "3535",
+      "name": "晶彩科",
+      "close": 59.4,
+      "change_pct": -10.0,
+      "market": "上市"
     }
   ]
 }
