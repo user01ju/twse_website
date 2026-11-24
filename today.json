@@ -1,115 +1,115 @@
 {
-  "date": "2026-11-23",
-  "generated_at": "2026-11-23 19:03:47",
+  "date": "2026-11-24",
+  "generated_at": "2026-11-24 19:02:32",
   "complete": true,
   "taiex": {
-    "close": 36811.89,
-    "change_pts": 778.6,
-    "change_pct": 2.16,
-    "trading_amount_yi": 11137.43193221,
-    "transaction_count": 5400204,
-    "avg20_amount_yi": 9805.611043119,
-    "avg20_txn": 5661334.3
+    "close": 40122.35,
+    "change_pts": 3310.46,
+    "change_pct": 8.99,
+    "trading_amount_yi": 4325.59877529,
+    "transaction_count": 2689942,
+    "avg20_amount_yi": 9506.0492124145,
+    "avg20_txn": 5551108.9
   },
   "breadth": {
     "twse": {
-      "up": 811,
-      "down": 479,
-      "flat": 97,
-      "limit_up": 43,
-      "limit_down": 9,
-      "total": 1387,
-      "up_pct": 58.5,
-      "down_pct": 34.5,
-      "flat_pct": 7.0,
-      "limit_up_pct": 3.1,
+      "up": 1308,
+      "down": 59,
+      "flat": 16,
+      "limit_up": 394,
+      "limit_down": 8,
+      "total": 1383,
+      "up_pct": 94.6,
+      "down_pct": 4.3,
+      "flat_pct": 1.2,
+      "limit_up_pct": 28.5,
       "limit_down_pct": 0.6
     },
     "tpex": {
-      "up": 560,
-      "down": 254,
-      "flat": 59,
-      "limit_up": 25,
-      "limit_down": 7,
+      "up": 840,
+      "down": 34,
+      "flat": 15,
+      "limit_up": 286,
+      "limit_down": 2,
       "total": 898,
-      "up_pct": 62.4,
-      "down_pct": 28.3,
-      "flat_pct": 6.6,
-      "limit_up_pct": 2.8,
-      "limit_down_pct": 0.8
+      "up_pct": 93.5,
+      "down_pct": 3.8,
+      "flat_pct": 1.7,
+      "limit_up_pct": 31.8,
+      "limit_down_pct": 0.2
     }
   },
   "top_gainers": [
     {
-      "code": "2308",
-      "name": "台達電",
-      "close": 990.0,
+      "code": "0050",
+      "name": "元大台灣50",
+      "close": 95.7,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "2454",
-      "name": "聯發科",
-      "close": 3685.0,
+      "code": "0053",
+      "name": "元大科技市值",
+      "close": 205.7,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "3419",
-      "name": "譁裕",
-      "close": 8.8,
+      "code": "0056",
+      "name": "元大高股息",
+      "close": 49.94,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "3665",
-      "name": "貿聯-KY",
-      "close": 1430.0,
+      "code": "1435",
+      "name": "中福",
+      "close": 18.15,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "4739",
-      "name": "康普",
-      "close": 64.9,
+      "code": "1519",
+      "name": "華城",
+      "close": 467.5,
       "change_pct": 10.0,
       "market": "上市"
     }
   ],
   "top_losers": [
     {
-      "code": "2923",
-      "name": "鼎固-KY",
-      "close": 28.35,
-      "change_pct": -10.0,
+      "code": "2466",
+      "name": "冠西電",
+      "close": 383.0,
+      "change_pct": -9.9882491186839,
       "market": "上市"
-    },
-    {
-      "code": "5906",
-      "name": "台南-KY",
-      "close": 32.4,
-      "change_pct": -10.0,
-      "market": "上市"
-    },
-    {
-      "code": "6697",
-      "name": "東捷資訊",
-      "close": 53.1,
-      "change_pct": -10.0,
-      "market": "上櫃"
     },
     {
       "code": "7827",
       "name": "漢康-KY創",
-      "close": 87.5,
-      "change_pct": -9.979423868312756,
+      "close": 78.8,
+      "change_pct": -9.942857142857143,
       "market": "上市"
     },
     {
       "code": "3259",
       "name": "鑫創",
-      "close": 6.95,
-      "change_pct": -9.974093264248705,
+      "close": 6.26,
+      "change_pct": -9.928057553956835,
+      "market": "上櫃"
+    },
+    {
+      "code": "3593",
+      "name": "力銘",
+      "close": 5.66,
+      "change_pct": -9.872611464968152,
+      "market": "上市"
+    },
+    {
+      "code": "2067",
+      "name": "嘉鋼",
+      "close": 3.2,
+      "change_pct": -9.859154929577462,
       "market": "上櫃"
     }
   ]
