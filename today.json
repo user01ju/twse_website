@@ -1,115 +1,115 @@
 {
-  "date": "2026-11-26",
-  "generated_at": "2026-11-26 19:02:58",
+  "date": "2026-11-27",
+  "generated_at": "2026-11-27 19:03:38",
   "complete": true,
   "taiex": {
-    "close": 39151.81,
-    "change_pts": 956.38,
-    "change_pct": 2.5,
-    "trading_amount_yi": 8453.36632675,
-    "transaction_count": 3717271,
-    "avg20_amount_yi": 9756.5218704935,
-    "avg20_txn": 5641472.15
+    "close": 39308.08,
+    "change_pts": 156.27,
+    "change_pct": 0.4,
+    "trading_amount_yi": 6946.60790531,
+    "transaction_count": 3317924,
+    "avg20_amount_yi": 9634.049631929,
+    "avg20_txn": 5489086.65
   },
   "breadth": {
     "twse": {
-      "up": 1210,
-      "down": 120,
-      "flat": 50,
-      "limit_up": 57,
-      "limit_down": 3,
-      "total": 1380,
-      "up_pct": 87.7,
-      "down_pct": 8.7,
-      "flat_pct": 3.6,
-      "limit_up_pct": 4.1,
-      "limit_down_pct": 0.2
+      "up": 581,
+      "down": 679,
+      "flat": 124,
+      "limit_up": 20,
+      "limit_down": 5,
+      "total": 1384,
+      "up_pct": 42.0,
+      "down_pct": 49.1,
+      "flat_pct": 9.0,
+      "limit_up_pct": 1.4,
+      "limit_down_pct": 0.4
     },
     "tpex": {
-      "up": 666,
-      "down": 157,
-      "flat": 57,
-      "limit_up": 36,
-      "limit_down": 3,
+      "up": 262,
+      "down": 524,
+      "flat": 76,
+      "limit_up": 15,
+      "limit_down": 4,
       "total": 899,
-      "up_pct": 74.1,
-      "down_pct": 17.5,
-      "flat_pct": 6.3,
-      "limit_up_pct": 4.0,
-      "limit_down_pct": 0.3
+      "up_pct": 29.1,
+      "down_pct": 58.3,
+      "flat_pct": 8.5,
+      "limit_up_pct": 1.7,
+      "limit_down_pct": 0.4
     }
   },
   "top_gainers": [
     {
-      "code": "2472",
-      "name": "立隆電",
-      "close": 137.5,
+      "code": "2460",
+      "name": "建通",
+      "close": 25.3,
       "change_pct": 10.0,
       "market": "上市"
     },
     {
-      "code": "6213",
-      "name": "聯茂",
-      "close": 429.0,
+      "code": "8289",
+      "name": "泰藝",
+      "close": 37.4,
       "change_pct": 10.0,
+      "market": "上櫃"
+    },
+    {
+      "code": "3138",
+      "name": "耀登",
+      "close": 79.3,
+      "change_pct": 9.98613037447989,
       "market": "上市"
     },
     {
-      "code": "1595",
-      "name": "川寶",
-      "close": 49.5,
-      "change_pct": 10.0,
-      "market": "上櫃"
+      "code": "2413",
+      "name": "環科",
+      "close": 54.0,
+      "change_pct": 9.979633401221996,
+      "market": "上市"
     },
     {
-      "code": "3147",
-      "name": "大綜",
-      "close": 269.5,
-      "change_pct": 10.0,
-      "market": "上櫃"
-    },
-    {
-      "code": "3363",
-      "name": "上詮",
-      "close": 269.5,
-      "change_pct": 10.0,
+      "code": "6517",
+      "name": "保勝光學",
+      "close": 51.8,
+      "change_pct": 9.978768577494694,
       "market": "上櫃"
     }
   ],
   "top_losers": [
     {
-      "code": "7869",
-      "name": "宏于電機",
-      "close": 180.5,
-      "change_pct": -10.199004975124378,
-      "market": "上櫃"
-    },
-    {
-      "code": "3593",
-      "name": "力銘",
-      "close": 4.59,
+      "code": "1538",
+      "name": "正峰",
+      "close": 6.39,
       "change_pct": -10.0,
       "market": "上市"
     },
     {
-      "code": "6697",
-      "name": "東捷資訊",
-      "close": 47.7,
+      "code": "6949",
+      "name": "沛爾*-創",
+      "close": 32.4,
+      "change_pct": -10.0,
+      "market": "上市"
+    },
+    {
+      "code": "6140",
+      "name": "訊達",
+      "close": 30.15,
       "change_pct": -10.0,
       "market": "上櫃"
     },
     {
-      "code": "4174",
-      "name": "浩鼎",
-      "close": 59.6,
-      "change_pct": -9.969788519637461,
+      "code": "3664",
+      "name": "安瑞-KY",
+      "close": 7.07,
+      "change_pct": -9.936305732484076,
       "market": "上櫃"
     },
     {
-      "code": "3259",
-      "name": "鑫創",
-      "close": 5.08,
-      "change_pct": -9.929078014184398,
+      "code": "8089",
+      "name": "康全電訊",
+      "close": 28.1,
+      "change_pct": -9.935897435897436,
       "market": "上櫃"
     }
   ]
